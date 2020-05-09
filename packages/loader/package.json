@@ -1,0 +1,19 @@
+{
+  "name": "@sinuous/loader",
+  "version": "1.0.0",
+  "description": "Support assets list input file type",
+  "main": "dist/index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Loader\"",
+    "start": "babel --root-mode upward src --watch --out-dir dist --source-maps inline --copy-files --ignore spec.js,spec.jsx"
+  },
+  "author": "Kir Burkhanov",
+  "license": "MIT",
+  "devDependencies": {
+    "loader-utils": "^2.0.0",
+    "querystring": "^0.2.0",
+    "schema-utils": "^2.6.6"
+  },
+  "dependencies": {}
+}

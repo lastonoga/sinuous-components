@@ -1,0 +1,20 @@
+{
+  "name": "@sinuous/compiler",
+  "version": "1.0.0",
+  "description": "Support assets list input file type",
+  "main": "dist/index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Compiler\"",
+    "start": "babel --root-mode upward src --watch --out-dir dist --source-maps inline --copy-files --ignore spec.js,spec.jsx"
+  },
+  "author": "Kir Burkhanov",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/generator": "^7.9.5",
+    "@babel/parser": "^7.9.4",
+    "@babel/traverse": "^7.9.5",
+    "node-html-parser": "^1.2.16"
+  },
+  "dependencies": {}
+}

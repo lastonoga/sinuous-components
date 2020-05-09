@@ -1,0 +1,96 @@
+<!-- row -->
+<template>
+	<div class="row">
+		<slot name="default" />
+	</div>
+</template>
+
+<!-- Col -->
+<template>
+	<div class="col">
+		<slot name="name1">
+			Default name 1 text
+		</slot>
+		<div class="content">
+			<slot name="name2" />
+			<slot name="name3" />
+		</div>
+	</div>
+</template>
+
+<!-- Page -->
+<row>
+	<col>
+		test
+	</col>
+</row>
+
+h('row', {}, [
+	<!-- default slot at row -->
+	h('col', {
+		slots: {
+			default(1, ['test'])
+		}
+	}, [
+		<!-- default slot at col -->
+	])
+])
+
+
+---------------------------------------------
+---------------------------------------------
+
+
+Data fetching
+
+1. Server
+
+# Fetch() -> initData
+serverFetch() -> initData
+
+2. Client
+
+# Fetch() -> State
+clientFetch() -> State
+
+3. Problems
+
+Не всегда нужен fetch на клиенте (если API выполнился на сервере и отдался HTML, где только нужна интерактивность)
+
+Fetch на сервере -> это начальные данные состояния (
+	State: items: o([<Item>, <Item>, ...])
+)
+
+Новый тип переменных – серверные переменные
+Runtime | SSR -> State
+Client | 
+<!-- SSR -> (State -> InitData) -->
+
+- Определяем какие методы изменяют данные? (
+	value(items)
+)
+Клиентские изменение переменной? -> State, если нет -> InitData
+
+
+CrossEnv Variables
+# example
+_data = 1;
+
+ssr | runtime -> state
+client | (no use) -> initData  | (use) -> State
+
+---------------------------------------------
+---------------------------------------------
+
+Loops [Hydration]
+
+1. Loop condition statefull? (items?)
+
+Make stateful loop and replace it
+
+2. 
+
+
+
+
+

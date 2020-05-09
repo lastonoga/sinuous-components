@@ -1,0 +1,49 @@
+<template>
+	<div @click="reactive_click">
+		test {{ visible }}
+	</div>
+</template>
+
+<script>
+import { d } from '../src/test-import.js'
+
+/**
+ * State
+ * @type {Number}
+ */
+let $visible = d;
+let $clicks2 = {
+	a: 2
+};
+let clicks = 1;
+/**
+ * Computed
+ * @return {[type]} [description]
+ */
+
+function computed2() {
+	let k = [];
+	
+	for(let d in [1,2,3]) {
+		k.push(visible);
+	}
+
+	return visible * 2 * 5;
+}
+
+/**
+ * Methods
+ */
+function click(event) {
+	clicks++;
+	alert(this._data.clicks)
+}
+
+function reactive_click(event2) {
+	visible = visible + 1;
+}
+
+// function mounted() {
+
+// }
+</script>
