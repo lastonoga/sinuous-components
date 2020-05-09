@@ -25,7 +25,7 @@ Sinuous is really tiny and too far from Vue+Nuxt, React+Next and etc.
 
 ## Benefits
 - **Small.** hello world at `~8kB` gzip.
-- **Fast.** Thanks Sinuous and partial hydration
+- **Fast.** Thanks Sinuous and partial hydration. (we need to finish slots, loopts and more to create realy website page and understand how fast is partial hydration work on partial-dynamic web apps)
 - **Truly reactive.** automatically derived from the app state.
 - **Tips & Tricks.** Slots, Loops, Statements and Props as we get used to
 
