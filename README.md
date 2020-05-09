@@ -29,6 +29,19 @@ Sinuous is really tiny and too far from Vue+Nuxt, React+Next and etc.
 - **Truly reactive.** automatically derived from the app state.
 - **Tips & Tricks.** Slots, Loops, Statements and Props as we get used to
 
+## Todo
+
+- [x] Single file components
+- [x] Compiler (Alpha)
+- [x] Partial hydration
+- [ ] Slots (with partial hydration support)
+- [ ] Loops (with partial hydration support)
+- [ ] Statements (with partial hydration support)
+- [ ] Props
+- [ ] Make full page and test performance
+- [ ] SSR with initial data passing
+- [ ] SSR Data fetching. (Server can fetch data only once. Then components are static)
+
 ## Component example
 
 ```html
