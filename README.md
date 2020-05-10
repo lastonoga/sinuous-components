@@ -157,16 +157,16 @@ Use `parseName` to make component autonaming
 				file = camelize(file);
 				let rootPath = camelize(path.resolve(__dirname, '../'));
 
-							let componentPath = file
-								.split(rootPath)
-								.join('')
-								.replace(/\.sin/i, '')
-								.replace(/Components/, '')
-								.replace(/(\s|\/)/g, '');
+					let componentPath = file
+						.split(rootPath)
+						.join('')
+						.replace(/\.sin/i, '')
+						.replace(/Components/, '')
+						.replace(/(\s|\/)/g, '');
 
-							return componentPath;
-						}
-		}
+					return componentPath;
+				}
+			}
 	    }
 	]
 },
