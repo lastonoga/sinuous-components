@@ -140,3 +140,34 @@ Client side
 import TestComponent from 'components/test?runtimeOnly';
 import TestPage from 'page/test?runtimeOnly';
 ```
+
+## Webpack
+
+Use `@sinuous/loader` to compile SFC. 
+Use `parseName` to make component autonaming 
+
+```javascript
+{
+	test: /\.sin/,
+	use: [
+	    {
+		loader: '@sinuous/loader',
+		options: {
+			parseName(file) {
+				file = camelize(file);
+				let rootPath = camelize(path.resolve(__dirname, '../'));
+
+							let componentPath = file
+								.split(rootPath)
+								.join('')
+								.replace(/\.sin/i, '')
+								.replace(/Components/, '')
+								.replace(/(\s|\/)/g, '');
+
+							return componentPath;
+						}
+		}
+	    }
+	]
+},
+```
