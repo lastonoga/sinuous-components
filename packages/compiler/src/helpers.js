@@ -41,7 +41,7 @@ export function checkFunctionArgumentDeclaration(data, path)
 	}
 }
 
-export function setIdentifierContext(ctx, data, path)
+export function setIdentifierContext(ctx, data, path, observableCall = true)
 {
 	if(['FunctionDeclaration', 'VariableDeclarator', 'LabeledStatement'].includes(path.parent.type) || ['property'].includes(path.key)) {
 		return false;
@@ -56,8 +56,8 @@ export function setIdentifierContext(ctx, data, path)
 	}
 
 	name = `${ctx}._${match.namespace}.${name}`;
-
-	if(match.observable && path.container.type !== 'CallExpression') {
+	// console.log(name, observableCall)
+	if(match.observable && path.container.type !== 'CallExpression' && observableCall) {
 		name += '()';
 	}
 

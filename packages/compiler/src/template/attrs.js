@@ -1,4 +1,4 @@
-import { parseExpression } from './expression';
+import { expression } from './expression';
 
 const AttrsMap = {
 	'style': 'staticStyle',
@@ -13,10 +13,15 @@ function parseOptionValue(context, key, value)
 {
 	let statefull = false;
 	let isExpression = false;
+	let observableCall = true;
 
 	if(key[0] === '@') {
 		statefull = true;
 		isExpression = true;
+	}
+
+	if(typeof value === 'object') {
+		observableCall = false;
 	}
 
 	if(key[0] === '_') {
@@ -24,7 +29,7 @@ function parseOptionValue(context, key, value)
 		isExpression = true;
 	}
 
-	let exp = parseExpression(context, value, isExpression);
+	let exp = expression(context, value, isExpression, observableCall);
 	
 	value = exp.value;
 

@@ -4,7 +4,8 @@ import * as parser from "@babel/parser";
 import generate from "@babel/generator";
 
 import { createData } from "./data";
-import parseVariables from "./parseVariables";
+import parseContext from "./parseContext";
+import parseExpression from "./parseExpression";
 import parseMethods from "./parseMethods";
 import AstGenerator from "./AstGenerator";
 
@@ -23,8 +24,7 @@ export function getReactiveVariables(context, source)
 		strictMode: false,
 	});
 
-	parseVariables(data, ast);
-	parseMethods(data, ast);
+	parseContext(data, ast);
 
 	let reactive_variables = [];
 
@@ -47,8 +47,8 @@ export function compileScript(context, source)
 		strictMode: false,
 	});
 
-	parseVariables(data, ast);
-	parseMethods(data, ast);
+	parseContext(data, ast);
+	parseExpression(data, ast);
 
 	// console.log(data);
 

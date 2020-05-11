@@ -2,7 +2,7 @@ import { compiler, _ } from '@sinuous/compiler';
 
 // import { parseExpression } from '@sinuous/compiler/src/template/expression';
 import { createData } from "@sinuous/compiler/src/script/data";
-import { parseHTML } from '@sinuous/compiler/src/template/html';
+import parseHTML from '@sinuous/compiler/src/template/html';
 
 
 let data = createData();
@@ -49,26 +49,60 @@ data.methods = {
 
 let source = `
 <template>
-	<div @click="alert(1)" :style="{ adc: s1 }">
-		test
-		{{ s2 }}
-		<template v-if="s23 = 2">
-		show {{ ddd }}
-		</template>
-		<div v-else-if="some2">
-			test
-		</div>
-		<template v-else>
-		hide
-		</template>
-		<span data-stop>stop</span>
-		<div v-if="once">if-once</div>
-		<div>after-once-if</div>
+	<div @click="reactive_click">
+		test {{ visible }}
 	</div>
 </template>
+
+<script>
+import { d } from '../src/test-import.js'
+
+/**
+ * State
+ * @type {Number}
+ */
+let $visible = d;
+let $clicks2 = {
+	a: 2
+};
+let clicks = 1;
+/**
+ * Computed
+ * @return {[type]} [description]
+ */
+let computed1 = function() {
+	return 1;
+}
+
+let computed2 = () => {
+	let k = [];
+	
+	for(let d in [1,2,3]) {
+		k.push(visible);
+	}
+
+	return visible * 2 * 5;
+}
+
+/**
+ * Methods
+ */
+function click(event) {
+	clicks++;
+	alert(this._data.clicks)
+}
+
+function reactive_click(event2) {
+	visible += 1;
+}
+
+// function mounted() {
+
+// }
+</script>
 `;
 
-console.log(parseHTML(source));
+// parseHTML(source);
 
 
 let block = compiler({

@@ -1,6 +1,7 @@
 import * as parser from "@babel/parser";
 import traverse from "@babel/traverse";
 import generate from "@babel/generator";
+import parseExpression from "../script/parseExpression";
 
 import {
 	identifier,
@@ -20,70 +21,29 @@ import { prepareOptionKey } from './attrs';
 
 import { hasState, getVariable } from './helpers';
 
-export function parseExpression(context, code, isExpression = false)
+export function expression(context, code, isExpression = false, observableCall = true)
 {
+	if(typeof code === 'object') {
+		return {
+			statefull: false,
+			value: JSON.stringify(code)
+		};
+	}
+
 	code = String(code);
 
-	// console.warn(code);
+	console.warn(code);
 
 	const ast = parser.parse(code);
 
-	var observable = false;
-	var changed = false;
-
-	let FunctionDeclaration = false;
-	traverse(ast, {
-		FunctionDeclaration: {
-			enter(path) {
-				FunctionDeclaration = true;
-		    },
-		    exit(path) {
-		    	FunctionDeclaration = false;
-		    }
-		},
-		// make reactive variable assignment as function
-		AssignmentExpression: {
-			enter(path) {
-				
-				if(!isIdentifierReactive(context.data, path.node.left)) {
-					return;
-				}
-
-				let args = [path.node.right];
-
-				if(path.node.operator.length > 1) {
-					args = [
-						BinaryExpression(path.node.operator[0], path.node.left, path.node.right)
-					]
-				}
-
-				let name = getIdentifierName(path.node.left);
-				path.replaceWith(
-					CallExpression(identifier(name), args)
-				);
-
-				observable = true;
-				changed = true;
-			},
-		},
-		Identifier: {
-			enter(path) {
-				checkFunctionArgumentDeclaration(context.data, path);
-				if(setIdentifierContext('this', context.data, path)) {
-					observable = true;
-				}
-
-				changed = true;
-			}
-		}
-	});
+	let { changed, observable } = parseExpression(context.data, ast);
 
 	if(changed) {
 		code = generate(ast, {
-			retainLines: false,
-			compact: false,
-			minified: false,
-			concise: false,
+			retainLines: true,
+			compact: true,
+			minified: true,
+			concise: true,
 			quotes: "double",
 		}, code).code;
 
@@ -96,8 +56,8 @@ export function parseExpression(context, code, isExpression = false)
 		}
 	}
 
-	// console.log(code);
-	// console.log('--------');
+	console.log(code);
+	console.log('--------');
 
 	return {
 		statefull: observable,

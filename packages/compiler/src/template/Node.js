@@ -1,7 +1,7 @@
 import { parseOptions, parseOptionKey, parseOptionValue } from './attrs';
 import { _ } from './helpers';
 import { parseStatement } from './parseFunctions';
-import { parseExpression } from './expression';
+import { expression } from './expression';
 
 export var HID = 0;
 
@@ -139,7 +139,7 @@ export default class Node
 
 		if(statement.is) {
 			
-			let condition = parseExpression(context, statement.condition, false)
+			let condition = expression(context, statement.condition, false)
 
 			if(statement.start) {
 				// console.log(this)

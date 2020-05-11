@@ -1,5 +1,32 @@
 <template>
-	<div>
-		test [2]
+	<div @click="alert(1)">
+		test
+		{{ s2 }}
+		<br>
+		<template v-if="s1">
+			<div>
+				show {{ ddd }}
+			</div>
+			<span>
+				test
+			</span>
+		</template>
+		<div v-else-if="s3">
+			test
+		</div>
+		<template v-else>
+		hide
+		</template>
+		<div>after-once-if</div>
 	</div>
 </template>
+
+<script>
+let $s1 = true;
+let $s2 = 10;
+let $s3 = false;
+
+mounted() {
+	alert(1);
+}
+</script>
