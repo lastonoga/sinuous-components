@@ -21,6 +21,7 @@ function parseOptionValue(context, key, value)
 
 	if(key[0] === '_') {
 		value = '`' + value.replace(/{{(.*)}}/g, '${$1}') + '`';
+		isExpression = true;
 	}
 
 	let exp = parseExpression(context, value, isExpression);

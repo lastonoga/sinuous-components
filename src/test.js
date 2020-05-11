@@ -2,6 +2,8 @@ import { compiler, _ } from '@sinuous/compiler';
 
 // import { parseExpression } from '@sinuous/compiler/src/template/expression';
 import { createData } from "@sinuous/compiler/src/script/data";
+import { parseHTML } from '@sinuous/compiler/src/template/html';
+
 
 let data = createData();
 
@@ -49,8 +51,9 @@ let source = `
 <template>
 	<div @click="alert(1)" :style="{ adc: s1 }">
 		test
+		{{ s2 }}
 		<template v-if="s23 = 2">
-		show
+		show {{ ddd }}
 		</template>
 		<div v-else-if="some2">
 			test
@@ -64,6 +67,9 @@ let source = `
 	</div>
 </template>
 `;
+
+console.log(parseHTML(source));
+
 
 let block = compiler({
 	context: data,

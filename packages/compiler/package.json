@@ -14,6 +14,7 @@
     "@babel/generator": "^7.9.5",
     "@babel/parser": "^7.9.4",
     "@babel/traverse": "^7.9.5",
+    "htmljs-parser": "^2.7.1",
     "node-html-parser": "^1.2.16"
   },
   "dependencies": {}

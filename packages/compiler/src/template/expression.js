@@ -23,16 +23,13 @@ import { hasState, getVariable } from './helpers';
 export function parseExpression(context, code, isExpression = false)
 {
 	code = String(code);
-	// code = '`' + code.replace(/{{(.*)}}/g, '${$1}') + '`';
 
-	console.warn(code);
-	// if(str) {
-	// 	code = `'${code}'`;
-	// }
+	// console.warn(code);
 
 	const ast = parser.parse(code);
 
 	var observable = false;
+	var changed = false;
 
 	let FunctionDeclaration = false;
 	traverse(ast, {
@@ -66,6 +63,7 @@ export function parseExpression(context, code, isExpression = false)
 				);
 
 				observable = true;
+				changed = true;
 			},
 		},
 		Identifier: {
@@ -74,28 +72,32 @@ export function parseExpression(context, code, isExpression = false)
 				if(setIdentifierContext('this', context.data, path)) {
 					observable = true;
 				}
+
+				changed = true;
 			}
 		}
 	});
 
-	code = generate(ast, {
-		retainLines: true,
-		compact: true,
-		minified: true,
-		concise: true,
-		quotes: "double",
-	}, code).code;
+	if(changed) {
+		code = generate(ast, {
+			retainLines: false,
+			compact: false,
+			minified: false,
+			concise: false,
+			quotes: "double",
+		}, code).code;
 
-	
-	// clean append
-	code = code.replace(/(;|,)$/g, '');
-	
-	if(isExpression) {
-		code = `() => { return ${code}; }`;
+		
+		// clean append
+		code = code.replace(/(;|,)$/g, '');
+
+		if(isExpression) {
+			code = `() => { return ${code}; }`;
+		}
 	}
 
-	console.log(code);
-	console.log('--------');
+	// console.log(code);
+	// console.log('--------');
 
 	return {
 		statefull: observable,
@@ -103,70 +105,70 @@ export function parseExpression(context, code, isExpression = false)
 	}
 }
 
-export default function expression(context, code, execute = false)
-{
-	const ast = parser.parse(code);
+// export default function expression(context, code, execute = false)
+// {
+// 	const ast = parser.parse(code);
 
-	var changed = false;
-	var statefull = false;
+// 	var changed = false;
+// 	var statefull = false;
 
-	traverse(ast, {
-		enter(path)
-		{
-			if(path.node.type === 'Identifier')
-			{
-				if(!['key', 'label'].includes(path.key)) {
-					let nameBuilder = [];
+// 	traverse(ast, {
+// 		enter(path)
+// 		{
+// 			if(path.node.type === 'Identifier')
+// 			{
+// 				if(!['key', 'label'].includes(path.key)) {
+// 					let nameBuilder = [];
 
-					let variable = path.node.name;
-					let variableWithContext = getVariable(context.data, variable)
+// 					let variable = path.node.name;
+// 					let variableWithContext = getVariable(context.data, variable)
 
-					if(path.container.type === 'CallExpression') {
-						variableWithContext = false;
-					}
+// 					if(path.container.type === 'CallExpression') {
+// 						variableWithContext = false;
+// 					}
 
-					if(variableWithContext) {
-						nameBuilder.push('ctx')
-						nameBuilder.push(variableWithContext);
-					} else {
-						nameBuilder.push(variable);
-					}
+// 					if(variableWithContext) {
+// 						nameBuilder.push('ctx')
+// 						nameBuilder.push(variableWithContext);
+// 					} else {
+// 						nameBuilder.push(variable);
+// 					}
 
-					if(!variable) {
-						throw new Error(`There is no ${ variable } in context ${ context }`);
-					}
+// 					if(!variable) {
+// 						throw new Error(`There is no ${ variable } in context ${ context }`);
+// 					}
 
-					if(context.reactive_variables.includes(variable)) {
-						statefull = true;
-					}
+// 					if(context.reactive_variables.includes(variable)) {
+// 						statefull = true;
+// 					}
 
-					path.node.name = nameBuilder.join('.') + (execute ? '()' : '');
+// 					path.node.name = nameBuilder.join('.') + (execute ? '()' : '');
 
-					changed = true;
-				} else {
-					path.node.name = prepareOptionKey(path.node.name);
-				}
-			}
-		}
-	});
+// 					changed = true;
+// 				} else {
+// 					path.node.name = prepareOptionKey(path.node.name);
+// 				}
+// 			}
+// 		}
+// 	});
 
-	code = generate(ast, {
-		retainLines: true,
-		compact: true,
-		minified: true,
-		concise: true,
-		quotes: "double",
-	}, code).code;
+// 	code = generate(ast, {
+// 		retainLines: true,
+// 		compact: true,
+// 		minified: true,
+// 		concise: true,
+// 		quotes: "double",
+// 	}, code).code;
 
-	// clean append
-	code = code.replace(/(;|,)$/g, '');
+// 	// clean append
+// 	code = code.replace(/(;|,)$/g, '');
 
-	if(changed && execute) {
-		code = `() => { return ${code}; }`;
-	}
+// 	if(changed && execute) {
+// 		code = `() => { return ${code}; }`;
+// 	}
 
-	return {
-		statefull,
-		value: code
-	}
-}
+// 	return {
+// 		statefull,
+// 		value: code
+// 	}
+// }

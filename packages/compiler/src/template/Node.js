@@ -142,7 +142,7 @@ export default class Node
 			let condition = parseExpression(context, statement.condition, false)
 
 			if(statement.start) {
-				console.log(this)
+				// console.log(this)
 				code += `statement(`;
 			}
 
