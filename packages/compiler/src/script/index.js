@@ -50,7 +50,7 @@ export function compileScript(context, source)
 	parseContext(data, ast);
 	parseExpression(data, ast);
 
-	// console.log(data);
+	console.log(data);
 
 	return generate(AstGenerator(data), {
 		retainLines: false,

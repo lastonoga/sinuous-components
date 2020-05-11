@@ -13,7 +13,7 @@ import {
 	checkFunctionArgumentDeclaration
 } from '../helpers';
 
-export default function parseExpression(data, ast)
+export default function parseExpression(data, ast, ctx = 'this')
 {
 	var observable = false;
 	var changed = false;
@@ -62,7 +62,7 @@ export default function parseExpression(data, ast)
 		Identifier: {
 			enter(path) {
 				checkFunctionArgumentDeclaration(data, path);
-				if(setIdentifierContext('this', data, path)) {
+				if(setIdentifierContext(ctx, data, path)) {
 					observable = true;
 				}
 

@@ -139,7 +139,7 @@ export default class Node
 
 		if(statement.is) {
 			
-			let condition = expression(context, statement.condition, false)
+			let condition = expression(context, statement.condition, true)
 
 			if(statement.start) {
 				// console.log(this)

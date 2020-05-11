@@ -60,7 +60,7 @@ export function collectVariables (data) {
 				let id = path.node.id;
 				let name = getIdentifierName(id);
 
-				data.methods[name] = FunctionExpression(id, path.node.params, path.node.body);
+				data.methods[name] = FunctionExpression(null, path.node.params, path.node.body);
 		    },
 		    exit(path)
 		    {

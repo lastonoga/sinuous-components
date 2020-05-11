@@ -1,5 +1,4 @@
 import * as parser from "@babel/parser";
-import traverse from "@babel/traverse";
 import generate from "@babel/generator";
 import parseExpression from "../script/parseExpression";
 
@@ -15,7 +14,6 @@ import {
 	isIdentifierReactive,
 	checkFunctionArgumentDeclaration
 } from '../helpers';
-
 
 import { prepareOptionKey } from './attrs';
 
@@ -36,7 +34,7 @@ export function expression(context, code, isExpression = false, observableCall =
 
 	const ast = parser.parse(code);
 
-	let { changed, observable } = parseExpression(context.data, ast);
+	let { changed, observable } = parseExpression(context.data, ast, 'ctx');
 
 	if(changed) {
 		code = generate(ast, {

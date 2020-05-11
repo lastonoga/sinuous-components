@@ -49,57 +49,39 @@ data.methods = {
 
 let source = `
 <template>
-	<div @click="reactive_click">
-		test {{ visible }}
+	<div @click="alert(1)">
+		test
+		{{ s2 }}
+		<br>
+		<template v-if="s1">
+			<div>
+				show {{ ddd }}
+			</div>
+			<span>
+				test
+			</span>
+		</template>
+		<div v-else-if="s3">
+			test
+		</div>
+		<template v-else>
+		hide
+		</template>
+		<div>after-once-if</div>
 	</div>
 </template>
 
 <script>
-import { d } from '../src/test-import.js'
+let $s1 = true;
+let $s2 = 10;
+let $s3 = false;
+let ddd = 1
 
-/**
- * State
- * @type {Number}
- */
-let $visible = d;
-let $clicks2 = {
-	a: 2
-};
-let clicks = 1;
-/**
- * Computed
- * @return {[type]} [description]
- */
-let computed1 = function() {
-	return 1;
+function mounted() {
+	alert(1);
 }
-
-let computed2 = () => {
-	let k = [];
-	
-	for(let d in [1,2,3]) {
-		k.push(visible);
-	}
-
-	return visible * 2 * 5;
-}
-
-/**
- * Methods
- */
-function click(event) {
-	clicks++;
-	alert(this._data.clicks)
-}
-
-function reactive_click(event2) {
-	visible += 1;
-}
-
-// function mounted() {
-
-// }
 </script>
+
 `;
 
 // parseHTML(source);
