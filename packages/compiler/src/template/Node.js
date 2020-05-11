@@ -1,5 +1,7 @@
 import { parseOptions, parseOptionKey, parseOptionValue } from './attrs';
 import { _ } from './helpers';
+import { parseStatement } from './parseFunctions';
+import { parseExpression } from './expression';
 
 export var HID = 0;
 
@@ -11,14 +13,31 @@ export const isNonPhrasingTag = [
 	'tbody', 'td', 'tfoot', 'th', 'thead', 'title', 'tr', 'track'
 ];
 
+var IF_STATEMENT_STARTED = false;
+
+function getComponentCode(tag, options, children = [])
+{
+	if(tag === 'template') {
+		return `[${ children.join(',') }]`;
+	}
+	
+	return `h('${ tag }', ${ options }, [${ children.join(',') }])`;
+}
+
 export default class Node
 {
 	constructor({ tag = null, attrs = null, children = [] })
 	{
 		this.hid = ++HID;
 		this.tag = tag;
+		this.attrs = attrs;
 		this.options = parseOptions(attrs);
 		this.children = children;
+		
+		this.prevSibling = null;
+		this.nextSibling = null;
+		// if
+		this.if_statement = false;
 	}
 
 	// getContext(currentContext)
@@ -35,6 +54,19 @@ export default class Node
 
 	// 	return ctx;
 	// }
+	setSiblings()
+	{
+		for (var i = 0; i < this.children.length; i++) {
+			if(this.children[i + 1]) {
+				this.children[i].nextSibling = this.children[i + 1];
+				this.children[i + 1].prevSibling = this.children[i];
+			}
+
+			if(this.children[i] instanceof Node) {
+				this.children[i].setSiblings();
+			}
+		}
+	}
 
 	get isComponent()
 	{
@@ -100,12 +132,57 @@ export default class Node
 		// console.warn(hydrate, context.name, this.tag, shouldHydarate ? options : '');
 
 		options = `{${options}}`;
+		
+		let fn_generated = false;
 
-		if(this.tag === 'slot') {
-			code += `slot(this, h, ${ options }, [${ children.join(',') }])`;
+		let statement = parseStatement(this);
+
+		if(statement.is) {
+			
+			let condition = parseExpression(context, statement.condition, false)
+
+			if(statement.start) {
+				console.log(this)
+				code += `statement(`;
+			}
+
+			code += ` ${ condition.value }, ${ getComponentCode(this.tag, options, children) }`;
+
+			if(statement.end) {
+				code += `)`;
+			}
 		} else {
-			code += `h('${ this.tag }', ${ options }, [${ children.join(',') }])`;
+			code += getComponentCode(this.tag, options, children);
 		}
+
+		// console.log(this.attrs, this.if_statement, statement)
+
+		// if(IF_STATEMENT_STARTED && !this.attrs['v-if']) {
+		// 	fn_generated = true;
+		// 	code += `)`;
+		// }
+
+		// if(IF_STATEMENT_STARTED) {
+		// 	let condition = this.attrs['v-if'] || this.attrs['v-else-if'] || this.attrs['v-else'];
+		// 	let res = [];
+		// 	if(!this.attrs['v-else']) {
+		// 		res.push(condition)
+		// 	}
+
+		// 	res.push(getComponentCode(this.tag, options, children));
+
+		// 	if(!this.attrs['v-else']) {
+		// 		res.push('')
+		// 	}
+			
+		// 	code += res.join(',');
+
+		// 	console.log(this.attrs, code)
+		// } 
+
+		// if(!fn_generated) {
+			
+		// }
 
 		// console.warn('[3]', context.name, shouldHydarate);
 		// console.log('[main]', this.tag, shouldHydarate);

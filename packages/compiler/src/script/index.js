@@ -16,7 +16,7 @@ import AstGenerator from "./AstGenerator";
  */
 export function getReactiveVariables(context, source)
 {
-	let data = createData();
+	let data = createData(context);
 
 	const ast = parser.parse(source, {
 		sourceType: "unambiguous",

@@ -1,4 +1,4 @@
-import expression from './expression';
+import { parseExpression } from './expression';
 
 const AttrsMap = {
 	'style': 'staticStyle',
@@ -12,40 +12,34 @@ const HTMLAttributes = ['id', 'name', 'value', 'placeholder'];
 function parseOptionValue(context, key, value)
 {
 	let statefull = false;
+	let isExpression = false;
+
+	if(key[0] === '@') {
+		statefull = true;
+		isExpression = true;
+	}
 
 	if(key[0] === '_') {
 		value = '`' + value.replace(/{{(.*)}}/g, '${$1}') + '`';
-		
-		let exp = expression(context, value, true);
-		
-		value = exp.value;
-
-		if(!statefull && exp.statefull) {
-			statefull = true;
-		}
-	} else if(key[0] === ':') {
-		let exp = expression(context, value);
-
-		value = exp.value;
-
-		if(!statefull && exp.statefull) {
-			statefull = true;
-		}
-	} else if(key[0] === '@') {
-		// console.warn(key, context, value);
-		let exp = expression(context, value);
-
-		value = exp.value;
-
-		statefull = true;
-
-	} else if(typeof value === 'object') {
-		value = JSON.stringify(value);
-	} else {
-		value = `"${value}"`;
 	}
 
-	// console.log('–', value, statefull);
+	let exp = parseExpression(context, value, isExpression);
+	
+	value = exp.value;
+
+	if(!statefull && exp.statefull) {
+		statefull = true;
+	}
+
+	
+
+	// if(typeof value === 'object') {
+	// 	value = JSON.stringify(value);
+	// } else {
+	// 	value = `"${value}"`;
+	// }
+
+	
 
 	return {
 		value,
@@ -96,6 +90,10 @@ function parseOptions(attrs)
 	{
 		let value = attrs[key];
 		let option_key = prepareOptionKey(key);
+
+		if(key.match(/^v\-/g)) {
+			continue;
+		}
 		// Is html attr
 		if(HTMLAttributes.includes(key) || Object.keys(AttrsMap).includes(key) || key.match(/data\-/g) || key.match(/@/g)) {
 			if(key === 'style') {

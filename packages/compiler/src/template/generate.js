@@ -2,6 +2,7 @@ import { parse } from 'node-html-parser';
 import Node, { HID } from './Node';
 import TextNode from './TextNode';
 import { parseAttrs } from './attrs';
+import parseFunctions from './parseFunctions';
 
 function generateTree(node, isRoot = false)
 {
@@ -28,6 +29,7 @@ function generateTree(node, isRoot = false)
 
 export default function generate(context, code)
 {
+	// code = parseFunctions(code);
 	// console.warn("PARSE", context.name)
 	code = code.replace(/\t/g, ' ').replace(/\s\s+/g, ' ');
 
@@ -36,7 +38,11 @@ export default function generate(context, code)
 	root.removeWhitespace();
 
 	// HID = 0;
-	let tree = generateTree(root, true).children;
+	let tree = generateTree(root, true);
+
+	tree.setSiblings();
+	
+	tree = tree.children;
 
 	let ast = {
 		render: [],

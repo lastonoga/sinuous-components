@@ -2,9 +2,106 @@ import * as parser from "@babel/parser";
 import traverse from "@babel/traverse";
 import generate from "@babel/generator";
 
+import {
+	identifier,
+	CallExpression,
+	BinaryExpression,
+} from "@babel/types";
+
+import {
+	getIdentifierName,
+	setIdentifierContext,
+	isIdentifierReactive,
+	checkFunctionArgumentDeclaration
+} from '../helpers';
+
+
 import { prepareOptionKey } from './attrs';
 
 import { hasState, getVariable } from './helpers';
+
+export function parseExpression(context, code, isExpression = false)
+{
+	code = String(code);
+	// code = '`' + code.replace(/{{(.*)}}/g, '${$1}') + '`';
+
+	console.warn(code);
+	// if(str) {
+	// 	code = `'${code}'`;
+	// }
+
+	const ast = parser.parse(code);
+
+	var observable = false;
+
+	let FunctionDeclaration = false;
+	traverse(ast, {
+		FunctionDeclaration: {
+			enter(path) {
+				FunctionDeclaration = true;
+		    },
+		    exit(path) {
+		    	FunctionDeclaration = false;
+		    }
+		},
+		// make reactive variable assignment as function
+		AssignmentExpression: {
+			enter(path) {
+				
+				if(!isIdentifierReactive(context.data, path.node.left)) {
+					return;
+				}
+
+				let args = [path.node.right];
+
+				if(path.node.operator.length > 1) {
+					args = [
+						BinaryExpression(path.node.operator[0], path.node.left, path.node.right)
+					]
+				}
+
+				let name = getIdentifierName(path.node.left);
+				path.replaceWith(
+					CallExpression(identifier(name), args)
+				);
+
+				observable = true;
+			},
+		},
+		Identifier: {
+			enter(path) {
+				checkFunctionArgumentDeclaration(context.data, path);
+				if(setIdentifierContext('this', context.data, path)) {
+					observable = true;
+				}
+			}
+		}
+	});
+
+	code = generate(ast, {
+		retainLines: true,
+		compact: true,
+		minified: true,
+		concise: true,
+		quotes: "double",
+	}, code).code;
+
+	
+	// clean append
+	code = code.replace(/(;|,)$/g, '');
+	
+	if(isExpression) {
+		code = `() => { return ${code}; }`;
+	}
+
+	console.log(code);
+	console.log('--------');
+
+	return {
+		statefull: observable,
+		value: code
+	}
+}
 
 export default function expression(context, code, execute = false)
 {

@@ -7,6 +7,6 @@ export const data = {
 	methods: {},
 }
 
-export function createData() {
-	return Object.assign({}, data);
+export function createData(context) {
+	return Object.assign({}, data, {}, context);
 }

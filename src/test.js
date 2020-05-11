@@ -1,81 +1,74 @@
-import Sinuous from '@sinuous/i';
-import hydration from '@sinuous/hydration';
-import render from '@sinuous/render';
-import test from '../components/test.sin'
-import test2 from '../components/test2.sin'
-// import IndexPage from '../pages/index.sin'
-import timeBenchmark from './time';
+import { compiler, _ } from '@sinuous/compiler';
 
+// import { parseExpression } from '@sinuous/compiler/src/template/expression';
+import { createData } from "@sinuous/compiler/src/script/data";
 
-const IndexPage = import(/* webpackChunkName: "pageIndex" */ '../pages/index.sin')
+let data = createData();
 
-
-var LAYOUT;
-var PageIndex, PageIndex2;
-
-function TEST_WEBPACK_BUILD()
-{
-	timeBenchmark('SSR-Build');
-	Sinuous.registerComponent(test);
-	Sinuous.registerComponent(test2);
-	timeBenchmark('SSR-Build');
+data.data = {
+	d1: 1,
+	d2: 1,
 }
 
-// function TEST_INIT()
-// {
-// 	timeBenchmark('SSR-Init');
-// 	PageIndex = new IndexPage();
-// 	PageIndex2 = new IndexPage();
-// 	timeBenchmark('SSR-Init');
+data.state = {
+	s1: 1,
+	s2: 1,
+}
+
+data.computed = {
+	c1: 1,
+	c2: 1,
+}
+
+data.methods = {
+	m1: 1,
+	m2: 1,
+}
+
+// parseExpression(data, `
+// let d = function() {}
+// let d2 = () => {}
+// function c1(s3) {
+// 	let d = [];
+// 	for(let i = 0; i < s1.length; i++) {
+// 		d.push(s1[i]);
+// 	}
 // }
-
-function TEST_RENDER()
-{
-	render(IndexPage, LAYOUT, timeBenchmark);
-}
-
-function CLEAR_HOOKS()
-{
-	
-	let html = LAYOUT.innerHTML;
-	LAYOUT.innerHTML = html;
-}
-
-function TEST_HYDRATE()
-{
-	hydration(IndexPage, LAYOUT, timeBenchmark, (c) => {
-		c.hook('mounted');
-	});
-}
-
-TEST_WEBPACK_BUILD();
-
-// TEST_INIT();
-
-// return;
-(function load() {
-	LAYOUT = document.getElementById('layout');
+// `)
+// parseExpression(data, '{ s1: () => s1 }')
+// parseExpression(data, 'alert();', true)
+// parseExpression(data, 'm1(event)')
+// parseExpression(data, 's1 += 6')
+// parseExpression(data, 'd1 = d1 + 6')
+// parseExpression(data, 'd1 /= 6')
+// parseExpression(data, 'd.push(s1)')
+// parseExpression(data, 'd = () => { return s1 }')
 
 
-	// LAYOUT.innerHTML = '';
-	// requestIdleCallback(() => {
-	TEST_HYDRATE();
-	return;
+let source = `
+<template>
+	<div @click="alert(1)" :style="{ adc: s1 }">
+		test
+		<template v-if="s23 = 2">
+		show
+		</template>
+		<div v-else-if="some2">
+			test
+		</div>
+		<template v-else>
+		hide
+		</template>
+		<span data-stop>stop</span>
+		<div v-if="once">if-once</div>
+		<div>after-once-if</div>
+	</div>
+</template>
+`;
 
-	// setTimeout(() => {
-	// 	TEST_RENDER();
-	// }, 2000)
+let block = compiler({
+	context: data,
+	type: 'template',
+	source: source,
+});
 
-	TEST_RENDER();
-	console.log(LAYOUT.innerHTML)
-	return
-
-	setTimeout(() => {
-
-		CLEAR_HOOKS();
-
-		setTimeout(() => {
-			 TEST_HYDRATE();
-		}, 300);
-	}, 1000);
-})();
+console.log(block.source.render)
