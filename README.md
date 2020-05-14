@@ -34,9 +34,12 @@ Sinuous is really tiny and too far from Vue+Nuxt, React+Next and etc.
 - [x] Single file components
 - [x] Compiler (Alpha)
 - [x] Partial hydration
-- [ ] Slots (with partial hydration support)
-- [ ] Loops (with partial hydration support)
-- [x] Statements (with partial hydration support)
+- [x] Statements Render
+- [x] Loops Render
+- [ ] Slots Render
+- [ ] Statements hydration
+- [ ] Loops hydration
+- [ ] Slots hydration
 - [ ] Props
 - [ ] Make full page and test performance
 - [ ] SSR with initial data passing
