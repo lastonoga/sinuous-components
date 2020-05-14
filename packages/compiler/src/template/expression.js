@@ -37,7 +37,7 @@ export function expression(context, code, keepObservation = true)
 
 	traverse(ast, {
 		enter(path) {
-			// console.log(path.node.type)
+			// console.log(path.node.type, path.node)
 			if(!['Program', 'ExpressionStatement', 'Identifier', 'BlockStatement', 'LabeledStatement'].includes(path.node.type)) {
 				identifierOnly = false;
 			}

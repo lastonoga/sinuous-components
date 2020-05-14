@@ -49,8 +49,8 @@ Sinuous is really tiny and too far from Vue+Nuxt, React+Next and etc.
 
 ```html
 <template>
-	<div @click="reactive_click">
-		test {{ visible }}
+	<div v-if="testProp" v-for="(item) in [1, 2, 3]" @click="reactive_click">
+		test {{ visible }} - {{ item }}
 	</div>
 </template>
 
@@ -68,11 +68,12 @@ let $clicks2 = {
  * Normal data defines as usual variable
  */
 let clicks = 1;
+let testProp = false;
 
 /**
  * Will become computed prop
  */
-function computed2() {
+let computed = () {
 	let k = [];
 	
 	for(let d in [1,2,3]) {
@@ -87,7 +88,7 @@ function computed2() {
  */
 function click(event) {
 	clicks++;
-	alert(this._data.clicks)
+	alert(this._data.clicks + `test ${ computed }`)
 }
 
 function reactive_click(event2) {

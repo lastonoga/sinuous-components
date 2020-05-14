@@ -31,7 +31,7 @@ let source = `
 		<br>
 		<template v-if="visible" v-for="(item, key) in [1,2,3]">
 			<div>
-				[visible] show {{ ddd }}
+				[visible] show {{ ddd }} {{ s1 }} ({{ item }})
 			</div>
 			<span v-if="s1">
 				[s1] test
