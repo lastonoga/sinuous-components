@@ -49,7 +49,7 @@ export default function(source) {
     	});
 
   //   	if(name === 'Test') {
-		// 	console.log(block.source);
+			console.log(block.source);
 		// }
 
     	return block.source || 'export default {}';
@@ -64,8 +64,10 @@ export default function(source) {
 	});
 
 	// if(name === 'Test') {
+		
 		// console.log(name);
-		// console.log(block.source.render);
+		console.log(block.source.render);
+		console.log('-----------');
 		// console.log(block.source.hydrate);
 		// console.log('-----------');
 	// }
@@ -98,9 +100,9 @@ export default function(source) {
 				instance.prototype[key] = config[key];
 			}
 		}
-
+		
 		for(let key in config.methods) {
-			instance.prototype[key] = config.methods[key]
+			instance.prototype._methods[key] = config.methods[key]
 		}
 	`	
 

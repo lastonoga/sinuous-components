@@ -8,16 +8,16 @@ import {
 
 import {
 	getIdentifierName,
-	setIdentifierContext,
+	handleIdentifier,
 	isIdentifierReactive,
 	checkFunctionArgumentDeclaration
 } from '../helpers';
 
-export default function parseExpression(data, ast, ctx = 'this')
+export default function parseExpression(data, ast, ctx = 'this', disableExecution = false)
 {
-	var observable = false;
-	var changed = false;
-
+	let observable = false;
+	let changed = false;
+	
 	let FunctionDeclaration = false;
 	traverse(ast, {
 		ImportDeclaration: {
@@ -62,9 +62,15 @@ export default function parseExpression(data, ast, ctx = 'this')
 		Identifier: {
 			enter(path) {
 				checkFunctionArgumentDeclaration(data, path);
-				if(setIdentifierContext(ctx, data, path)) {
-					observable = true;
+
+				let identifier = handleIdentifier(ctx, data, path);
+				if(!identifier) {
+					return;
 				}
+
+				observable = identifier.observable ? true : observable;
+
+				identifier.replace(disableExecution);
 
 				changed = true;
 			}

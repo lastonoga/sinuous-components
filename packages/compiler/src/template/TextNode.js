@@ -8,12 +8,12 @@ export default class TextNode
 		this.text = text;
 	}
 
-	toAST(context = null, hydrate = false)
+	toAST(context = null, hydrate = false, isCallExpression = false)
 	{
 		let { value, statefull } = parseOptionValue(context, '_t', this.text);
 		// console.log(`t(${this.text})`, value, statefull)
 
-		if(hydrate && !statefull) {
+		if(hydrate && !statefull && !isCallExpression) {
 			value = _;
 		}
 

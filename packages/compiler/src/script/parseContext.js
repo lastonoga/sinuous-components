@@ -11,12 +11,12 @@ import {
 	makeObservableGetter,
 } from "./helpers";
 
-// Get all data
-// Mark data as reactive or stateless
-let isFunctionDeclaration = false;
 
-export function collectVariables (data) {
-	return {
+export default function(data, ast)
+{
+	let isFunctionDeclaration = false;
+
+	traverse(ast, {
 		VariableDeclarator: {
 			enter(path)
 			{
@@ -26,7 +26,6 @@ export function collectVariables (data) {
 				if(isFunctionDeclaration || value === null) {
 					return;
 				}
-
 
 				let name = getIdentifierName(id);
 
@@ -39,6 +38,7 @@ export function collectVariables (data) {
 					type = 'data';
 				}
 
+				// console.log(`SET PROP ${name} to ${type}`, data)
 				data[type][name] = value;
 		    },
 		},
@@ -67,10 +67,5 @@ export function collectVariables (data) {
 		    	isFunctionDeclaration = false;
 		    }
 		}
-	};
-}
-
-export default function(data, ast)
-{
-	traverse(ast, collectVariables(data));
+	});
 }

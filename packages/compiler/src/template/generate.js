@@ -1,44 +1,12 @@
-import { parse } from 'node-html-parser';
-import Node, { HID } from './Node';
-import TextNode from './TextNode';
+import { parseHTML } from './html';
 import { parseAttrs } from './attrs';
 import parseFunctions from './parseFunctions';
 
-function generateTree(node, isRoot = false)
+
+
+export default function generate(context, html)
 {
-
-	let children = [];
-
-	for (var i = 0; i < node.childNodes.length; i++) {
-		let child = generateTree(node.childNodes[i], false);
-		children.push(child);
-	}
-
-	let attrs = parseAttrs(node.rawAttrs);
-
-	if(children.length === 0 && node.rawText !== '') {
-		return new TextNode(node.rawText);
-	}
-
-	return new Node({
-		tag: node.tagName,
-		attrs: attrs,
-		children: children,
-	});
-}
-
-export default function generate(context, code)
-{
-	// code = parseFunctions(code);
-	// console.warn("PARSE", context.name)
-	code = code.replace(/\t/g, ' ').replace(/\s\s+/g, ' ');
-
-	const root = parse(code);
-
-	root.removeWhitespace();
-
-	// HID = 0;
-	let tree = generateTree(root, true);
+	let tree = parseHTML(html);
 
 	tree.setSiblings();
 	

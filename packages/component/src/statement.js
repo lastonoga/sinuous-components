@@ -35,28 +35,30 @@ export default function statement(condition)
 {
 	let d = () => {
 
-		let instance = new Condition(condition);
+		if(arguments.length % 2 !== 0) {
+			throw new Error('Statement should be odd number');
+		}
 
-		let methods = ['setFirstResult', 'setSecondResult'];
+		for (var i = 0; i < arguments.length; i += 2) {
+			let condition = arguments[i];
+			let value = arguments[i + 1];
 
-		for (var i = 1; i < arguments.length; i++) {
-			if(arguments[i] instanceof Condition) {
-				if(arguments[i].check()) {
-					// Nested condition – should be done
+			if(typeof condition === 'function') {
+				if(condition()) {
+					return value;
 				}
 			} else {
-				let fn = methods.shift();
-				if(typeof fn !== 'undefined') {
-					instance[fn](arguments[i]);
+				if(condition) {
+					return value;
 				}
 			}
 		}
-
-		return instance.result();
+		return [
+			document.createComment('statement comment')
+		];
 	}
 
 	d._observable = true;
-	d._node = true;
 
 	return d;
 }

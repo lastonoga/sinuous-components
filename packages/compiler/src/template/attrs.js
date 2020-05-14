@@ -9,43 +9,46 @@ const AttrsMap = {
 
 const HTMLAttributes = ['id', 'name', 'value', 'placeholder'];
 
+/**
+ * There are some type of expressions (javascript code)
+ * 1. @click="expr" -> _methods.submitForm();
+ * 2. :style="expr" -> ['test', _state.some, _computed.some]  ||  ['test', _data.paddingTop]
+ * 3. :class="expr" -> { is-loading: _state.loading }  ||  { is-red: _data.red }
+ * 4. v-if="expr" -> _data.type === 'type'  ||  _state.visible === true
+ *
+ * In render function should be 
+ * 1. _methods.submitForm();
+ * 2. style(['test', _state.some(), _computed.some() ])  ||  ['test', _data.paddingTop]  SHOULD NOT BE CALLED BECAUSE REACTIVE
+ * 3. 
+ * 4.  _data.type  ||  () => { return _state.visible() } OR _state.visible
+ * 
+ * @return {[type]}         [description]
+ */
 function parseOptionValue(context, key, value)
 {
 	let statefull = false;
-	let isExpression = false;
-	let observableCall = true;
+	let keepObservation = false;
 
 	if(key[0] === '@') {
 		statefull = true;
-		isExpression = true;
 	}
 
 	if(typeof value === 'object') {
-		observableCall = false;
+		keepObservation = true;
 	}
 
 	if(key[0] === '_') {
 		value = '`' + value.replace(/{{(.*)}}/g, '${$1}') + '`';
-		isExpression = true;
+		keepObservation = false;
 	}
 
-	let exp = expression(context, value, isExpression, observableCall);
+	let exp = expression(context, value, keepObservation);
 	
 	value = exp.value;
 
 	if(!statefull && exp.statefull) {
 		statefull = true;
 	}
-
-	
-
-	// if(typeof value === 'object') {
-	// 	value = JSON.stringify(value);
-	// } else {
-	// 	value = `"${value}"`;
-	// }
-
-	
 
 	return {
 		value,

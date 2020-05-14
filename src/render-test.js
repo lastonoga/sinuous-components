@@ -3,11 +3,11 @@ import hydration from '@sinuous/hydration';
 import render from '@sinuous/render';
 import test from '../components/test.sin'
 import test2 from '../components/test2.sin'
-// import IndexPage from '../pages/index.sin'
+import IndexPage from '../pages/index.sin'
 import timeBenchmark from './time';
 
 
-const IndexPage = import(/* webpackChunkName: "pageIndex" */ '../pages/index.sin')
+// const IndexPage = import(/* webpackChunkName: "pageIndex" */ '../pages/index.sin')
 
 
 var LAYOUT;
@@ -59,15 +59,15 @@ TEST_WEBPACK_BUILD();
 
 	// LAYOUT.innerHTML = '';
 	// requestIdleCallback(() => {
-	TEST_HYDRATE();
-	return;
+	// TEST_HYDRATE();
+	// return;
 
 	// setTimeout(() => {
 	// 	TEST_RENDER();
 	// }, 2000)
 
 	TEST_RENDER();
-	console.log(LAYOUT.innerHTML)
+	// console.log(LAYOUT.innerHTML)
 	return
 
 	setTimeout(() => {

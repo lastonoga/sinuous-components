@@ -41,7 +41,7 @@ export function getReactiveVariables(context, source)
 export function compileScript(context, source)
 {
 	let data = createData();
-		// console.log(data);
+		
 	const ast = parser.parse(source, {
 		sourceType: "unambiguous",
 		strictMode: false,
@@ -49,8 +49,6 @@ export function compileScript(context, source)
 
 	parseContext(data, ast);
 	parseExpression(data, ast);
-
-	console.log(data);
 
 	return generate(AstGenerator(data), {
 		retainLines: false,

@@ -8,5 +8,12 @@ export const data = {
 }
 
 export function createData(context) {
-	return Object.assign({}, data, {}, context);
+	return {
+		imports: [],
+		props: {},
+		data: {},
+		state: {},
+		computed: {},
+		methods: {},
+	};
 }

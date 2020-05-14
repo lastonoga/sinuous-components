@@ -47,8 +47,21 @@ var Basic = function () {
 
 		this.setChildren();
 		this.setParent();
+
+		this.bindContext();
 	}
 
+
+	Basic.prototype.bindContext = function()
+	{
+		for(let key in this._methods) {
+			this._methods[key] = this._methods[key].bind(this);
+		}
+
+		for(let key in this._computed) {
+			this._computed[key] = this._computed[key].bind(this);
+		}
+	}
 	/**
 	 * Config
 	 */
@@ -206,7 +219,11 @@ var Basic = function () {
 
 	Basic.prototype.hook = function(type = 'mounted')
 	{
-		this[type]();
+		// console.log(this);
+		if(this._methods[type]) {
+			this._methods[type].call(this);
+		}
+
 		for (var i = 0; i < this._children.length; i++) {
 			this._children[i].hook(type);
 		}

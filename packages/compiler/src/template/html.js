@@ -1,65 +1,76 @@
-import { createParser } from 'htmljs-parser';
+import { Parser } from 'htmlparser2';
 import Node from './Node';
 import TextNode from './TextNode';
 
-function handleTag(event)
+
+function prepareHTML(html)
 {
-	let tag = event.tagName;
-	let attributes = {};
-
-	if(event.attributes) {
-		for (var i = 0; i < event.attributes.length; i++) {
-			let attr = event.attributes[i];
-			attributes[attr.name] = attr.value || true;
-		}
-	}
-
-	return {
-		tag,
-		attributes
-	}
+	return html.replace(/\t/g, ' ').replace(/\s\s+/g, ' ').trim();
 }
 
-function close(event)
+function initStack()
 {
-	let { tag, attributes } = handleTag(event);
-
-	console.log('end', tag)
+	return [
+		new Node({
+			tag: 'ParserBody',
+			children: [],
+		})
+	];
 }
 
-export default function parse(html)
+export function parseHTML(html)
 {
-	let stack = [];
+	function currentStackNode()
+	{
+		return stack[stack.length - 1];
+	}
 
-	html = html.replace(/\t/g, ' ').replace(/\s\s+/g, ' ');
+	html = prepareHTML(html);
 
-	createParser({
+	let stack = initStack();
+
+	const parse = new Parser({
 		
-		onOpenTag(event)
+		onopentag(name, attrs)
 		{
-			let { tag, attributes } = handleTag(event);
-			
-			console.log('create Node', tag, attributes)
+			let parent = currentStackNode();
+
+			let node = new Node({
+				tag: name,
+				attrs: attrs,
+				children: [],
+			});
+
+			if(parent) {
+				parent.appendChild(node);
+			}
+
+			stack.push(node);
 		},
 
-		onText(event)
+		ontext(text)
 		{
-			let value = event.value.trim();
-			
-			if(value !== '') {
-	        	console.warn(value)
+			let parent = currentStackNode();
+
+			text = text.trim();
+
+			if(text !== '' && parent) {
+				let node = new TextNode(text);
+				if(parent) {
+					parent.appendChild(node);
+				}
 	    	}
 	    },
 
-		onString(event)
+		onclosetag(name)
 		{
-	        // console.warn(event)
-	    },
+			stack.pop();
+	    }
 
-		onCloseTag: close
+	}, { decodeEntities: true })
+	
+	parse.write(html);
+	parse.end();
 
-	}, {
-		reflectiveAttributes: true
-	})
-	.parse(html);
+	return stack[0];
 }

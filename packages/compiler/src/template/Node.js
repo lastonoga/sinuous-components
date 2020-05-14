@@ -40,20 +40,11 @@ export default class Node
 		this.if_statement = false;
 	}
 
-	// getContext(currentContext)
-	// {
-	// 	let ctx = null;
+	appendChild(node)
+	{
+		this.children.push(node);
+	}
 
-	// 	try {
-	// 		ctx = Sinuous.getComponent(this.tag);
-	// 	} catch(err) {}
-
-	// 	if(ctx === null) {
-	// 		ctx = currentContext;
-	// 	}
-
-	// 	return ctx;
-	// }
 	setSiblings()
 	{
 		for (var i = 0; i < this.children.length; i++) {
@@ -73,15 +64,20 @@ export default class Node
 		return !isNonPhrasingTag.includes(this.tag);
 	}
 
-	toAST(context = null, hydrate = false)
+	toAST(context = null, hydrate = false, isCallExpression = false)
 	{
 		let code = '';
 		let children = [];
 		let shouldHydarate = false;
 		let shouldOptionsHydrate = false;
-		// context = this.getContext(context);
+		// let isCallExpression = false;
 
-		// console.warn('[1]', context.name, shouldHydarate);
+		let Statement = parseStatement(this);
+
+		if(Statement.is) {
+			isCallExpression = true;
+		}
+
 		/**
 		 * Translate children to hyperscript
 		 * @param  {[type]} var i             [description]
@@ -89,7 +85,7 @@ export default class Node
 		 */
 		for (var i = 0; i < this.children.length; i++) {
 			let child = this.children[i];
-			let { value, statefull } = child.toAST(context, hydrate);
+			let { value, statefull } = child.toAST(context, hydrate, isCallExpression);
 			// console.log('[child]', child, statefull);
 			if(statefull) {
 				shouldHydarate = true;
@@ -133,22 +129,17 @@ export default class Node
 
 		options = `{${options}}`;
 		
-		let fn_generated = false;
 
-		let statement = parseStatement(this);
+		if(Statement.is) {
+			let condition = expression(context, Statement.condition, false)
 
-		if(statement.is) {
-			
-			let condition = expression(context, statement.condition, true)
-
-			if(statement.start) {
-				// console.log(this)
+			if(Statement.start) {
 				code += `statement(`;
 			}
 
 			code += ` ${ condition.value }, ${ getComponentCode(this.tag, options, children) }`;
 
-			if(statement.end) {
+			if(Statement.end) {
 				code += `)`;
 			}
 		} else {
@@ -158,7 +149,7 @@ export default class Node
 		// console.log(this.attrs, this.if_statement, statement)
 
 		// if(IF_STATEMENT_STARTED && !this.attrs['v-if']) {
-		// 	fn_generated = true;
+		// 	isCallExpression = true;
 		// 	code += `)`;
 		// }
 
@@ -180,14 +171,14 @@ export default class Node
 		// 	console.log(this.attrs, code)
 		// } 
 
-		// if(!fn_generated) {
+		// if(!isCallExpression) {
 			
 		// }
 
 		// console.warn('[3]', context.name, shouldHydarate);
 		// console.log('[main]', this.tag, shouldHydarate);
 
-		if(hydrate && !shouldHydarate) {
+		if(hydrate && !shouldHydarate && !isCallExpression) {
 			return {
 				value: _,
 				statefull: false,

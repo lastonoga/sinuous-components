@@ -7,21 +7,14 @@
 <script>
 import { d } from '../src/test-import.js'
 
-/**
- * State
- * @type {Number}
- */
 let $visible = d;
 let $clicks2 = {
 	a: 2
 };
 let clicks = 1;
-/**
- * Computed
- * @return {[type]} [description]
- */
 
-function computed2() {
+
+let computed2 = () => {
 	let k = [];
 	
 	for(let d in [1,2,3]) {
@@ -31,12 +24,10 @@ function computed2() {
 	return visible * 2 * 5;
 }
 
-/**
- * Methods
- */
+
 function click(event) {
 	clicks++;
-	alert(this._data.clicks)
+	// alert(clicks)
 }
 
 function reactive_click(event2) {

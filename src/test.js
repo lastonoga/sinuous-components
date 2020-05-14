@@ -1,31 +1,7 @@
 import { compiler, _ } from '@sinuous/compiler';
 
 // import { parseExpression } from '@sinuous/compiler/src/template/expression';
-import { createData } from "@sinuous/compiler/src/script/data";
-import parseHTML from '@sinuous/compiler/src/template/html';
-
-
-let data = createData();
-
-data.data = {
-	d1: 1,
-	d2: 1,
-}
-
-data.state = {
-	s1: 1,
-	s2: 1,
-}
-
-data.computed = {
-	c1: 1,
-	c2: 1,
-}
-
-data.methods = {
-	m1: 1,
-	m2: 1,
-}
+// import { parseHTML } from '@sinuous/compiler/src/template/html';
 
 // parseExpression(data, `
 // let d = function() {}
@@ -49,11 +25,11 @@ data.methods = {
 
 let source = `
 <template>
-	<div @click="alert(1)">
+	<div @click="s2 = 123" :class="{ d: 1}" :style="{ paddingTop: s2 }">
 		test
 		{{ s2 }}
 		<br>
-		<template v-if="s1">
+		<template v-if="s1 === true">
 			<div>
 				show {{ ddd }}
 			</div>
@@ -76,6 +52,7 @@ let $s1 = true;
 let $s2 = 10;
 let $s3 = false;
 let ddd = 1
+let ccc = true
 
 function mounted() {
 	alert(1);
@@ -84,13 +61,15 @@ function mounted() {
 
 `;
 
-// parseHTML(source);
+
+
+// console.log(parseHTML(source));
 
 
 let block = compiler({
-	context: data,
+	context: {},
 	type: 'template',
 	source: source,
 });
 
-console.log(block.source.render)
+console.log(block.source.hydrate)
