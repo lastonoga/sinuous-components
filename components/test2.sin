@@ -3,7 +3,7 @@
 		test
 		{{ s2 }}
 		<br>
-		<template v-if="visible">
+		<template v-if="visible" v-for="(item, key) in [1,2,3]">
 			<div>
 				[visible] show {{ ddd }}
 			</div>

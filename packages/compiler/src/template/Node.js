@@ -1,6 +1,6 @@
 import { parseOptions, parseOptionKey, parseOptionValue } from './attrs';
 import { _ } from './helpers';
-import { parseStatement } from './parseFunctions';
+import { parseStatement, parseLoop } from './parseFunctions';
 import { expression } from './expression';
 
 export var HID = 0;
@@ -22,6 +22,28 @@ function getComponentCode(tag, options, children = [])
 	}
 	
 	return `h('${ tag }', ${ options }, [${ children.join(',') }])`;
+}
+
+function handleTag(node, context, options, children = [])
+{
+	let Loop = parseLoop(node);
+
+	let code = '';
+
+	if(Loop.is) {
+		let condition = expression(context, Loop.condition, false);
+		code += `loop(${ condition.value }, (${ Loop.args }) => { return `
+	}
+
+	code += getComponentCode(node.tag, options, children);
+
+	if(Loop.is) {
+		code += `;})`;
+	}
+
+	code += '';
+
+	return code;
 }
 
 export default class Node
@@ -131,19 +153,19 @@ export default class Node
 		
 
 		if(Statement.is) {
-			let condition = expression(context, Statement.condition, false)
+			let condition = expression(context, Statement.condition, false);
 
 			if(Statement.start) {
 				code += `statement(`;
 			}
 
-			code += ` ${ condition.value }, ${ getComponentCode(this.tag, options, children) }`;
+			code += ` ${ condition.value }, ${ handleTag(this, context, options, children) }`;
 
 			if(Statement.end) {
 				code += `)`;
 			}
 		} else {
-			code += getComponentCode(this.tag, options, children);
+			code += handleTag(this, context, options, children);
 		}
 
 		// console.log(this.attrs, this.if_statement, statement)

@@ -25,23 +25,25 @@ import { compiler, _ } from '@sinuous/compiler';
 
 let source = `
 <template>
-	<div @click="s2 = 123" :class="{ d: 1}" :style="{ paddingTop: s2 }">
+	<div @click="alert(1)" :style="{ paddingTop: s2 }">
 		test
 		{{ s2 }}
 		<br>
-		<template v-if="s1 === true">
+		<template v-if="visible" v-for="(item, key) in [1,2,3]">
 			<div>
-				show {{ ddd }}
+				[visible] show {{ ddd }}
 			</div>
-			<span>
-				test
+			<span v-if="s1">
+				[s1] test
 			</span>
 		</template>
 		<div v-else-if="s3">
-			test
+			[s3] test
 		</div>
-		<template v-else>
-		hide
+		<template>
+			<div>
+				[none] hide
+			</div>
 		</template>
 		<div>after-once-if</div>
 	</div>
@@ -51,14 +53,51 @@ let source = `
 let $s1 = true;
 let $s2 = 10;
 let $s3 = false;
-let ddd = 1
-let ccc = true
 
-function mounted() {
-	alert(1);
+let ddd = '[test variable ddd]'
+let timer1 = null;
+let visible = true;
+
+function makeIf()
+{
+	console.log('Make');
+
+	s1 = true;
+	s3 = true;
+
+	console.log(s1, s3);
+	setTimeout(() => {
+		s1 = false;
+		s3 = true;
+		console.log(s1, s3);
+	}, 1000)
+
+	setTimeout(() => {
+		s1 = false;
+		s3 = false;
+		console.log(s1, s3);
+	}, 2000)
+
+	setTimeout(() => {
+		s1 = true;
+		s3 = false;
+		console.log(s1, s3);
+	}, 3000)
+}
+
+function mounted()
+{
+	makeIf();
+	timer1 = setInterval(() => {
+		makeIf();
+	}, 5000)
+}
+
+function unmounted()
+{
+	clearInterval(timer1);
 }
 </script>
-
 `;
 
 
