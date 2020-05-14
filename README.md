@@ -34,6 +34,7 @@ Sinuous is really tiny and too far from Vue+Nuxt, React+Next and etc.
 - [x] Single file components
 - [x] Compiler (Alpha)
 - [x] Partial hydration
+- [x] Page lazy load
 - [x] Statements Render
 - [x] Loops Render
 - [ ] Slots Render
@@ -42,6 +43,9 @@ Sinuous is really tiny and too far from Vue+Nuxt, React+Next and etc.
 - [ ] Slots hydration
 - [ ] Props
 - [ ] Make full page and test performance
+- [ ] Init data 
+- [ ] Component lazy load
+- [ ] Dynamic Components
 - [ ] SSR with initial data passing
 - [ ] SSR Data fetching. (Server can fetch data only once. Then components are static)
 
