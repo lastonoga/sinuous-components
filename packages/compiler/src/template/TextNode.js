@@ -14,9 +14,7 @@ export default class TextNode
 		// console.log(`t(${this.text})`, value, statefull)
 
 		// console.log(value, value.substring(0, 2))
-		if(value.substring(0, 2) === '()') {
-			value = `c(${value})`;
-		}
+		
 
 		if(hydrate && !statefull && !isCallExpression) {
 			value = _;

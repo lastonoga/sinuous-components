@@ -9,9 +9,14 @@
 				[visible] show {{ ddd }} - {{ s3 }} 
 				<span>static 2</span>
 			</div>
-			<span v-if="visible">
-				[s1] test
-			</span>
+			<template v-if="visible">
+				<span >
+					[s1] test
+				</span>
+				<strong>
+					[s1] test 2
+				</strong>
+			</template>
 		</template>
 		<div v-else-if="s3">
 			[s3] test
@@ -70,14 +75,14 @@ function makeIf()
 
 function mounted()
 {
-	console.log(this, 'mount')
+	// console.log(this, 'mount')
 	makeIf();
 	timer1 = setInterval(() => {
 		makeIf();
 	}, 5000)
 
 	timer2 = setInterval(() => {
-		console.log(this.hid, s2)
+		// console.log(this.hid, s2)
 		s2 += 2;
 	}, 500)
 }

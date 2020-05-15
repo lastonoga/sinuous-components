@@ -25,7 +25,7 @@ function hydrateTag(parent, children, currentIndex, value)
 
 	// api.subscribe(() => console.log(value()));
 
-	// console.warn(children, currentIndex, value, nodes)
+	// console.warn(children, currentIndex, nodes)
 	// let nodes = computed(() => value(h))();
 	// let nodes = co
 	// console.error(nodes)
@@ -33,18 +33,16 @@ function hydrateTag(parent, children, currentIndex, value)
 
 	if(Array.isArray(nodes)) {
 
-
-
-
-		// for (var i = 0; i < nodes.length; i++) {
-		// 	let child = nodes[i];
-		// 	if(typeof child === 'function') {
-		// 		child = child()[0];
-		// 	}
-		// 	console.log(parent, children[currentIndex + i], child)
-		// 	// api.insert(parent, child, children[currentIndex + i]);
-		// 	parent.replaceChild(child, children[currentIndex + i])
-		// }
+		for (var i = 0; i < nodes.length; i++) {
+			let child = nodes[i];
+			if(typeof child === 'function') {
+				child = child();
+			}
+			// console.log(parent,  child)
+			// api.insert(parent, child, children[currentIndex + i]);
+			// parent.replaceChild(child, children[currentIndex + i])
+			// children[currentIndex + i].replaceWith(child);
+		}
 	} else {
 		api.insert(el, nodes, null);
 	}

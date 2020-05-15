@@ -29,8 +29,6 @@ var Basic = function () {
 		// Stateful data
 		this._state = this.state(observable);
 
-		console.log('create state', this.hid, this.name);
-
 		this._slots = {
 			default: [],
 		};
@@ -58,11 +56,6 @@ var Basic = function () {
 
 	Basic.prototype.bindContext = function()
 	{
-		console.error(this);
-		// for(let key in this._methods) {
-		// 	this._methods[key] = this._methods[key].bind(this);
-		// }
-
 		for(let key in this._computed) {
 			this._computed[key] = this._computed[key].bind(this);
 		}
