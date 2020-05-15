@@ -3,11 +3,13 @@
 		test
 		{{ s2 }}
 		<br>
-		<template v-if="visible">
+		<template v-if="s1">
 			<div>
-				[visible] show {{ ddd }} - {{ s1 }} 
+				<span>static 1</span>
+				[visible] show {{ ddd }} - {{ s3 }} 
+				<span>static 2</span>
 			</div>
-			<span v-if="s1">
+			<span v-if="visible">
 				[s1] test
 			</span>
 		</template>
@@ -24,7 +26,7 @@
 		</slot>
 		<div>after-once-if</div>
 		<slot name="footer" tag="div" class="footer" style="background: #efefef;">
-			footer slot value
+			footer slot value 
 		</slot>
 	</div>
 </template>
@@ -75,6 +77,7 @@ function mounted()
 
 function unmounted()
 {
+	// console.error('clear', timer1)
 	clearInterval(timer1);
 }
 </script>

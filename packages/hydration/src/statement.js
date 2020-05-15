@@ -1,4 +1,64 @@
+
+
 export default function statement()
 {
-	
+	let d = () => {
+
+		if(arguments.length % 3 !== 0) {
+			throw new Error('Statement should be odd number');
+		}
+
+		let result = [];
+
+		// value
+		let childIndex = 0;
+		for (var i = 0; i < arguments.length; i += 3) {
+			let condition = arguments[i];
+			let size = arguments[i + 1];
+			let value = arguments[i + 2];
+			let node = null;
+
+			if(typeof condition === 'function') {
+				if(condition()) {
+					node = value;
+				}
+			} else {
+				if(condition) {
+					node = value;
+				}
+			}
+
+			// console.warn(i, size, node);
+			// Pass failed stetement condition
+			// Normilize index that will be used in replacing placeholder (below)
+			if(node === null) {
+				for (var j = 0; j < size; j++) {
+					result.push(document.createComment(''));
+				}
+				continue;
+			}
+
+			if(!node._observable) {
+				console.error(node);
+				node = node;
+			}
+			// replace placeholder with node
+			// And correct index
+			if(size > 1) {
+				for (var j = 0; j < size; j++) {
+					result.push(node);
+				}
+			} else {
+				result.push(node);
+			}
+		}
+		
+		// console.log(result);
+
+		return result;
+	}
+
+	d._observable = true;
+
+	return d;
 }

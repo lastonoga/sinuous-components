@@ -31,7 +31,9 @@ function TEST_WEBPACK_BUILD()
 
 function TEST_RENDER()
 {
-	render(IndexPage, LAYOUT, timeBenchmark);
+	render(IndexPage, LAYOUT, timeBenchmark, (c) => {
+		PageIndex = c;
+	});
 }
 
 function CLEAR_HOOKS()
@@ -39,13 +41,12 @@ function CLEAR_HOOKS()
 	
 	let html = LAYOUT.innerHTML;
 	LAYOUT.innerHTML = html;
+	PageIndex.hook('unmounted');
 }
 
 function TEST_HYDRATE()
 {
-	hydrate(IndexPage, LAYOUT, timeBenchmark, (c) => {
-		c.hook('mounted');
-	});
+	hydrate(IndexPage, LAYOUT, timeBenchmark);
 }
 
 TEST_WEBPACK_BUILD();
@@ -68,7 +69,7 @@ TEST_WEBPACK_BUILD();
 
 	TEST_RENDER();
 	// console.log(LAYOUT.innerHTML)
-	return
+	// return
 
 	setTimeout(() => {
 

@@ -18,10 +18,21 @@ var IF_STATEMENT_STARTED = false;
 function getComponentCode(tag, options, children = [])
 {
 	if(tag === 'template') {
-		return `[${ children.join(',') }]`;
+		return {
+			code: `[${ children.join(',') }]`,
+			length: children.length,
+		};
 	}
 	
-	return `h('${ tag }', ${ options }, [${ children.join(',') }])`;
+	return {
+		code: `h('${ tag }', ${ options }, [${ children.join(',') }])`,
+		length: 1,
+	};
+}
+
+function getComponentSize(tag, options, children = [])
+{
+	return getComponentCode(tag, options, children).length;
 }
 
 function handleTag(node, context, options, children = [])
@@ -35,7 +46,7 @@ function handleTag(node, context, options, children = [])
 		code += `loop(${ condition.value }, (${ Loop.args }) => { return `
 	}
 
-	code += getComponentCode(node.tag, options, children);
+	code += getComponentCode(node.tag, options, children).code;
 
 	if(Loop.is) {
 		code += `;})`;
@@ -213,7 +224,7 @@ export default class Node
 		for (var i = 0; i < this.children.length; i++) {
 			let child = this.children[i];
 
-			let { value, statefull } = child.toAST(context, hydrate, isCallExpression);
+			let { value, statefull } = child.toAST(context, hydrate);
 			// console.log('[child]', child, statefull);
 			if(statefull) {
 				shouldHydarate = true;
@@ -286,6 +297,7 @@ export default class Node
 
 		options = `{${options}}`;
 
+		// Statement render
 		if(Statement.is) {
 			let condition = expression(context, Statement.condition, false);
 
@@ -293,11 +305,19 @@ export default class Node
 				code += `statement(`;
 			}
 
-			code += ` ${ condition.value }, ${ handleTag(this, context, options, children) }`;
+			let length = getComponentSize(this.tag, options, children);
+			let statementElements = _;
+
+			if((hydrate && shouldHydarate) || render) {
+				statementElements = `() => { return ${ handleTag(this, context, options, children) } }`;
+			}
+
+			code += ` ${ condition.value }, ${ length }, ${ statementElements }`;
 
 			if(Statement.end) {
 				code += `)`;
 			}
+		// Slot render
 		} else if(Slot.is) {
 			let { name, tag } = parseSlotAttrs(this);
 

@@ -16,22 +16,37 @@ function hydrateProps(el, opts)
 	api.property(el, opts, null);
 }
 
-function hydrateTag(el, value)
+function hydrateTag(realNodes, currentIndex, value)
 {
-	api.insert(el, value(), null);
+	let el = realNodes[currentIndex];
+	let nodes = value();
+
+	console.warn(realNodes, currentIndex, nodes)
+
+	if(Array.isArray(nodes)) {
+		for (var i = 0; i < nodes.length; i++) {
+			// console.log(realNodes[currentIndex + i], nodes[i])
+			// api.insert(realNodes[currentIndex + i], nodes[i], null);
+		}
+	} else {
+		api.insert(el, nodes, null);
+	}
 }
 
 function hydrateChildren(node, children)
 {
-	// console.log(node.childNodes);
-	let bindChildren = filterChildNodes(node);
+	let bindChildren = [];
+
+	if(node !== null) {
+		bindChildren = filterChildNodes(node);
+	}
 
 	for (var i = 0; i < children.length; i++) {
 		if(children[i] === _) {
 			continue;
 		}
-
-		hydrateTag(bindChildren[i], children[i]);
+		// console.error(bindChildren[i], children[i]);
+		hydrateTag(bindChildren, i, children[i]);
 	}
 }
 
@@ -43,6 +58,7 @@ function hydrate(el, opts = {}, children = [])
 
 	let bindNode = document.getElementById(`${ opts['id'] }`);
 
+	// console.log(el, opts, children)
 	api.subscribe(() => {
 		hydrateProps(bindNode, opts);
 		hydrateChildren(bindNode, children);

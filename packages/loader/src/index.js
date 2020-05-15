@@ -66,7 +66,7 @@ export default function(source) {
 	// if(name === 'Test') {
 		
 		// console.log(name);
-		console.log(block.source.render);
+		console.log(block.source.hydrate);
 		console.log('-----------');
 		// console.log(block.source.hydrate);
 		// console.log('-----------');

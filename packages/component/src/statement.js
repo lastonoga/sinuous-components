@@ -1,50 +1,22 @@
-export class Condition
-{
-
-	constructor(condition)
-	{
-		this.condition = condition;
-		this.result_1 = null;
-		this.result_2 = null;
-	}
-
-	setFirstResult(a)
-	{
-		this.result_1 = a;
-	}
-
-	setSecondResult(a)
-	{
-		this.result_2 = a;
-	}
-
-	check()
-	{
-		return this.condition()
-	}
-
-	result()
-	{
-		return this.condition() ? this.result_1 : this.result_2;
-	}
-
-}
 
 
-export default function statement(condition)
+export default function statement()
 {
 	let d = () => {
 
-		if(arguments.length % 2 !== 0) {
+		if(arguments.length % 3 !== 0) {
 			throw new Error('Statement should be odd number');
 		}
 
 		let result = [];
 
-		for (var i = 0; i < arguments.length; i += 2) {
+		// value
+		let childIndex = 0;
+		for (var i = 0; i < arguments.length; i += 3) {
 			let condition = arguments[i];
-			let value = arguments[i + 1];
-			let node = document.createComment(`statement comment – ${ i }`);
+			let size = arguments[i + 1];
+			let value = arguments[i + 2];
+			let node = null;
 
 			if(typeof condition === 'function') {
 				if(condition()) {
@@ -56,11 +28,32 @@ export default function statement(condition)
 				}
 			}
 
-			result.push(node);
-		}
+			// console.warn(i, size, node);
+			// Pass failed stetement condition
+			// Normilize index that will be used in replacing placeholder (below)
+			if(node === null) {
+				for (var j = 0; j < size; j++) {
+					result.push(document.createComment(''));
+				}
+				continue;
+			}
 
-		// console.log(result)
+			if(!node._observable) {
+				node = node();
+			}
+			// replace placeholder with node
+			// And correct index
+			if(size > 1) {
+				for (var j = 0; j < size; j++) {
+					result.push(node[j]);
+				}
+			} else {
+				result.push(node);
+			}
+		}
 		
+		// console.log(result);
+
 		return result;
 	}
 
