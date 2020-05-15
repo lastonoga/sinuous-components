@@ -224,7 +224,7 @@ export default class Node
 		for (var i = 0; i < this.children.length; i++) {
 			let child = this.children[i];
 
-			let { value, statefull } = child.toAST(context, hydrate);
+			let { value, statefull } = child.toAST(context, hydrate, isCallExpression);
 			// console.log('[child]', child, statefull);
 			if(statefull) {
 				shouldHydarate = true;
@@ -306,11 +306,10 @@ export default class Node
 			}
 
 			let length = getComponentSize(this.tag, options, children);
-			let statementElements = _;
-
-			if((hydrate && shouldHydarate) || render) {
-				statementElements = `() => { return ${ handleTag(this, context, options, children) } }`;
-			}
+			// let statementElements = _;
+			// if((hydrate && shouldHydarate) || render) {
+			let statementElements = `(h) => { return ${ handleTag(this, context, options, children) } }`;
+			// }
 
 			code += ` ${ condition.value }, ${ length }, ${ statementElements }`;
 

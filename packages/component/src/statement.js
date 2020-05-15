@@ -1,4 +1,4 @@
-
+import { h } from '@sinuous/component';
 
 export default function statement()
 {
@@ -39,7 +39,7 @@ export default function statement()
 			}
 
 			if(!node._observable) {
-				node = node();
+				node = node(h);
 			}
 			// replace placeholder with node
 			// And correct index

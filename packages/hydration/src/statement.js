@@ -1,4 +1,4 @@
-
+import { h } from '@sinuous/component';
 
 export default function statement()
 {
@@ -39,14 +39,17 @@ export default function statement()
 			}
 
 			if(!node._observable) {
-				console.error(node);
-				node = node;
+				node = node(h);
 			}
 			// replace placeholder with node
 			// And correct index
 			if(size > 1) {
 				for (var j = 0; j < size; j++) {
-					result.push(node);
+					// if(Array.isArray(node)) {
+						result.push(node[j]);
+					// } else {
+					// 	result.push(j == 0 ? node : -1);
+					// }
 				}
 			} else {
 				result.push(node);

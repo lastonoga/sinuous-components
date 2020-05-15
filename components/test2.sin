@@ -38,6 +38,7 @@ let $s3 = false;
 
 let ddd = '[test variable ddd]'
 let timer1 = null;
+let timer2 = null;
 let visible = true;
 
 function makeIf()
@@ -69,15 +70,22 @@ function makeIf()
 
 function mounted()
 {
+	console.log(this, 'mount')
 	makeIf();
 	timer1 = setInterval(() => {
 		makeIf();
 	}, 5000)
+
+	timer2 = setInterval(() => {
+		console.log(this.hid, s2)
+		s2 += 2;
+	}, 500)
 }
 
 function unmounted()
 {
-	// console.error('clear', timer1)
+	// console.error('clear', timer1, timer2)
 	clearInterval(timer1);
+	clearInterval(timer2);
 }
 </script>

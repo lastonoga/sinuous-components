@@ -61,8 +61,13 @@ export class IdentifierExpression
 		}
 
 		let name = getIdentifierName(this.id);
+		let _name = `${ this.context }.`;
 
-		let _name = `${ this.context }._${ this.namespace }.${name}`;
+		if(this.namespace !== 'methods') {
+			_name += `_${ this.namespace }.`;
+		}
+
+		_name += `${name}`;
 
 		if(!disableExecution && this.callable) {
 			_name += '()';

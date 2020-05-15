@@ -3,6 +3,7 @@ import { _ } from '@sinuous/compiler/src/empty';
 import Sinuous from '@sinuous/i';
 import { options } from '@sinuous/component';
 import { loadComponent } from '@sinuous/lazy';
+import { computed } from 'sinuous/observable';
 
 let OBSERVER;
 let STORAGE = {};
@@ -16,18 +17,34 @@ function hydrateProps(el, opts)
 	api.property(el, opts, null);
 }
 
-function hydrateTag(realNodes, currentIndex, value)
+function hydrateTag(parent, children, currentIndex, value)
 {
-	let el = realNodes[currentIndex];
+	let el = children[currentIndex];
+	
 	let nodes = value();
 
-	console.warn(realNodes, currentIndex, nodes)
+	// api.subscribe(() => console.log(value()));
+
+	// console.warn(children, currentIndex, value, nodes)
+	// let nodes = computed(() => value(h))();
+	// let nodes = co
+	// console.error(nodes)
+	
 
 	if(Array.isArray(nodes)) {
-		for (var i = 0; i < nodes.length; i++) {
-			// console.log(realNodes[currentIndex + i], nodes[i])
-			// api.insert(realNodes[currentIndex + i], nodes[i], null);
-		}
+
+
+
+
+		// for (var i = 0; i < nodes.length; i++) {
+		// 	let child = nodes[i];
+		// 	if(typeof child === 'function') {
+		// 		child = child()[0];
+		// 	}
+		// 	console.log(parent, children[currentIndex + i], child)
+		// 	// api.insert(parent, child, children[currentIndex + i]);
+		// 	parent.replaceChild(child, children[currentIndex + i])
+		// }
 	} else {
 		api.insert(el, nodes, null);
 	}
@@ -46,7 +63,7 @@ function hydrateChildren(node, children)
 			continue;
 		}
 		// console.error(bindChildren[i], children[i]);
-		hydrateTag(bindChildren, i, children[i]);
+		hydrateTag(node, bindChildren, i, children[i]);
 	}
 }
 
@@ -148,6 +165,7 @@ export default function initHydration(component, hydrationRoot, timeBenchmark = 
 			initComponent(tree[i], connectedNode[i]);
 		}
 
+		// console.log(instance);
 		instance.hook('mounted');
 
 		if(callback) {

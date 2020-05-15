@@ -13,6 +13,11 @@ export default class TextNode
 		let { value, statefull } = parseOptionValue(context, '_t', this.text);
 		// console.log(`t(${this.text})`, value, statefull)
 
+		// console.log(value, value.substring(0, 2))
+		if(value.substring(0, 2) === '()') {
+			value = `c(${value})`;
+		}
+
 		if(hydrate && !statefull && !isCallExpression) {
 			value = _;
 		}

@@ -103,7 +103,7 @@ export default function(source) {
 		}
 		
 		for(let key in config.methods) {
-			instance.prototype._methods[key] = config.methods[key]
+			instance.prototype[key] = config.methods[key]
 		}
 	`	
 

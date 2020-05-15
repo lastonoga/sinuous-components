@@ -19,7 +19,7 @@ var Basic = function () {
 	function Basic()
 	{
 		this._isComponent = true;
-		this.hid = null;
+		this.hid = ++HID;
 
 		this._props = this.props();
 		this._passedProps = {};
@@ -28,6 +28,8 @@ var Basic = function () {
 		this._data = this.data();
 		// Stateful data
 		this._state = this.state(observable);
+
+		console.log('create state', this.hid, this.name);
 
 		this._slots = {
 			default: [],
@@ -56,9 +58,10 @@ var Basic = function () {
 
 	Basic.prototype.bindContext = function()
 	{
-		for(let key in this._methods) {
-			this._methods[key] = this._methods[key].bind(this);
-		}
+		console.error(this);
+		// for(let key in this._methods) {
+		// 	this._methods[key] = this._methods[key].bind(this);
+		// }
 
 		for(let key in this._computed) {
 			this._computed[key] = this._computed[key].bind(this);
@@ -68,10 +71,10 @@ var Basic = function () {
 	 * Config
 	 */
 
-	Basic.prototype.setMethods = function(methods = {})
-	{
-		this._methods = methods;
-	}
+	// Basic.prototype.setMethods = function(methods = {})
+	// {
+	// 	this._methods = methods;
+	// }
 
 	/**
 	 * Hierarchy
@@ -221,9 +224,8 @@ var Basic = function () {
 
 	Basic.prototype.hook = function(type = 'mounted')
 	{
-		// console.log(this);
-		if(this._methods[type]) {
-			this._methods[type].call(this);
+		if(this[type]) {
+			this[type].call(this);
 		}
 
 		for (var i = 0; i < this._children.length; i++) {
