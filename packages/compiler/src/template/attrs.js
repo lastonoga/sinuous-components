@@ -28,6 +28,7 @@ function parseOptionValue(context, key, value)
 {
 	let statefull = false;
 	let keepObservation = false;
+	let isExpression = false;
 
 	if(key[0] === '$') {
 		return {
@@ -37,7 +38,12 @@ function parseOptionValue(context, key, value)
 	}
 
 	if(key[0] === '@') {
+		isExpression = true;
 		statefull = true;
+	}
+
+	if(key[0] === ':') {
+		isExpression = true;
 	}
 
 	if(typeof value === 'object') {
@@ -47,6 +53,14 @@ function parseOptionValue(context, key, value)
 	if(key[0] === '_') {
 		value = '`' + value.replace(/{{((?:(?!(}})).)+)}}/g, '${$1}') + '`';
 		keepObservation = false;
+		isExpression = true;
+	}
+
+	if(!isExpression) {
+		return {
+			value: `'${value}'`,
+			statefull: false,
+		}
 	}
 
 	let exp = expression(context, value, keepObservation);

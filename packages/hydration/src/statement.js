@@ -11,12 +11,14 @@ export default function statement()
 		let result = [];
 
 		// value
-		let childIndex = 0;
+		let statementSize = 0;
 		for (var i = 0; i < arguments.length; i += 3) {
 			let condition = arguments[i];
 			let size = arguments[i + 1];
 			let value = arguments[i + 2];
 			let node = null;
+
+			statementSize += size;
 
 			if(typeof condition === 'function') {
 				if(condition()) {
@@ -57,8 +59,12 @@ export default function statement()
 		}
 		
 		// console.log(result);
-
 		return result;
+		
+		return {
+			nodes: result,
+			size: statementSize,
+		};
 	}
 
 	d._observable = true;

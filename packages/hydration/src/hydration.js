@@ -23,14 +23,6 @@ function hydrateTag(parent, children, currentIndex, value)
 	
 	let nodes = value();
 
-	// api.subscribe(() => console.log(value()));
-
-	// console.warn(children, currentIndex, nodes)
-	// let nodes = computed(() => value(h))();
-	// let nodes = co
-	// console.error(nodes)
-	
-
 	if(Array.isArray(nodes)) {
 
 		for (var i = 0; i < nodes.length; i++) {
@@ -38,7 +30,7 @@ function hydrateTag(parent, children, currentIndex, value)
 			if(typeof child === 'function') {
 				child = child();
 			}
-			// console.log(parent,  child)
+			// console.log(parent,  child.size)
 			// api.insert(parent, child, children[currentIndex + i]);
 			// parent.replaceChild(child, children[currentIndex + i])
 			// children[currentIndex + i].replaceWith(child);

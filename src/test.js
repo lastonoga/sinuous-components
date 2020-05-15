@@ -111,7 +111,13 @@ function unmounted()
 `;
 
 
-
+source = `
+<template>
+	<div class="button">
+		<slot />
+	</div>
+</template>
+`
 // console.log(parseHTML(source));
 
 
@@ -121,4 +127,5 @@ let block = compiler({
 	source: source,
 });
 
+console.log(block.source.render)
 console.log(block.source.hydrate)

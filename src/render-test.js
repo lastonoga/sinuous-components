@@ -3,6 +3,7 @@ import { hydrate } from '@sinuous/hydration';
 import render from '@sinuous/render';
 import test from '../components/test.sin'
 import test2 from '../components/test2.sin'
+import button from '../components/sbutton.sin'
 import IndexPage from '../pages/index.sin'
 import timeBenchmark from './time';
 
@@ -18,6 +19,7 @@ function TEST_WEBPACK_BUILD()
 	timeBenchmark('SSR-Build');
 	Sinuous.registerComponent(test);
 	Sinuous.registerComponent(test2);
+	Sinuous.registerComponent(button);
 	timeBenchmark('SSR-Build');
 }
 

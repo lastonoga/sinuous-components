@@ -52,8 +52,12 @@ export default function generate(context, html)
 		}
 	};
 
-	result.render = prettier.format(result.render, prettierConfig);
-	result.hydrate = prettier.format(result.hydrate, prettierConfig);
+	try {
+		result.render = prettier.format(result.render, prettierConfig);
+		result.hydrate = prettier.format(result.hydrate, prettierConfig);
+	} catch(err) {
+		// console.error(err);
+	}
 	result.slots = slots;
 	
 	return result;

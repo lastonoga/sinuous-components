@@ -1,7 +1,24 @@
+<script>
+let $items = [];
+
+function mounted()
+{
+	let d = [];
+
+	for (var i = 0; i < 10000; i++) {
+		d.push(i);
+	}
+
+	items = d;
+
+	// console.log(items)
+}
+</script>
+
 <template>
 	<div>
 		<!-- <test /> -->
-		<test2>
+		<!-- <test2>
 			passed text 
 			<slot name="footer">
 				<div>
@@ -9,7 +26,11 @@
 				</div>
 			</slot>
 			in default slot
-		</test2>
+		</test2> -->
+
+		<sbutton v-for="(item, key) in items">
+			Button {{ item }}
+		</sbutton>
 		<!-- <test />
 		<test2 />
 		<test />
