@@ -29,6 +29,13 @@ function parseOptionValue(context, key, value)
 	let statefull = false;
 	let keepObservation = false;
 
+	if(key[0] === '$') {
+		return {
+			value,
+			statefull,
+		}
+	}
+
 	if(key[0] === '@') {
 		statefull = true;
 	}

@@ -1,3 +1,6 @@
+import Node from './Node';
+import TextNode from './TextNode';
+
 export const IF_ATTRS = ['v-if', 'v-else-if', 'v-else'];
 
 
@@ -57,7 +60,7 @@ export function parseStatement(node)
 	}
 
 
-	if(node.nextSibling) {
+	if(node.nextSibling instanceof Node) {
 		if(node.nextSibling.attrs['v-else-if'] || node.nextSibling.attrs['v-else']) {
 			end = false;
 		}

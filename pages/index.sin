@@ -1,7 +1,15 @@
 <template>
 	<div>
 		<!-- <test /> -->
-		<test2 />
+		<test2>
+			passed text 
+			<slot name="footer">
+				<div>
+					some test of <strong>child</strong> slot
+				</div>
+			</slot>
+			in default slot
+		</test2>
 		<!-- <test />
 		<test2 />
 		<test />

@@ -29,7 +29,7 @@ let source = `
 		test
 		{{ s2 }}
 		<br>
-		<template v-if="visible" v-for="(item, key) in [1,2,3]">
+		<template v-if="visible">
 			<div>
 				[visible] show {{ ddd }} {{ s1 }} ({{ item }})
 			</div>
@@ -42,10 +42,19 @@ let source = `
 		</div>
 		<template>
 			<div>
+				<slot name="header" tag="h1">
+					default slot text
+				</slot>
 				[none] hide
 			</div>
 		</template>
 		<div>after-once-if</div>
+		<child>
+			default slot
+			test 1
+			<slot name="footer">footer-slot-test</slot>
+			test 2
+		</child>
 	</div>
 </template>
 
@@ -111,4 +120,4 @@ let block = compiler({
 	source: source,
 });
 
-console.log(block.source.hydrate)
+console.log(block.source.render)

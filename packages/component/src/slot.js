@@ -1,12 +1,16 @@
-export default function slot(context, h, options = {}, defaultValue)
+export default function slot(context, h, name, tag, options, defaultChildren)
 {
-	let name = options.name || 'default';
-	let tag = options.tag || 'div';
-	let value = defaultValue;
+	// context.__slots
+	
+	let children = defaultChildren;
 
 	if(context._slots[name]) {
-		value = context._slots[name];
+		children = context._slots[name];
+	}
+	
+	if(tag === null) {
+		return children;
 	}
 
-	return h(tag, {}, value);
+	return h(tag, options, children);
 }

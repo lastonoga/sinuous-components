@@ -1,0 +1,78 @@
+<!-- Parent -->
+<!-- render -->
+<div class="parent">
+	<div class="child" id="1">
+		some test
+		<div>
+			<div>
+				<h1 data-slot="header">
+					test
+				</h1>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- parent -->
+<div class="parent">
+	<child>
+		some test
+		<slot name="header">
+			test
+		</slot>
+	</child>
+</div>
+
+h(div, [
+	h(child, {
+		id: 1
+		slots: {
+			default: [
+				'some test'
+			],
+			header: {[
+				h(h2, [
+					'test'
+				])
+			]
+		}
+	}, [
+		'some test',
+		[
+			[
+				-,
+				[
+					'test'
+				]
+			]
+		]
+	])
+])
+
+
+<!-- child -->
+<div class="child">
+	<slot name="defailt">
+		some text
+	</slot>
+	<div>
+		<div>
+			before slot
+			<slot name="header" tag="h1">
+				Default header
+			</slot>
+		</div>
+	</div>
+</div>
+
+
+h(div, [
+	slot('default', null, ['some text']),
+	h(div, [
+		h(div, [
+			slot('header', 'h1', [
+				'default header'
+			])
+		])
+	])
+])

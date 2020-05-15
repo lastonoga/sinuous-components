@@ -2,14 +2,17 @@ import { parseHTML } from './html';
 import { parseAttrs } from './attrs';
 import parseFunctions from './parseFunctions';
 
-
+import prettier from 'prettier/standalone';
+import * as parser from "@babel/parser";
 
 export default function generate(context, html)
 {
 	let tree = parseHTML(html);
 
 	tree.setSiblings();
-	
+
+	let slots = tree.getSlots();
+
 	tree = tree.children;
 
 	let ast = {
@@ -43,5 +46,15 @@ export default function generate(context, html)
 		result.hydrate = `[${  ast.hydrate.join(',') }]`;
 	}
 
+	let prettierConfig = {
+		parser(text, { babel }) {
+			return parser.parse(text);
+		}
+	};
+
+	result.render = prettier.format(result.render, prettierConfig);
+	result.hydrate = prettier.format(result.hydrate, prettierConfig);
+	result.slots = slots;
+	
 	return result;
 }

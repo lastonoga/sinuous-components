@@ -10,15 +10,32 @@ export const isNonPhrasingTag = [
 	'dd', 'details', 'dialog', 'div', 'dl', 'dt', 'fieldset', 'figcaption', 'figure', 'footer',
 	'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'header', 'hgroup', 'hr', 'html', 'legend',
 	'li', 'menuitem', 'meta', 'optgroup', 'option', 'param', 'rp', 'rt', 'source', 'style', 'summary',
-	'tbody', 'td', 'tfoot', 'th', 'thead', 'title', 'tr', 'track'
+	'tbody', 'td', 'tfoot', 'th', 'thead', 'title', 'tr', 'track', 'template', 'br', 'span', 'p', 'ParserBody', 'slot'
 ];
 
 var IF_STATEMENT_STARTED = false;
 
-function getComponentCode(tag, options, children = [])
+function getComponentCode(node, options, children = [])
 {
+	let tag = node.tag;
+
 	if(tag === 'template') {
 		return `[${ children.join(',') }]`;
+	}
+
+	if(tag === 'slot') {
+		let { name, tag } = parseSlot(node);
+
+		if(node.isInsideComponent) {
+			return `${ children.join(',') }`;
+		} else {
+			let attrs = Object.assign({}, node.attrs);
+			
+			delete attrs.name;
+			delete attrs.tag;
+
+			return `slot(ctx, h, '${ name }', ${ typeof tag === 'string' ? `'${tag}'` : tag }, ${ JSON.stringify(attrs) }, [${ children.join(',') }])`;
+		}
 	}
 	
 	return `h('${ tag }', ${ options }, [${ children.join(',') }])`;
@@ -35,7 +52,7 @@ function handleTag(node, context, options, children = [])
 		code += `loop(${ condition.value }, (${ Loop.args }) => { return `
 	}
 
-	code += getComponentCode(node.tag, options, children);
+	code += getComponentCode(node, options, children);
 
 	if(Loop.is) {
 		code += `;})`;
@@ -44,6 +61,22 @@ function handleTag(node, context, options, children = [])
 	code += '';
 
 	return code;
+}
+
+function parseSlot(node)
+{
+	let name = 'default';
+	let tag = null;
+
+	if(node.tag === 'slot') {
+		name = node.attrs['name'] || 'default';
+		tag = node.attrs['tag'] || null;
+	}
+
+	return {
+		name,
+		tag,
+	};
 }
 
 export default class Node
@@ -58,13 +91,73 @@ export default class Node
 		
 		this.prevSibling = null;
 		this.nextSibling = null;
+		this.parent = null;
 		// if
 		this.if_statement = false;
+		this.index = 0;
+	}
+
+	get isComponent()
+	{
+		return !isNonPhrasingTag.includes(this.tag);
+	}
+
+	get isInsideComponent()
+	{
+		let node = this;
+		let i = 0;
+		let isInsideComponent = false;
+
+		while(node) {
+			i++;
+
+			if(node.isComponent) {
+				isInsideComponent = true;
+				break;
+			}
+
+			node = node.parent;
+
+			if(i > 100) {
+				throw new Error('Loop problem');
+			}
+		}
+
+		return isInsideComponent;
+	}
+
+	get isSlot()
+	{
+		return this.tag === 'slot';
 	}
 
 	appendChild(node)
 	{
+		node.index = this.children.length;
+		node.parent = this;
 		this.children.push(node);
+	}
+
+	getIndexPath()
+	{
+		let indexes = [];
+		let node = this;
+		let i = 0;
+
+		while(node) {
+			i++;
+
+			indexes.push(node.index);
+			node = node.parent;
+
+			if(i > 10) {
+				throw new Error('Loop problem');
+			}
+		}
+
+		indexes.reverse();
+
+		return indexes;
 	}
 
 	setSiblings()
@@ -81,9 +174,29 @@ export default class Node
 		}
 	}
 
-	get isComponent()
+	getSlots(indexes = [], isUnderComponent = false)
 	{
-		return !isNonPhrasingTag.includes(this.tag);
+		let slots = {};
+
+		if(this.isComponent) {
+			isUnderComponent = true;
+		}
+
+		for (var i = 0; i < this.children.length; i++) {
+			let node = this.children[i];
+			let nodeIndexes = indexes.concat([i]);
+
+			if(node instanceof Node) {
+				slots = Object.assign(slots, node.getSlots(nodeIndexes, isUnderComponent));
+
+				if(node.isSlot && !isUnderComponent) {
+					let name = node.attrs['name'] || 'default';
+					slots[name] = nodeIndexes;
+				}
+			}
+		}
+
+		return slots;
 	}
 
 	toAST(context = null, hydrate = false, isCallExpression = false)
@@ -100,6 +213,8 @@ export default class Node
 			isCallExpression = true;
 		}
 
+		let slots = {};
+
 		/**
 		 * Translate children to hyperscript
 		 * @param  {[type]} var i             [description]
@@ -107,18 +222,43 @@ export default class Node
 		 */
 		for (var i = 0; i < this.children.length; i++) {
 			let child = this.children[i];
+
 			let { value, statefull } = child.toAST(context, hydrate, isCallExpression);
 			// console.log('[child]', child, statefull);
 			if(statefull) {
 				shouldHydarate = true;
 			}
 
-			children.push(value);
+			// Parse slots if component
+			if(this.isComponent) {
+				let { name } = parseSlot(child);
+
+				if(!slots[name]) {
+					slots[name] = [];
+				}
+
+				slots[name].push(value);
+			} else {
+				children.push(value);
+			}
+			
 		}
 
 		let options = '';
 
-		// console.warn('[2]', context.name, shouldHydarate);
+		// Handle slots for Component children
+		if(this.isComponent && Object.keys(slots).length > 0) {
+			let value = '';
+
+			for(let key in slots) {
+				value += `'${key}': [${ slots[key].join(',') }],`
+				// this.options.$slots[key] = `[${ slots[key].join(',') }]`
+			}
+
+			options += `$slots: { ${ value } },`;
+		}
+
+		// Handle options
 		for(let key in this.options) {
 			let { value, statefull } = parseOptionValue(context, key, this.options[key]);
 			
@@ -138,19 +278,17 @@ export default class Node
 
 		shouldHydarate = this.isComponent || shouldHydarate;
 
-
+		// Add hydrate ID 
 		if(shouldHydarate) {
 			options += `id: ctx.getUID(${ this.hid }),`;
 		}
 
+		// Is component stateful
 		if(shouldOptionsHydrate) {
 			options += `_s: true,`;
 		}
 
-		// console.warn(hydrate, context.name, this.tag, shouldHydarate ? options : '');
-
 		options = `{${options}}`;
-		
 
 		if(Statement.is) {
 			let condition = expression(context, Statement.condition, false);
@@ -168,37 +306,7 @@ export default class Node
 			code += handleTag(this, context, options, children);
 		}
 
-		// console.log(this.attrs, this.if_statement, statement)
-
-		// if(IF_STATEMENT_STARTED && !this.attrs['v-if']) {
-		// 	isCallExpression = true;
-		// 	code += `)`;
-		// }
-
-		// if(IF_STATEMENT_STARTED) {
-		// 	let condition = this.attrs['v-if'] || this.attrs['v-else-if'] || this.attrs['v-else'];
-		// 	let res = [];
-		// 	if(!this.attrs['v-else']) {
-		// 		res.push(condition)
-		// 	}
-
-		// 	res.push(getComponentCode(this.tag, options, children));
-
-		// 	if(!this.attrs['v-else']) {
-		// 		res.push('')
-		// 	}
-			
-		// 	code += res.join(',');
-
-		// 	console.log(this.attrs, code)
-		// } 
-
-		// if(!isCallExpression) {
-			
-		// }
-
-		// console.warn('[3]', context.name, shouldHydarate);
-		// console.log('[main]', this.tag, shouldHydarate);
+	
 
 		if(hydrate && !shouldHydarate && !isCallExpression) {
 			return {

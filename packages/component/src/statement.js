@@ -39,23 +39,29 @@ export default function statement(condition)
 			throw new Error('Statement should be odd number');
 		}
 
+		let result = [];
+
 		for (var i = 0; i < arguments.length; i += 2) {
 			let condition = arguments[i];
 			let value = arguments[i + 1];
+			let node = document.createComment(`statement comment – ${ i }`);
 
 			if(typeof condition === 'function') {
 				if(condition()) {
-					return value;
+					node = value;
 				}
 			} else {
 				if(condition) {
-					return value;
+					node = value;
 				}
 			}
+
+			result.push(node);
 		}
-		return [
-			document.createComment('statement comment')
-		];
+
+		// console.log(result)
+		
+		return result;
 	}
 
 	d._observable = true;

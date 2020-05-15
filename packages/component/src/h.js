@@ -37,7 +37,9 @@ export default function h(el, opts = {}, children = [])
 		component.passProps(opts.props);
 	}
 
-	component.passSlots('default', children);
+	for(let key in opts.$slots) {
+		component.passSlots(key, opts.$slots[key]);	
+	}
 
 	registerChildren(this, component);
 

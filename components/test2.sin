@@ -3,9 +3,9 @@
 		test
 		{{ s2 }}
 		<br>
-		<template v-if="visible" v-for="(item, key) in [1,2,3]">
+		<template v-if="visible">
 			<div>
-				[visible] show {{ ddd }} - {{ s1 }} ({{ item }})
+				[visible] show {{ ddd }} - {{ s1 }} 
 			</div>
 			<span v-if="s1">
 				[s1] test
@@ -19,7 +19,13 @@
 				[none] hide
 			</div>
 		</template>
+		<slot>
+			default slot value
+		</slot>
 		<div>after-once-if</div>
+		<slot name="footer" tag="div" class="footer" style="background: #efefef;">
+			footer slot value
+		</slot>
 	</div>
 </template>
 
@@ -34,28 +40,28 @@ let visible = true;
 
 function makeIf()
 {
-	console.log('Make');
+	// console.log('Make');
 
 	s1 = true;
 	s3 = true;
 
-	console.log(s1, s3);
+	// console.log(s1, s3);
 	setTimeout(() => {
 		s1 = false;
 		s3 = true;
-		console.log(s1, s3);
+		// console.log(s1, s3);
 	}, 1000)
 
 	setTimeout(() => {
 		s1 = false;
 		s3 = false;
-		console.log(s1, s3);
+		// console.log(s1, s3);
 	}, 2000)
 
 	setTimeout(() => {
 		s1 = true;
 		s3 = false;
-		console.log(s1, s3);
+		// console.log(s1, s3);
 	}, 3000)
 }
 
