@@ -37,7 +37,7 @@ Sinuous is really tiny and too far from Vue+Nuxt, React+Next and etc.
 - [x] Page lazy load
 - [x] Statements Render
 - [x] Loops Render
-- [ ] Slots Render
+- [x] Slots Render
 - [ ] Statements hydration
 - [ ] Loops hydration
 - [ ] Slots hydration
