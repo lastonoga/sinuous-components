@@ -2,8 +2,10 @@ import Sinuous from '@sinuous/i';
 
 
 import { hydrate, dhtml } from 'sinuous/hydrate';
+
 import { observable, computed } from './observable';
 
+import { loop as hLoop, slot as hSlot, statement as hStatement } from '@sinuous/hydration';
 import { styles, classes, statement, dynamic, loop, slot } from './index';
 
 import { h } from './';
@@ -249,8 +251,6 @@ var Basic = function () {
 
 		return ctx.__render(h.bind(ctx), {
 			ctx,
-			// render: 'render',
-			// components: (i) => ctx.childComponents()[i],
 			statement,
 			loop,
 			slot,
@@ -268,11 +268,9 @@ var Basic = function () {
 
 		return ctx.__hydrate(compiler, {
 			ctx,
-			// render: 'hydrate',
-			// components: (i) => ctx.childComponents()[i],
-			statement,
-			slot,
-			loop,
+			statement: hStatement,
+			slot: hSlot,
+			loop: hLoop,
 			d: dynamic,
 			c: computed,
 		});

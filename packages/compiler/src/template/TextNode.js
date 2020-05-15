@@ -1,5 +1,5 @@
 import { parseOptionValue } from './attrs';
-import { _ } from './helpers';
+import { _ } from '../helpers';
 
 export default class TextNode
 {

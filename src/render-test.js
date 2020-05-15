@@ -1,5 +1,5 @@
 import Sinuous from '@sinuous/i';
-import hydration from '@sinuous/hydration';
+import { hydrate } from '@sinuous/hydration';
 import render from '@sinuous/render';
 import test from '../components/test.sin'
 import test2 from '../components/test2.sin'
@@ -43,7 +43,7 @@ function CLEAR_HOOKS()
 
 function TEST_HYDRATE()
 {
-	hydration(IndexPage, LAYOUT, timeBenchmark, (c) => {
+	hydrate(IndexPage, LAYOUT, timeBenchmark, (c) => {
 		c.hook('mounted');
 	});
 }

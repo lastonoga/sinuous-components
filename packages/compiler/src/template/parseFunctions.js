@@ -3,6 +3,19 @@ import TextNode from './TextNode';
 
 export const IF_ATTRS = ['v-if', 'v-else-if', 'v-else'];
 
+export function parseSlot(node)
+{
+	if(!node.isSlot) {
+		return {
+			is: false,
+		}
+	}
+
+	return {
+		is: true,
+		callExpression: !node.isInsideComponent,
+	}
+}
 
 export function parseLoop(node)
 {

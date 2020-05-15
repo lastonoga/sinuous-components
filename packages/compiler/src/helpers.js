@@ -1,5 +1,7 @@
 export const ReactiveNamespaces = ['state', 'computed'];
 
+export const _ = -1;
+
 export function isIdentifierReactive(data, id)
 {
 	let name = id.name;

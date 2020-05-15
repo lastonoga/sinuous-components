@@ -1,6 +1,6 @@
 import { parseOptions, parseOptionKey, parseOptionValue } from './attrs';
-import { _ } from './helpers';
-import { parseStatement, parseLoop } from './parseFunctions';
+import { _ } from '../helpers';
+import { parseStatement, parseLoop, parseSlot } from './parseFunctions';
 import { expression } from './expression';
 
 export var HID = 0;
@@ -15,27 +15,10 @@ export const isNonPhrasingTag = [
 
 var IF_STATEMENT_STARTED = false;
 
-function getComponentCode(node, options, children = [])
+function getComponentCode(tag, options, children = [])
 {
-	let tag = node.tag;
-
 	if(tag === 'template') {
 		return `[${ children.join(',') }]`;
-	}
-
-	if(tag === 'slot') {
-		let { name, tag } = parseSlot(node);
-
-		if(node.isInsideComponent) {
-			return `${ children.join(',') }`;
-		} else {
-			let attrs = Object.assign({}, node.attrs);
-			
-			delete attrs.name;
-			delete attrs.tag;
-
-			return `slot(ctx, h, '${ name }', ${ typeof tag === 'string' ? `'${tag}'` : tag }, ${ JSON.stringify(attrs) }, [${ children.join(',') }])`;
-		}
 	}
 	
 	return `h('${ tag }', ${ options }, [${ children.join(',') }])`;
@@ -52,7 +35,7 @@ function handleTag(node, context, options, children = [])
 		code += `loop(${ condition.value }, (${ Loop.args }) => { return `
 	}
 
-	code += getComponentCode(node, options, children);
+	code += getComponentCode(node.tag, options, children);
 
 	if(Loop.is) {
 		code += `;})`;
@@ -63,7 +46,7 @@ function handleTag(node, context, options, children = [])
 	return code;
 }
 
-function parseSlot(node)
+function parseSlotAttrs(node)
 {
 	let name = 'default';
 	let tag = null;
@@ -71,6 +54,10 @@ function parseSlot(node)
 	if(node.tag === 'slot') {
 		name = node.attrs['name'] || 'default';
 		tag = node.attrs['tag'] || null;
+	}
+
+	if(tag !== null) {
+		tag = `'${tag}'`;
 	}
 
 	return {
@@ -205,9 +192,12 @@ export default class Node
 		let children = [];
 		let shouldHydarate = false;
 		let shouldOptionsHydrate = false;
+		let shouldSlotsHydrate = false;
+		let render = !hydrate;
 		// let isCallExpression = false;
 
 		let Statement = parseStatement(this);
+		let Slot = parseSlot(this);
 
 		if(Statement.is) {
 			isCallExpression = true;
@@ -231,14 +221,19 @@ export default class Node
 
 			// Parse slots if component
 			if(this.isComponent) {
-				let { name } = parseSlot(child);
+				let { name } = parseSlotAttrs(child);
 
 				if(!slots[name]) {
 					slots[name] = [];
 				}
 
 				slots[name].push(value);
+
+				if(value !== _) {
+					shouldSlotsHydrate = true;
+				}
 			} else {
+				// If not append child
 				children.push(value);
 			}
 			
@@ -252,10 +247,11 @@ export default class Node
 
 			for(let key in slots) {
 				value += `'${key}': [${ slots[key].join(',') }],`
-				// this.options.$slots[key] = `[${ slots[key].join(',') }]`
 			}
 
-			options += `$slots: { ${ value } },`;
+			if((hydrate && shouldSlotsHydrate) || render) {
+				options += `$slots: { ${ value } },`;
+			}
 		}
 
 		// Handle options
@@ -302,12 +298,25 @@ export default class Node
 			if(Statement.end) {
 				code += `)`;
 			}
+		} else if(Slot.is) {
+			let { name, tag } = parseSlotAttrs(this);
+
+			if(Slot.callExpression) {
+				let attrs = Object.assign({}, this.attrs);
+				
+				delete attrs.name;
+				delete attrs.tag;
+
+				code += `slot(ctx, h, '${ name }', ${ tag }, ${ JSON.stringify(attrs) }, [${ children.join(',') }])`;
+			} else {
+				code += `${ children.join(',') }`;
+			}
 		} else {
 			code += handleTag(this, context, options, children);
 		}
 
 	
-
+		// console.log(hydrate, shouldHydarate, isCallExpression, code)
 		if(hydrate && !shouldHydarate && !isCallExpression) {
 			return {
 				value: _,

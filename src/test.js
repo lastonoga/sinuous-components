@@ -33,6 +33,7 @@ let source = `
 			<div>
 				[visible] show {{ ddd }} {{ s1 }} ({{ item }})
 			</div>
+			test
 			<span v-if="s1">
 				[s1] test
 			</span>
@@ -43,7 +44,7 @@ let source = `
 		<template>
 			<div>
 				<slot name="header" tag="h1">
-					default slot text
+					default slot text 
 				</slot>
 				[none] hide
 			</div>
@@ -120,4 +121,4 @@ let block = compiler({
 	source: source,
 });
 
-console.log(block.source.render)
+console.log(block.source.hydrate)
