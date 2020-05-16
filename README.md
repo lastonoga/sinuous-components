@@ -53,10 +53,10 @@ sButton:
 </template>
 ````
 
-Sinuous-components | NuxtJS | NuxtJS (Functional)
------------- | ------------- | -------------
-23ms | 449ms | 238ms
-43kb | 169kb | 169kb
+Metric  | Sinuous-components | NuxtJS | NuxtJS (Functional)
+------------ | ------------ | ------------- | -------------
+Framework load | 23ms | 449ms | 238ms
+Full page size | 43kb | 169kb | 169kb
 
 So... Sinuous is faster in x10 times if components are functional and x20 times with simple components.
 Framework size is x4 less.
