@@ -29,6 +29,38 @@ Sinuous is really tiny and too far from Vue+Nuxt, React+Next and etc.
 - **Truly reactive.** automatically derived from the app state.
 - **Tips & Tricks.** Slots, Loops, Statements and Props as we get used to
 
+## Performance
+
+It was dirty check, but +- in similar conditions.
+
+Index page with 10k static components:
+```javascript
+<template>
+	<div>
+		<sbutton v-for="(item, key) in items" :key="key">
+			Button {{ item }}
+		</sbutton>
+	</div>
+</template>
+````
+
+sButton:
+```javascript
+<template>
+	<div class="button">
+		<slot />
+	</div>
+</template>
+````
+
+Sinuous-components | NuxtJS | NuxtJS (Functional)
+------------ | ------------- | -------------
+23ms | 449ms | 238ms
+43kb | 169kb | 169kb
+
+So... Sinuous is faster in x10 times if components are functional and x20 times with simple components.
+Framework size is x4 less.
+
 ## Todo
 
 - [x] Single file components
