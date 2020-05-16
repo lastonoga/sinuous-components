@@ -72,7 +72,7 @@ Framework size is x4 less.
 - [x] Slots Render
 - [ ] Statements hydration
 - [ ] Loops hydration
-- [ ] Slots hydration
+- [x] Slots hydration
 - [ ] Props
 - [ ] Make full page and test performance
 - [ ] Init data 

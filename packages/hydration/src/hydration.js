@@ -57,15 +57,78 @@ function hydrateChildren(node, children)
 	}
 }
 
+function getSlotNode(el, path)
+{
+	for (var i = 0; i < path.length; i++) {
+		el = el.childNodes[path[i]];
+	}
+
+	return el;
+}
+
+function hydrateSlots(component, el, opts = {}, slots)
+{
+	if(!opts['id']) {
+		return;
+	}
+
+	if(opts['id'] === 'hydr-13') {
+		opts['id'] = 'hydr-6';
+	}
+
+	if(opts['id'] === 'hydr-30') {
+		opts['id'] = 'hydr-21';
+	}
+
+	let bindNode = document.getElementById(`${ opts['id'] }`);
+
+	console.log(bindNode, opts)
+
+	let slotNodes = {}
+
+	for(let key in slots) {
+		if(component._slotsPath[key]) {
+			let node = getSlotNode(bindNode, component._slotsPath[key])
+			slotNodes[key] = node;
+		} else {
+			throw new Error(`There is no ${key} slot namespace defined`);
+		}
+	}
+
+	api.subscribe(() => {
+		for(let key in slots) {
+			let node = slotNodes[key];
+			let childrenSlots = slots[key];
+			
+			if(node.childNodes.length === 0) {
+				node = [node];
+			} else {
+				node = node.childNodes;
+			}
+
+			if(childrenSlots.length > node.length) {
+				throw new Error('Slot hydration length mismatch');
+			}
+
+			for (var i = 0; i < childrenSlots.length; i++) {
+				
+				api.insert(node[i], childrenSlots[i](), null);
+			}
+		}
+	});
+	
+}
+
 function hydrate(el, opts = {}, children = [])
 {
+	// console.log(this, el, opts, children)
 	if(!opts['id']) {
 		return;
 	}
 
 	let bindNode = document.getElementById(`${ opts['id'] }`);
 
-	// console.log(el, opts, children)
+	
 	api.subscribe(() => {
 		hydrateProps(bindNode, opts);
 		hydrateChildren(bindNode, children);
@@ -87,17 +150,20 @@ export function compiler(el, opts = {}, children = [])
 		return _;
 	}
 		
-	let component = Sinuous.getHydrateComponent(el);
-
+	let component = Sinuous.getHydrateComponent(el, opts);
+	// console.log(component, el, opts)
 	if(component === null) {
 		return _;
 	}
-	// console.log('[ COMPONENT ]', el);
+
 	if(typeof opts.props !== 'undefined') {
 		component.passProps(opts.props);
 	}
 
-	component.passSlots('default', children);
+	if(opts.$slots) {
+		hydrateSlots(component, el, opts, opts.$slots);
+	}
+	// component.passSlots('default', children);
 
 	registerChildren(this, component);
 

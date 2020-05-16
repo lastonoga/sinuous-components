@@ -94,7 +94,7 @@ export default function(source) {
 		
 		instance.prototype._componentName = '${ name }';
 		instance.prototype._shouldHydarate = ${ block.source.shouldHydarate };
-		instance.prototype.__slots = ${ JSON.stringify(block.source.slots) };
+		instance.prototype._slotsPath = ${ JSON.stringify(block.source.slots) };
 
 		for(let key in config) {
 			if(typeof config[key] === 'function') {

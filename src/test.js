@@ -112,9 +112,23 @@ function unmounted()
 
 
 source = `
+<script>
+let $items = [];
+let $test = 1;
+
+function mounted()
+{
+	setTimeout(() => {
+		test = 100;
+	}, 1000)
+}
+</script>
+
 <template>
-	<div class="button">
-		<slot />
+	<div>
+		<sbutton>
+			Button {{ test }}
+		</sbutton>
 	</div>
 </template>
 `
@@ -127,5 +141,5 @@ let block = compiler({
 	source: source,
 });
 
-console.log(block.source.render)
 console.log(block.source.hydrate)
+console.log(block.source)

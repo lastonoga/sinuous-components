@@ -43,13 +43,14 @@ class Sinuous
 		return !(typeof this.components[component] === 'undefined');
 	}
 
-	getHydrateComponent(component)
+	getHydrateComponent(component, opts)
 	{
 		if(!this.hasComponent(component)) {
 			throw new Error(`There is no ${ component } component registered`);
 		}
 
-		if(this.components[component].prototype._shouldHydarate) {
+		// console.log(this.components[component].prototype)
+		if(this.components[component].prototype._shouldHydarate || opts.$slots) {
 			return new this.components[component]; 
 		} else {
 			return null;

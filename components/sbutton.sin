@@ -1,5 +1,7 @@
 <template>
 	<div class="button">
-		<slot />
+		<slot tag="span">
+			Default button text 
+		</slot>
 	</div>
 </template>
