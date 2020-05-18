@@ -15,6 +15,12 @@ export const isNonPhrasingTag = [
 
 var IF_STATEMENT_STARTED = false;
 
+/**
+ * @return Interface {
+ *   Code
+ *   Length
+ * }
+ */
 function getComponentCode(tag, options, children = [])
 {
 	if(tag === 'template') {
@@ -35,26 +41,15 @@ function getComponentSize(tag, options, children = [])
 	return getComponentCode(tag, options, children).length;
 }
 
+/**
+ * @return Interface {
+ *   value
+ *   stateful
+ * }
+ */
 function handleTag(node, context, options, children = [])
 {
-	let Loop = parseLoop(node);
-
-	let code = '';
-
-	if(Loop.is) {
-		let condition = expression(context, Loop.condition, false);
-		code += `loop(${ condition.value }, (${ Loop.args }) => { return `
-	}
-
-	code += getComponentCode(node.tag, options, children).code;
-
-	if(Loop.is) {
-		code += `;})`;
-	}
-
-	code += '';
-
-	return code;
+	return getComponentCode(node.tag, options, children).code;
 }
 
 function parseSlotAttrs(node)
@@ -209,6 +204,7 @@ export default class Node
 
 		let Statement = parseStatement(this);
 		let Slot = parseSlot(this);
+		let Loop = parseLoop(this);
 
 		if(Statement.is) {
 			isCallExpression = true;
@@ -297,6 +293,13 @@ export default class Node
 
 		options = `{${options}}`;
 
+		let componentTag = handleTag(this, context, options, children);
+
+		// Make loop from component
+		if(Loop.is) {
+			let condition = expression(context, Loop.condition, false);
+			componentTag = `loop(${ condition.value }, (${ Loop.args }) => { return ${ componentTag }; })`
+		}
 		// Statement render
 		if(Statement.is) {
 			let condition = expression(context, Statement.condition, false);
@@ -306,12 +309,8 @@ export default class Node
 			}
 
 			let length = getComponentSize(this.tag, options, children);
-			// let statementElements = _;
-			// if((hydrate && shouldHydarate) || render) {
-			let statementElements = `(h) => { return ${ handleTag(this, context, options, children) } }`;
-			// }
 
-			code += ` ${ condition.value }, ${ length }, ${ statementElements }`;
+			code += ` ${ condition.value }, ${ length }, (h) => { return ${ componentTag } }`;
 
 			if(Statement.end) {
 				code += `)`;
@@ -331,7 +330,7 @@ export default class Node
 				code += `${ children.join(',') }`;
 			}
 		} else {
-			code += handleTag(this, context, options, children);
+			code += componentTag;
 		}
 
 	

@@ -53,13 +53,17 @@ sButton:
 </template>
 ````
 
-Metric  | Sinuous-components | NuxtJS | NuxtJS (Functional)
------------- | ------------ | ------------- | -------------
-Framework load | 23ms | 449ms | 238ms
-Full page size | 43kb | 169kb | 169kb
+Metric  | SinuousCC | Sinuous | NuxtJS | NuxtJS (Functional)
+------------ | ------------ | ------------ | ------------- | -------------
+Render | 1018ms | 297ms | 1349ms | 1149ms
+Hydration | 23ms | 5000ms+ | 449ms | 238ms
+Hydration (with onclick) | 856ms | 5000ms+ | - | -
+Full page size | 43kb | 60kb | 169kb | 169kb
 
 So... Sinuous is faster in x10 times if components are functional and x20 times with simple components.
 Framework size is x4 less.
+
+But! Thats only for full static components that do need hydration. Why? Because more that 60% of usual website is static.
 
 ## Todo
 
@@ -80,6 +84,7 @@ Framework size is x4 less.
 - [ ] Dynamic Components
 - [ ] SSR with initial data passing
 - [ ] SSR Data fetching. (Server can fetch data only once. Then components are static)
+- [ ] Auto detection statefull variables (depends on component template variable usage)
 
 ## Component example
 

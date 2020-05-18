@@ -41,6 +41,9 @@ let source = `
 		<div v-else-if="s3">
 			[s3] test
 		</div>
+		<div class="loop" v-for="(item, key) in s1" :key="key">
+			{{ item }}
+		</div>
 		<template>
 			<div>
 				<slot name="header" tag="h1">
@@ -111,27 +114,27 @@ function unmounted()
 `;
 
 
-source = `
-<script>
-let $items = [];
-let $test = 1;
+// source = `
+// <script>
+// let $items = [];
+// let $test = 1;
 
-function mounted()
-{
-	setTimeout(() => {
-		test = 100;
-	}, 1000)
-}
-</script>
+// function mounted()
+// {
+// 	setTimeout(() => {
+// 		test = 100;
+// 	}, 1000)
+// }
+// </script>
 
-<template>
-	<div>
-		<sbutton>
-			Button {{ test }}
-		</sbutton>
-	</div>
-</template>
-`
+// <template>
+// 	<div>
+// 		<sbutton>
+// 			Button {{ test }}
+// 		</sbutton>
+// 	</div>
+// </template>
+// `
 // console.log(parseHTML(source));
 
 
@@ -141,5 +144,7 @@ let block = compiler({
 	source: source,
 });
 
+console.log(block.source.render)
+console.log('----------')
 console.log(block.source.hydrate)
-console.log(block.source)
+// console.log(block.source)

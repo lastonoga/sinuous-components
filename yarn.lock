@@ -8251,10 +8251,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-sinuous@^0.27.0-beta.4:
-  version "0.27.0"
-  resolved "https://registry.yarnpkg.com/sinuous/-/sinuous-0.27.0.tgz#9d63d6ce8e24ad7597ca32ccaa48320d02f7cc2e"
-  integrity sha512-uvknWclMr8Q6H+7+cQTc4APLn+3qv54HCsYQqDgXVqrMyhaMHAaZEU8eHS9LE/eRpotpshxvnc3mdEjzRkgYew==
+sinuous@^0.27.2:
+  version "0.27.2"
+  resolved "https://registry.yarnpkg.com/sinuous/-/sinuous-0.27.2.tgz#aae17505a074d9835cb8cbbf600eb30d9093e764"
+  integrity sha512-kWV3o/jeMBSLnjfg4pqLgibWeFEACTiXv1W9beWg7iB88Sw56Z9hAgP5tqwRbZDnuCy7hlEiiRQBYRWszlQZRw==
 
 slash@^2.0.0:
   version "2.0.0"

@@ -82,8 +82,6 @@ function hydrateSlots(component, el, opts = {}, slots)
 
 	let bindNode = document.getElementById(`${ opts['id'] }`);
 
-	console.log(bindNode, opts)
-
 	let slotNodes = {}
 
 	for(let key in slots) {
@@ -127,7 +125,10 @@ function hydrate(el, opts = {}, children = [])
 	}
 
 	let bindNode = document.getElementById(`${ opts['id'] }`);
-
+	// console.log(opts['id'], bindNode);
+	if(bindNode === null) {
+		return;
+	}
 	
 	api.subscribe(() => {
 		hydrateProps(bindNode, opts);

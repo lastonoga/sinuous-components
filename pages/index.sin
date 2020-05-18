@@ -1,24 +1,26 @@
 <script>
 let $items = [];
-let $test = 1;
 
 function mounted()
 {
-	setTimeout(() => {
-		test = 100;
-	}, 1000)
+	let d = [];
+
+	for (var i = 0; i < 10000; i++) {
+		d.push(i);
+	}
+
+	items = d;
+
+	// console.log(items)
 }
 </script>
 
 <template>
 	<div>
-		<sbutton>
-			Button {{ test }}
+
+		<sbutton v-for="(item, key) in items">
+			Button {{ item }}
 		</sbutton>
-		<div>
-			<sbutton>
-				Button 2 {{ test }}
-			</sbutton>
-		</div>
+		
 	</div>
 </template>
