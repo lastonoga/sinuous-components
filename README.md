@@ -55,9 +55,9 @@ sButton:
 
 Metric  | SinuousCC | Sinuous | NuxtJS | NuxtJS (Functional)
 ------------ | ------------ | ------------ | ------------- | -------------
-Render | 1018ms | 297ms | 1349ms | 1149ms
-Hydration | 23ms | 5000ms+ | 449ms | 238ms
-Hydration (with onclick) | 856ms | 5000ms+ | - | -
+Render | 1018ms | 297ms | 3743ms | 1825ms
+Hydration | 23ms | 5000ms+ | 455ms | 238ms
+Hydration (with onclick) | 856ms | 5000ms+ | 707ms | 390ms
 Full page size | 43kb | 60kb | 169kb | 169kb
 
 So... Sinuous is faster in x10 times if components are functional and x20 times with simple components.
@@ -78,6 +78,7 @@ But! Thats only for full static components that do need hydration. Why? Because 
 - [ ] Loops hydration
 - [x] Slots hydration
 - [ ] Props
+- [ ] Functional components (automatic, need to reduce class init time)
 - [ ] Make full page and test performance
 - [ ] Init data 
 - [ ] Component lazy load
