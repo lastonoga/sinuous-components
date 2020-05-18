@@ -11,7 +11,9 @@ let HTMLTags = [
 function registerChildren(parent, child)
 {
 	parent.addChildren(child);
-	child.setParent(parent);
+	if(child.setParent) {
+		child.setParent(parent);
+	}
 }
 
 export default function h(el, opts = {}, children = [])
@@ -31,8 +33,17 @@ export default function h(el, opts = {}, children = [])
 
 	let component = Sinuous.getComponent(el);
 
-	// console.log(component)
-	
+	registerChildren(this, component);
+
+	if(component._functional) {
+		return component.render({
+			getUID() {
+				return -1;
+			},
+			_slots: opts.$slots,
+		});
+	}
+
 	if(typeof opts.props !== 'undefined') {
 		component.passProps(opts.props);
 	}
@@ -40,8 +51,6 @@ export default function h(el, opts = {}, children = [])
 	for(let key in opts.$slots) {
 		component.passSlots(key, opts.$slots[key]);	
 	}
-
-	registerChildren(this, component);
 
 	return component.render();
 }

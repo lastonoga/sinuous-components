@@ -21,24 +21,44 @@ var IF_STATEMENT_STARTED = false;
  *   Length
  * }
  */
-function getComponentCode(tag, options, children = [])
+function makeLoop(condition, args, componentTag, returnObject)
+{
+	if(returnObject) {
+		return `{
+			_t: 'loop',
+			c: ${ condition },
+			fn: (${ args }) => { return ${ componentTag }; },
+		}`
+	}
+
+	return `loop(${ condition }, (${ args }) => { return ${ componentTag }; })`
+}
+
+function getComponentCode(tag, options, children = [], returnObject = false)
 {
 	if(tag === 'template') {
-		return {
-			code: `[${ children.join(',') }]`,
-			length: children.length,
-		};
+		return `[${ children.join(',') }]`;
+	}
+
+	if(returnObject) {
+		return `{
+			_t: 'h',
+			t: '${ tag }',
+			o: ${ options },
+			c: [${ children.join(',') }],
+		}`
 	}
 	
-	return {
-		code: `h('${ tag }', ${ options }, [${ children.join(',') }])`,
-		length: 1,
-	};
+	return `h('${ tag }', ${ options }, [${ children.join(',') }])`;
 }
 
 function getComponentSize(tag, options, children = [])
 {
-	return getComponentCode(tag, options, children).length;
+	if(tag === 'template') {
+		return children.length;
+	}
+
+	return 1;
 }
 
 /**
@@ -47,9 +67,9 @@ function getComponentSize(tag, options, children = [])
  *   stateful
  * }
  */
-function handleTag(node, context, options, children = [])
+function handleTag(tag, options, children = [], returnObject)
 {
-	return getComponentCode(node.tag, options, children).code;
+	return getComponentCode(tag, options, children, returnObject);
 }
 
 function parseSlotAttrs(node)
@@ -59,7 +79,7 @@ function parseSlotAttrs(node)
 
 	if(node.tag === 'slot') {
 		name = node.attrs['name'] || 'default';
-		tag = node.attrs['tag'] || null;
+		tag = node.attrs['tag'] || 'span';
 	}
 
 	if(tag !== null) {
@@ -184,7 +204,19 @@ export default class Node
 
 				if(node.isSlot && !isUnderComponent) {
 					let name = node.attrs['name'] || 'default';
-					slots[name] = nodeIndexes;
+					let tag = node.attrs['tag'] || 'span';
+					let startIndex = 0;
+
+					if(tag === null) {
+						startIndex = i;
+						nodeIndexes.pop();
+					}
+					// console.log('TAAAAAG', nodeIndexes, node.attrs['tag'])
+					slots[name] = {
+						path: nodeIndexes,
+						tag,
+						index: startIndex,
+					};
 				}
 			}
 		}
@@ -283,7 +315,7 @@ export default class Node
 
 		// Add hydrate ID 
 		if(shouldHydarate) {
-			options += `id: ctx.getUID(${ this.hid }),`;
+			// options += `id: ctx.getUID(${ this.hid }),`;
 		}
 
 		// Is component stateful
@@ -293,12 +325,17 @@ export default class Node
 
 		options = `{${options}}`;
 
-		let componentTag = handleTag(this, context, options, children);
+		let componentTag = getComponentCode(this.tag, options, children, hydrate);
 
 		// Make loop from component
 		if(Loop.is) {
 			let condition = expression(context, Loop.condition, false);
-			componentTag = `loop(${ condition.value }, (${ Loop.args }) => { return ${ componentTag }; })`
+			
+			if(condition.statefull) {
+				shouldHydarate = true;
+			}
+
+			componentTag = makeLoop(condition.value, Loop.args, componentTag, hydrate)
 		}
 		// Statement render
 		if(Statement.is) {

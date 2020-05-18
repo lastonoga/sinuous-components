@@ -3,7 +3,23 @@ import qs from 'querystring';
 import { compiler, _ } from '@sinuous/compiler';
 import path from 'path';
 import { parseName } from './name';
+import statefullComponent from './statefull';
+import functionalComponent from './functional';
 
+function loadComponent(resource, options, block)
+{
+	let code = `
+		import componentConfig from ${ resource };
+	`;
+
+	if(block.source.isStatefull) {
+		code += statefullComponent(options, block);
+	} else {
+		code += functionalComponent(options, block);
+	}
+
+	return code;
+}
 
 export default function(source) {
     const loaderContext = this;
@@ -66,68 +82,15 @@ export default function(source) {
 	// if(name === 'Test') {
 		
 		// console.log(name);
-		console.log(block.source.hydrate);
+		console.log(block.source.render);
 		console.log('-----------');
-		// console.log(block.source.hydrate);
-		// console.log('-----------');
+		console.log(block.source.hydrate);
+		console.log('-----------0');
 	// }
-
-	let code = `
-		import { Basic } from '@sinuous/component';
-		import componentConfig from ${ stringifyRequest(resourcePath + '?type=script') };
-		
-		let config = Object.assign({
-			methods: {},
-		}, componentConfig);
-
-		let instance = function ${ name }() {
-			Basic.call(this);
-		};
-		
-		// inherit Basic
-		instance.prototype = Object.create(Basic.prototype);
-
-		// correct the constructor pointer because it points to Basic
-		instance.prototype.constructor = instance;
-		
-		instance.prototype._methods = {};
-		
-		instance.prototype._componentName = '${ name }';
-		instance.prototype._shouldHydarate = ${ block.source.shouldHydarate };
-		instance.prototype._slotsPath = ${ JSON.stringify(block.source.slots) };
-
-		for(let key in config) {
-			if(typeof config[key] === 'function') {
-				instance.prototype[key] = config[key];
-			}
-		}
-		
-		for(let key in config.methods) {
-			instance.prototype[key] = config.methods[key]
-		}
-	`	
-
-	if(isSSR) {
-		code += `
-			instance.prototype.__render = function(h, { ctx, components, render, statement, slot, loop, d, c }) {
-				return ${ block.source.render };
-			}
-		`;
-	}
-
-	if(isRuntime) {
-		code += `
-			instance.prototype.__hydrate = function(h, { ctx, components, render, statement, slot, loop, d, c }) {
-				return ${ block.source.hydrate };
-			}
-		`;
-	}
-
-	// console.log(code)
-
-	code += `
-		export default instance;
-	`;
-
-	return code;
+	// 
+	return loadComponent(stringifyRequest(resourcePath + '?type=script'), {
+		name,
+		isSSR,
+		isRuntime,
+	}, block);
 }

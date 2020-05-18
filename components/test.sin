@@ -7,12 +7,12 @@
 <script>
 import { d } from '../src/test-import.js'
 
-let $visible = d;
+let $visible = Math.random(1, 100);
 let $clicks2 = {
 	a: 2
 };
 let clicks = 1;
-
+let timer;
 
 let computed2 = () => {
 	let k = [];
@@ -32,9 +32,13 @@ function click(event) {
 
 function reactive_click(event2) {
 	visible = visible + 1;
+	return visible;
 }
 
 // function mounted() {
+// 	console.error('mounted', this, this.reactive_click(), this.reactive_click())
+// // 	timer = setInterval(() => {
 
+// // 	})
 // }
 </script>

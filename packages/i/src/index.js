@@ -1,6 +1,16 @@
 // import { register } from './components';
 var SinuousComponents = {};
 
+function getComponentInstance(component)
+{
+	if(component._functional) {
+		return component;
+	}
+
+	return new component;
+}
+
+
 class Sinuous 
 {
 
@@ -51,7 +61,7 @@ class Sinuous
 
 		// console.log(this.components[component].prototype)
 		if(this.components[component].prototype._shouldHydarate || opts.$slots) {
-			return new this.components[component]; 
+			return getComponentInstance(this.components[component]);
 		} else {
 			return null;
 		}
@@ -63,8 +73,10 @@ class Sinuous
 			throw new Error(`There is no ${ component } component registered`);
 		}
 
-		return new this.components[component];
+		return getComponentInstance(this.components[component]);
 	}
+
+
 
 }
 

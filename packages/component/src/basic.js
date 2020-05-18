@@ -35,7 +35,7 @@ var Basic = function () {
 
 		this._computed = this.computed(computed);
 		this._children = [];
-
+		this._el_index = 0;
 
 		// this._state = [];
 		// this._state = [];
@@ -58,6 +58,11 @@ var Basic = function () {
 	{
 		for(let key in this._computed) {
 			this._computed[key] = this._computed[key].bind(this);
+		}
+
+		for(let key in this._methods) {
+			let name = this._methods[key];
+			this[name] = this[name].bind(this);
 		}
 	}
 	/**
@@ -222,7 +227,9 @@ var Basic = function () {
 		}
 
 		for (var i = 0; i < this._children.length; i++) {
-			this._children[i].hook(type);
+			if(!this._children[i]._functional) {
+				this._children[i].hook(type);
+			}
 		}
 	}
 

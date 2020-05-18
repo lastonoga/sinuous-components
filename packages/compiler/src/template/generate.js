@@ -24,6 +24,7 @@ export default function generate(context, html)
 		render: '',
 		hydrate: '',
 		shouldHydarate: false,
+		isStatefull: false,
 	}
 
 	for (var i = 0; i < tree.length; i++) {
@@ -54,11 +55,16 @@ export default function generate(context, html)
 
 	try {
 		result.render = prettier.format(result.render, prettierConfig);
-		result.hydrate = prettier.format(result.hydrate, prettierConfig);
+		result.hydrate = prettier.format('let _tmp = ' + result.hydrate, prettierConfig).substring('let _tmp = '.length);
 	} catch(err) {
-		// console.error(err);
+		console.error(err);
 	}
+
 	result.slots = slots;
+	result.isStatefull = context.reactive_variables.length > 0;
+
+	// console.log();
+	// result.functional = false;
 	
 	return result;
 }

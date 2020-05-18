@@ -8,206 +8,413 @@ import { computed } from 'sinuous/observable';
 let OBSERVER;
 let STORAGE = {};
 
+let SUBSCRIBERS = [];
+
+function addSubscriber(fn)
+{
+	console.log(fn, SUBSCRIBERS)
+	SUBSCRIBERS.push(fn);
+}
+
+// function hydrateProps(el, opts)
+// {
+	// if(!opts._s) {
+	// 	return;
+	// }
+
+// 	api.property(el, opts, null);
+// }
+
+// function hydrateTag(parent, children, currentIndex, value)
+// {
+// 	let el = children[currentIndex];
+	
+// 	let nodes = value();
+
+// 	if(Array.isArray(nodes)) {
+
+// 		for (var i = 0; i < nodes.length; i++) {
+// 			let child = nodes[i];
+// 			if(typeof child === 'function') {
+// 				child = child();
+// 			}
+// 			// console.log(parent,  child.size)
+// 			// api.insert(parent, child, children[currentIndex + i]);
+// 			// parent.replaceChild(child, children[currentIndex + i])
+// 			// children[currentIndex + i].replaceWith(child);
+// 		}
+// 	} else {
+// 		api.insert(el, nodes, null);
+// 	}
+// }
+
+// function hydrateChildren(node, children)
+// {
+// 	let bindChildren = [];
+
+// 	if(node !== null) {
+// 		bindChildren = filterChildNodes(node);
+// 	}
+
+// 	for (var i = 0; i < children.length; i++) {
+// 		if(children[i] === _) {
+// 			continue;
+// 		}
+// 		// console.error(bindChildren[i], children[i]);
+// 		hydrateTag(node, bindChildren, i, children[i]);
+// 	}
+// }
+
+// function getSlotNode(el, path)
+// {
+// 	for (var i = 0; i < path.length; i++) {
+// 		el = el.childNodes[path[i]];
+// 	}
+
+// 	return el;
+// }
+
+// function hydrateSlots(component, el, opts = {}, slots)
+// {
+// 	if(!opts['id']) {
+// 		return;
+// 	}
+
+// 	// if(opts['id'] === 'hydr-13') {
+// 	// 	opts['id'] = 'hydr-6';
+// 	// }
+
+// 	// if(opts['id'] === 'hydr-30') {
+// 	// 	opts['id'] = 'hydr-21';
+// 	// }
+
+// 	let bindNode = document.getElementById(`${ opts['id'] }`);
+
+// 	let slotNodes = {}
+
+// 	for(let key in slots) {
+// 		if(component._slotsPath[key]) {
+// 			let node = getSlotNode(bindNode, component._slotsPath[key])
+// 			slotNodes[key] = node;
+// 		} else {
+// 			throw new Error(`There is no ${key} slot namespace defined`);
+// 		}
+// 	}
+
+// 	api.subscribe(() => {
+// 		for(let key in slots) {
+// 			let node = slotNodes[key];
+// 			let childrenSlots = slots[key];
+			
+// 			if(node.childNodes.length === 0) {
+// 				node = [node];
+// 			} else {
+// 				node = node.childNodes;
+// 			}
+
+// 			if(childrenSlots.length > node.length) {
+// 				throw new Error('Slot hydration length mismatch');
+// 			}
+
+// 			for (var i = 0; i < childrenSlots.length; i++) {
+				
+// 				api.insert(node[i], childrenSlots[i](), null);
+// 			}
+// 		}
+// 	});
+	
+// }
+
+// function hydrate(el, opts = {}, children = [])
+// {
+// 	let bindNode;
+// 	console.log(this, el, opts, children)
+
+// 	// if(this.node) {
+// 	// 	bindNode = this.node;
+// 	// }
+
+// 	if(!opts['id']) {
+// 		return;
+// 	} else {
+// 		bindNode = document.getElementById(`${ opts['id'] }`);
+// 	}
+
+// 	// console.log(this);
+// 	// this.ctx._el_index++;
+
+// 	if(bindNode === null) {
+// 		return;
+// 	}
+	
+	// api.subscribe(() => {
+	// 	hydrateProps(bindNode, opts);
+	// 	hydrateChildren(bindNode, children);
+	// });
+// }
+
+// function registerChildren(parent, child)
+// {
+// 	parent.addChildren(child);
+// 	if(child.setParent) {
+// 		child.setParent(parent);
+// 	}
+// }
+
+// export function compiler(el, opts = {}, children = [])
+// {
+// 	options(this, opts);
+	
+// 	if(!Sinuous.hasComponent(el)) {
+// 		hydrate.call(this, el, opts, children);
+// 		return _;
+// 	}
+		
+// 	let component = Sinuous.getHydrateComponent(el, opts);
+
+// 	// console.log(component, el, opts)
+// 	if(component === null) {
+// 		return _;
+// 	}
+
+// 	registerChildren(this.ctx, component);
+
+// 	if(component._functional) {
+// 		// console.warn('start hydration');
+// 		return component.hydrate({
+// 			getUID() {
+// 				return -1;
+// 			},
+// 			_slots: opts.$slots,
+// 		}, compiler);
+// 	}
+
+// 	if(typeof opts.props !== 'undefined') {
+// 		component.passProps(opts.props);
+// 	}
+
+// 	if(opts.$slots) {
+// 		hydrateSlots(component, el, opts, opts.$slots);
+// 	}
+
+// 	return initComponent(component);
+// }
+
+
+
+
+
+
 function hydrateProps(el, opts)
 {
-	if(!opts._s) {
-		return;
-	}
-
-	api.property(el, opts, null);
+	// console.log(opts)
+	addSubscriber(() => {
+		api.property(el, opts, null);
+	});
 }
 
-function hydrateTag(parent, children, currentIndex, value)
+function hydrateH(context, el, options, children)
 {
-	let el = children[currentIndex];
-	
-	let nodes = value();
-
-	if(Array.isArray(nodes)) {
-
-		for (var i = 0; i < nodes.length; i++) {
-			let child = nodes[i];
-			if(typeof child === 'function') {
-				child = child();
-			}
-			// console.log(parent,  child.size)
-			// api.insert(parent, child, children[currentIndex + i]);
-			// parent.replaceChild(child, children[currentIndex + i])
-			// children[currentIndex + i].replaceWith(child);
-		}
-	} else {
-		api.insert(el, nodes, null);
-	}
-}
-
-function hydrateChildren(node, children)
-{
-	let bindChildren = [];
-
-	if(node !== null) {
-		bindChildren = filterChildNodes(node);
+	if(options._s) {
+		hydrateProps(el, options);
 	}
 
 	for (var i = 0; i < children.length; i++) {
-		if(children[i] === _) {
-			continue;
-		}
-		// console.error(bindChildren[i], children[i]);
-		hydrateTag(node, bindChildren, i, children[i]);
+		// console.log(children[i])
+		hydrate(context, el.childNodes[i], children[i]);
 	}
+
+	// el._index++;
 }
 
-function getSlotNode(el, path)
+function hydrateLoop(context, node, args)
 {
-	for (var i = 0; i < path.length; i++) {
-		el = el.childNodes[path[i]];
+	let condition = args.c;
+	let startNode = node;
+
+	// api.subscribe(() => {
+		let loop_condition = typeof condition === 'function' ? condition() : condition;
+		let currentNode = startNode;
+
+		for(let key in loop_condition)
+		{
+			let item = loop_condition[key];
+			let itemArgs = args.fn(item, key);
+			// console.log('[hydrate loop]', currentNode, itemArgs)
+
+			hydrate(context, currentNode, itemArgs);
+
+			currentNode = currentNode.nextElementSibling;
+		}
+	// });
+}
+
+function hydrateText(context, node, args)
+{
+	// console.warn('[TEXT]', node, args.t);
+	if(args.t === _) {
+		return;
 	}
+	// if(typeof args.t !== 'function' ) {
+	// 	return;
+	// }
+	// console.warn('[TEXT]', node, args.t());
+	
+	api.subscribe(() => {
+		api.insert(node, args.t(), null);
+	});
+	// api.insert(el, nodes, null);
+}
+
+
+function getSlotNode(el, tag, path)
+{
+	// let 
+	// console.log(el, tag, path);
+	for (var i = 1; i < path.length; i++) {
+		if(path[i] !== null) {
+			el = el.childNodes[path[i]];
+		}
+	}
+	// console.error(el);
 
 	return el;
 }
 
-function hydrateSlots(component, el, opts = {}, slots)
+function hydrateSlots(context, el, opts = {}, slots)
 {
-	if(!opts['id']) {
-		return;
-	}
+	let bindedNodes = {}
 
-	if(opts['id'] === 'hydr-13') {
-		opts['id'] = 'hydr-6';
-	}
-
-	if(opts['id'] === 'hydr-30') {
-		opts['id'] = 'hydr-21';
-	}
-
-	let bindNode = document.getElementById(`${ opts['id'] }`);
-
-	let slotNodes = {}
+	let slotData = context._slotsData;
 
 	for(let key in slots) {
-		if(component._slotsPath[key]) {
-			let node = getSlotNode(bindNode, component._slotsPath[key])
-			slotNodes[key] = node;
+		if(slotData[key]) {
+			let node = getSlotNode(el, slotData[key].tag, slotData[key].path);
+			bindedNodes[key] = node;
 		} else {
 			throw new Error(`There is no ${key} slot namespace defined`);
 		}
 	}
 
-	api.subscribe(() => {
-		for(let key in slots) {
-			let node = slotNodes[key];
-			let childrenSlots = slots[key];
-			
-			if(node.childNodes.length === 0) {
-				node = [node];
-			} else {
-				node = node.childNodes;
-			}
+	// return;
+	// api.subscribe(() => {
+	for(let key in slots) {
+		let data = slotData[key];
+		let node = bindedNodes[key];
+		let childrenSlots = slots[key];
+		let startNodeIndex = data.index;
+		// if(data.tag) {
+		// 	node = node.childNodes;
+		// } else {
+		// 	node = [node];
+		// }
 
-			if(childrenSlots.length > node.length) {
-				throw new Error('Slot hydration length mismatch');
-			}
+		// console.log(key, startNodeIndex, node, node.childNodes[startNodeIndex], childrenSlots)
+		// break;
 
-			for (var i = 0; i < childrenSlots.length; i++) {
-				
-				api.insert(node[i], childrenSlots[i](), null);
-			}
+		if(childrenSlots.length > node.length) {
+			throw new Error('Slot hydration length mismatch');
 		}
-	});
+
+		for (var i = startNodeIndex; i < childrenSlots.length; i++) {
+			// console.log(node.childNodes[i], childrenSlots[i])
+
+			hydrate(context, node.childNodes[i], childrenSlots[i]);
+			// api.insert(node[i], childrenSlots[i](), null);
+		}
+	}
+	// });
 	
 }
-
-function hydrate(el, opts = {}, children = [])
-{
-	// console.log(this, el, opts, children)
-	if(!opts['id']) {
-		return;
-	}
-
-	let bindNode = document.getElementById(`${ opts['id'] }`);
-	// console.log(opts['id'], bindNode);
-	if(bindNode === null) {
-		return;
-	}
-	
-	api.subscribe(() => {
-		hydrateProps(bindNode, opts);
-		hydrateChildren(bindNode, children);
-	});
-}
-
+/**
+ * Context setup
+ */
 function registerChildren(parent, child)
 {
 	parent.addChildren(child);
-	child.setParent(parent);
+	if(child.setParent) {
+		child.setParent(parent);
+	}
 }
 
-export function compiler(el, opts = {}, children = [])
+function hydrateTag(context, node, args)
 {
-	options(this, opts);
-				
+	let el = args.t,
+		opts = args.o,
+		children = args.c;
+
 	if(!Sinuous.hasComponent(el)) {
-		hydrate.call(this, el, opts, children);
-		return _;
+		hydrateH(context, node, opts, children);
+		return;
 	}
-		
+
 	let component = Sinuous.getHydrateComponent(el, opts);
-	// console.log(component, el, opts)
+
 	if(component === null) {
 		return _;
 	}
 
-	if(typeof opts.props !== 'undefined') {
-		component.passProps(opts.props);
+	registerChildren(context, component);
+
+	if(component._functional) {
+		let newArgs = component.hydrate({
+			getUID() {
+				return -1;
+			},
+			_slots: opts.$slots,
+		});
+
+		if(opts.$slots) {
+			hydrateSlots(component, node, opts, opts.$slots);
+		}
+
+		hydrate(context, node, newArgs);
+		return;
 	}
+
+	// setup component
+	// if(typeof opts.props !== 'undefined') {
+	// 	component.passProps(opts.props);
+	// }
 
 	if(opts.$slots) {
-		hydrateSlots(component, el, opts, opts.$slots);
+		hydrateSlots(component, node, opts, opts.$slots);
 	}
-	// component.passSlots('default', children);
 
-	registerChildren(this, component);
-
-	return initComponent(component);
+	// console.warn(component.hydrate(), node, opts, children)
+	return hydrate(component, node, component.hydrate(component));
 }
 
-function initComponent(component)
+/**
+ * Main hydration function
+ */
+function hydrate(context, node, args = null)
 {
-	component.hydrate(component, compiler.bind(component));
+	if(args === null) {
+		return;
+	}
+
+	// console.log('[HYDRATE]', context, node)
+
+	if(args._t === 'h') {
+		// args.o['data-hydrated'] = true;
+		hydrateTag(context, node, args);
+	}
+
+	if(args._t === 't') {
+		hydrateText(context, node, args);
+	}
+
+	if(args._t === 'loop') {
+		hydrateLoop(context, node, args);
+	}
 
 	return _;
 }
 
-function IntersectionObserverCallback (entries, observer)
-{
-	entries.forEach(entry => {
-		let id = entry.target.id
-		// console.log(id);
-		api.subscribe(() => {
-			hydrateProps(entry.target, STORAGE[id].opts);
-			hydrateChildren(entry.target, STORAGE[id].children);
-		});
-	});
-}
 
 export default function initHydration(component, hydrationRoot, timeBenchmark = () => {}, callback = null)
 {
-	// OBSERVER = new IntersectionObserver(IntersectionObserverCallback, {
-	// 	root: hydrationRoot,
-	// 	rootMargin: '0px',
-	// 	threshold: 1.0
-	// });
-
-
-
-	// requestIdleCallback(() => {
-	// 	OBSERVER.observe(bindNode);
-
-	// 	STORAGE[opts['id']] = {
-	// 		opts,
-	// 		children,
-	// 	}
-	// });
 	loadComponent(component, (instance) => {
 
 		timeBenchmark('Hydration');
@@ -219,9 +426,26 @@ export default function initHydration(component, hydrationRoot, timeBenchmark = 
 		let connectedNode = filterChildNodes(hydrationRoot);
 
 		for (var i = 0; i < tree.length; i++) {
-			initComponent(tree[i], connectedNode[i]);
+			let component = tree[i];
+			let node = connectedNode[i];
+			let hydration = component.hydrate(component);
+			api.subscribe(() => {
+				// hydrate(component, node, hydration);
+			});
 		}
 
+		
+			// console.log('start', SUBSCRIBERS);
+		// for (var i = 0; i < SUBSCRIBERS.length; i++) {
+		// 	let fn = SUBSCRIBERS[i];
+		// 	console.warn(i, SUBSCRIBERS[i])
+		// 	api.subscribe(() => {
+		// 		// console.log(fn)
+		// 		fn()
+		// 	});
+		// 	// SUBSCRIBERS[i]();
+		// }
+		// });
 		// console.log(instance);
 		instance.hook('mounted');
 

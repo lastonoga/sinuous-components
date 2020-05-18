@@ -1,7 +1,27 @@
 <template>
 	<div class="button">
+		{{ s1 }}
 		<slot>
 			Default button text 
 		</slot>
 	</div>
 </template>
+
+<script>
+let $s1 = Math.random(1, 100);
+let timer = null;
+
+function mounted()
+{
+	// console.log('mounted');
+	timer = setInterval(() => {
+		// console.log('update')
+		s1 += 1
+	}, 1000)
+}
+
+function unmoutned()
+{
+	clearInterval(timer);
+}
+</script>

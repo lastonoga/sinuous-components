@@ -66,7 +66,7 @@ TEST_WEBPACK_BUILD();
 	return;
 
 	// setTimeout(() => {
-	// 	TEST_RENDER();
+		// TEST_RENDER();
 	// }, 2000)
 
 	TEST_RENDER();

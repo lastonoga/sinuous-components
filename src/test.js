@@ -115,25 +115,19 @@ function unmounted()
 
 
 // source = `
-// <script>
-// let $items = [];
-// let $test = 1;
 
-// function mounted()
-// {
-// 	setTimeout(() => {
-// 		test = 100;
-// 	}, 1000)
-// }
-// </script>
 
 // <template>
-// 	<div>
-// 		<sbutton>
-// 			Button {{ test }}
-// 		</sbutton>
+// 	<div class="button" @click="alert(1)">
+// 		<slot>
+// 		default text
+// 		</slot>
 // 	</div>
 // </template>
+
+// <script>
+// let d = 1
+// </script>
 // `
 // console.log(parseHTML(source));
 

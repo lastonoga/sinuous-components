@@ -69,24 +69,6 @@ module.exports = {
      */
     module: {
         rules: [
-			// {
-			// 	test: /\.js(x?)$/,
-			// 	include: [/packages/],
-			// 	use: [
-			// 	'thread-loader',
-			// 		{
-			// 			loader: 'babel-loader',
-			// 			options: {
-			// 				cacheDirectory: true,
-			// 				configFile: path.resolve(
-			// 					__dirname,
-			// 					'../../../../',
-			// 					path.resolve(__dirname, 'babel.config.js'),
-			// 				),
-			// 			},
-			// 		},
-			// 	],
-			// },
             /**
              * JavaScript
              *

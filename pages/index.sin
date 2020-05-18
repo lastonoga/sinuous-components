@@ -1,26 +1,41 @@
 <script>
 let $items = [];
+let $s1 = 1;
+// let timer = null;
 
 function mounted()
 {
 	let d = [];
 
-	for (var i = 0; i < 10000; i++) {
+	for (var i = 0; i < 1000; i++) {
 		d.push(i);
 	}
 
 	items = d;
 
-	// console.log(items)
+	// timer = setInterval(() => {
+	// 	s1 += 10
+	// }, 100)
+}
+
+function unmoutned()
+{
+	// clearInterval(timer);
 }
 </script>
 
 <template>
 	<div>
-
+		
+		<!-- <sbutton>
+			Button - test - slot {{ s1 }}
+		</sbutton> -->
+	<!-- test -->
 		<sbutton v-for="(item, key) in items">
 			Button {{ item }}
 		</sbutton>
+		<!-- <test></test> -->
+		<!-- <test></test> -->
 		
 	</div>
 </template>

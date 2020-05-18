@@ -20,6 +20,13 @@ export default class TextNode
 			value = _;
 		}
 
+		if(hydrate) {
+			value = `{
+				_t: 't',
+				t: ${ value }
+			}`
+		}
+
 		return {
 			value,
 			statefull,
