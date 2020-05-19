@@ -62,7 +62,7 @@ export default function generate(context, html)
 
 	result.slots = slots;
 	result.isStatefull = context.reactive_variables.length > 0;
-
+	result.context = context;
 	// console.log();
 	// result.functional = false;
 	

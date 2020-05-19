@@ -208,7 +208,7 @@ function addSubscriber(fn)
 function hydrateProps(el, opts)
 {
 	// console.log(opts)
-	addSubscriber(() => {
+	api.subscribe(() => {
 		api.property(el, opts, null);
 	});
 }
@@ -220,11 +220,8 @@ function hydrateH(context, el, options, children)
 	}
 
 	for (var i = 0; i < children.length; i++) {
-		// console.log(children[i])
 		hydrate(context, el.childNodes[i], children[i]);
 	}
-
-	// el._index++;
 }
 
 function hydrateLoop(context, node, args)
@@ -232,7 +229,7 @@ function hydrateLoop(context, node, args)
 	let condition = args.c;
 	let startNode = node;
 
-	// api.subscribe(() => {
+	api.subscribe(() => {
 		let loop_condition = typeof condition === 'function' ? condition() : condition;
 		let currentNode = startNode;
 
@@ -246,7 +243,7 @@ function hydrateLoop(context, node, args)
 
 			currentNode = currentNode.nextElementSibling;
 		}
-	// });
+	});
 }
 
 function hydrateText(context, node, args)
@@ -260,21 +257,22 @@ function hydrateText(context, node, args)
 	// }
 	// console.warn('[TEXT]', node, args.t());
 	
+	// if(!node._hydrated) {
+	// 	node._hydrated = true;
+	
 	api.subscribe(() => {
 		api.insert(node, args.t(), null);
 	});
+	// }
 	// api.insert(el, nodes, null);
 }
 
 
 function getSlotNode(el, tag, path)
 {
-	// let 
 	// console.log(el, tag, path);
 	for (var i = 1; i < path.length; i++) {
-		if(path[i] !== null) {
-			el = el.childNodes[path[i]];
-		}
+		el = el.childNodes[path[i]];
 	}
 	// console.error(el);
 
@@ -287,6 +285,7 @@ function hydrateSlots(context, el, opts = {}, slots)
 
 	let slotData = context._slotsData;
 
+	// Find slot binding nodes
 	for(let key in slots) {
 		if(slotData[key]) {
 			let node = getSlotNode(el, slotData[key].tag, slotData[key].path);
@@ -296,21 +295,12 @@ function hydrateSlots(context, el, opts = {}, slots)
 		}
 	}
 
-	// return;
-	// api.subscribe(() => {
+	// Hydrate slots per binded tag
 	for(let key in slots) {
 		let data = slotData[key];
 		let node = bindedNodes[key];
 		let childrenSlots = slots[key];
 		let startNodeIndex = data.index;
-		// if(data.tag) {
-		// 	node = node.childNodes;
-		// } else {
-		// 	node = [node];
-		// }
-
-		// console.log(key, startNodeIndex, node, node.childNodes[startNodeIndex], childrenSlots)
-		// break;
 
 		if(childrenSlots.length > node.length) {
 			throw new Error('Slot hydration length mismatch');
@@ -318,23 +308,22 @@ function hydrateSlots(context, el, opts = {}, slots)
 
 		for (var i = startNodeIndex; i < childrenSlots.length; i++) {
 			// console.log(node.childNodes[i], childrenSlots[i])
-
 			hydrate(context, node.childNodes[i], childrenSlots[i]);
-			// api.insert(node[i], childrenSlots[i](), null);
 		}
 	}
-	// });
-	
 }
 /**
  * Context setup
  */
 function registerChildren(parent, child)
 {
-	parent.addChildren(child);
-	if(child.setParent) {
-		child.setParent(parent);
+	if(child._functional) {
+		parent.addChildren(_);
+		return;
 	}
+
+	parent.addChildren(child);
+	child.setParent(parent);
 }
 
 function hydrateTag(context, node, args)
@@ -369,6 +358,7 @@ function hydrateTag(context, node, args)
 		}
 
 		hydrate(context, node, newArgs);
+
 		return;
 	}
 
@@ -381,7 +371,6 @@ function hydrateTag(context, node, args)
 		hydrateSlots(component, node, opts, opts.$slots);
 	}
 
-	// console.warn(component.hydrate(), node, opts, children)
 	return hydrate(component, node, component.hydrate(component));
 }
 
@@ -390,14 +379,24 @@ function hydrateTag(context, node, args)
  */
 function hydrate(context, node, args = null)
 {
+	// requestIdleCallback(() => {
+		// console.log('start')
+		hydrateIdle(context, node, args);
+	// }, {
+	// 	timeout: 0,
+	// 	read: true
+	// });
+}
+
+function hydrateIdle(context, node, args)
+{
 	if(args === null) {
 		return;
 	}
 
-	// console.log('[HYDRATE]', context, node)
-
 	if(args._t === 'h') {
 		// args.o['data-hydrated'] = true;
+		// args.o['_s'] = true;
 		hydrateTag(context, node, args);
 	}
 
@@ -410,6 +409,7 @@ function hydrate(context, node, args = null)
 	}
 
 	return _;
+	
 }
 
 
@@ -429,9 +429,8 @@ export default function initHydration(component, hydrationRoot, timeBenchmark = 
 			let component = tree[i];
 			let node = connectedNode[i];
 			let hydration = component.hydrate(component);
-			api.subscribe(() => {
-				// hydrate(component, node, hydration);
-			});
+			
+			hydrate(component, node, hydration);
 		}
 
 		
@@ -446,7 +445,7 @@ export default function initHydration(component, hydrationRoot, timeBenchmark = 
 		// 	// SUBSCRIBERS[i]();
 		// }
 		// });
-		// console.log(instance);
+		console.log(instance);
 		instance.hook('mounted');
 
 		if(callback) {

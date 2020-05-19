@@ -23,7 +23,7 @@ export default function statefull(options, block)
 		instance.prototype._shouldHydarate = ${ block.source.shouldHydarate };
 		instance.prototype._slotsData = ${ JSON.stringify(block.source.slots) };
 		instance.prototype._methods = Object.keys(config.methods);
-		instance._functional = false;
+		instance.prototype._functional = false;
 		
 		for(let key in config) {
 			if(typeof config[key] === 'function') {

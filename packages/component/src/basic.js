@@ -1,4 +1,5 @@
 import Sinuous from '@sinuous/i';
+import { _ } from '@sinuous/compiler/src/empty';
 
 
 import { hydrate, dhtml } from 'sinuous/hydrate';
@@ -227,6 +228,10 @@ var Basic = function () {
 		}
 
 		for (var i = 0; i < this._children.length; i++) {
+			if(this._children[i] === _) {
+				continue;
+			}
+			
 			if(!this._children[i]._functional) {
 				this._children[i].hook(type);
 			}
