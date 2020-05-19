@@ -53,9 +53,9 @@ sButton:
 </template>
 ````
 
-Metric  | SinuousCC | SinuousCC (Stateless) | Sinuous | NuxtJS | NuxtJS (Functional | Stateless)
------------- | ------------ | ------------ | ------------ | ------------- | -------------
-Render | 1018ms | 865ms | 297ms (single component) | 3743ms | 1825ms
+Metric  | SinuousCC | SinuousCC (Fn) | Sinuous | NuxtJS | NuxtJS (Fn)
+------- | --------- | --------------------- | ------- | ------ | --------------------------------
+Render  | 1018ms | 865ms | 297ms (single obj) | 3743ms | 1825ms
 Hydration | 102ms | 78ms | 5000ms+ | 455ms | 238ms
 Hydration (with onclick) | 828ms | 704ms | 5000ms+ | 707ms | 390ms
 Full page size | 43kb | 43kb | 60kb | 169kb | 169kb
