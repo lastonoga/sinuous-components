@@ -54,16 +54,15 @@ function TEST_HYDRATE()
 TEST_WEBPACK_BUILD();
 
 // TEST_INIT();
-
+// document.addEventListener('DOMContentLoaded', load);
 // return;
 (function load() {
 	LAYOUT = document.getElementById('layout');
 
-
 	// LAYOUT.innerHTML = '';
 	// requestIdleCallback(() => {
-	// TEST_HYDRATE();
-	// return;
+	TEST_HYDRATE();
+	return;
 
 	// setTimeout(() => {
 		// TEST_RENDER();
@@ -71,7 +70,7 @@ TEST_WEBPACK_BUILD();
 
 	TEST_RENDER();
 	// console.log(LAYOUT.innerHTML)
-	// return
+	return
 
 	setTimeout(() => {
 

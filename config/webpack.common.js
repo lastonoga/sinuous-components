@@ -119,7 +119,7 @@ module.exports = {
 		}),
 
 		new ScriptExtHtmlWebpackPlugin({
-			defaultAttribute: 'async',
+			defaultAttribute: 'defer',
 			// preload: [/\.js$/],
 		}),
 		// new PrintChunksPlugin()

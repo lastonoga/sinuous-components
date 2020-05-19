@@ -1,5 +1,5 @@
 <template>
-	<div class="button" @click="click">
+	<div class="button">
 		<!-- {{ s1 }} -->
 		<slot>
 			Default button text 
@@ -8,9 +8,11 @@
 </template>
 
 <script>
-// let $s1 = Math.random(1, 100);
+// let $s1 = 1;//Math.random(1, 100);
 // let timer = null;
+// let computed = () => {
 
+// }
 // function mounted()
 // {
 // 	// console.log('mounted');

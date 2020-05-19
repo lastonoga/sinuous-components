@@ -270,10 +270,15 @@ function hydrateText(context, node, args)
 
 function getSlotNode(el, tag, path)
 {
+	let node = el;
 	// console.log(el, tag, path);
-	for (var i = 1; i < path.length; i++) {
-		el = el.childNodes[path[i]];
-	}
+	// try {
+		for (var i = 1; i < path.length; i++) {
+			node = node.childNodes[path[i]];
+		}
+	// } catch(err) {
+	// 	console.warn(el, node);
+	// }
 	// console.error(el);
 
 	return el;
@@ -282,7 +287,9 @@ function getSlotNode(el, tag, path)
 function hydrateSlots(context, el, opts = {}, slots)
 {
 	hydrateProps(el, opts);
-	// console.log(context, el, opts, slots)
+	// if(el === null) {
+	// 	console.log(context, el, opts, slots)
+	// }
 
 	let bindedNodes = {}
 
@@ -304,6 +311,10 @@ function hydrateSlots(context, el, opts = {}, slots)
 		let node = bindedNodes[key];
 		let childrenSlots = slots[key];
 		let startNodeIndex = data.index;
+
+		if(typeof node === 'undefined') {
+			console.warn(el, opts, slotData, el[0]);
+		}
 
 		if(childrenSlots.length > node.length) {
 			throw new Error('Slot hydration length mismatch');
@@ -394,7 +405,7 @@ function hydrate(context, node, args = null)
 
 function hydrateIdle(context, node, args)
 {
-	if(args === null) {
+	if(args === null || node === null) {
 		return;
 	}
 
