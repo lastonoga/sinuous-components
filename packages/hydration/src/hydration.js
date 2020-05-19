@@ -460,7 +460,7 @@ export default function initHydration(component, hydrationRoot, timeBenchmark = 
 		// 	// SUBSCRIBERS[i]();
 		// }
 		// });
-		console.log(instance);
+		// console.log(instance);
 		instance.hook('mounted');
 
 		if(callback) {
