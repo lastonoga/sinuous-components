@@ -205,19 +205,19 @@ function addSubscriber(fn)
 
 
 
-function hydrateProps(el, opts)
+function hydrateProps(el, options)
 {
-	// console.log(opts)
-	api.subscribe(() => {
-		api.property(el, opts, null);
-	});
+	if(options._s) {
+		api.subscribe(() => {
+			api.property(el, options, null);
+		});
+	}
 }
 
 function hydrateH(context, el, options, children)
 {
-	if(options._s) {
-		hydrateProps(el, options);
-	}
+	
+	hydrateProps(el, options);
 
 	for (var i = 0; i < children.length; i++) {
 		hydrate(context, el.childNodes[i], children[i]);
@@ -281,6 +281,9 @@ function getSlotNode(el, tag, path)
 
 function hydrateSlots(context, el, opts = {}, slots)
 {
+	hydrateProps(el, opts);
+	// console.log(context, el, opts, slots)
+
 	let bindedNodes = {}
 
 	let slotData = context._slotsData;
@@ -357,6 +360,7 @@ function hydrateTag(context, node, args)
 			hydrateSlots(component, node, opts, opts.$slots);
 		}
 
+		// console.log(opts)
 		hydrate(context, node, newArgs);
 
 		return;
