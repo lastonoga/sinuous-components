@@ -114,21 +114,46 @@ function unmounted()
 `;
 
 
-// source = `
+source = `
+<template>
+	<div id="test" class="button" :class="[testClass]" style="border-radius: 5px;" :style="[{ fontSize: s1 }]" @click="click" disabled some-prop="red" :other-prop="1">
+		<!-- {{ s1 }} -->
+		<slot>
+			Default button text 
+		</slot>
+	</div>
+</template>
 
+<script>
+let $s1 = 1;//Math.random(1, 100);
+let timer = null;
 
-// <template>
-// 	<div class="button" @click="alert(1)">
-// 		<slot>
-// 		default text
-// 		</slot>
-// 	</div>
-// </template>
+let testClass = () => {
+	return {
+		red: s1 % 2 === 0
+	}
+}
 
-// <script>
-// let d = 1
-// </script>
-// `
+function click()
+{
+	alert(1)
+}
+
+function mounted()
+{
+	// console.log('mounted');
+	timer = setInterval(() => {
+		s1 += 1
+	}, 1000)
+}
+
+function unmoutned()
+{
+	clearInterval(timer);
+}
+</script>
+
+`
 // console.log(parseHTML(source));
 
 

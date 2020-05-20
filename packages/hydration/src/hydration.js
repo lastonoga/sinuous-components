@@ -1,9 +1,9 @@
 import { h, hs, api } from 'sinuous';
 import { _ } from '@sinuous/compiler/src/empty';
 import Sinuous from '@sinuous/i';
-import { options } from '@sinuous/component';
+import { options as parseOptions } from '@sinuous/component';
 import { loadComponent } from '@sinuous/lazy';
-import { computed } from 'sinuous/observable';
+// import subscribe from './subscribe';
 
 let OBSERVER;
 let STORAGE = {};
@@ -208,7 +208,12 @@ function addSubscriber(fn)
 function hydrateProps(el, options)
 {
 	if(options._s) {
+		// console.log(el, 'Prepare options');
+
+		options = parseOptions(options, false);
+
 		api.subscribe(() => {
+			// console.log(el, 'Change options');
 			api.property(el, options, null);
 		});
 	}

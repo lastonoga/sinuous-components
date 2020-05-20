@@ -112,56 +112,259 @@ export function prepareOptionKey(variable)
 	return variable;
 }
 
-function parseOptions(attrs)
+
+/**
+ * Make a map and return a function for checking if a key
+ * is in that map.
+ */
+function makeMap (
+  str,
+  expectsLowerCase
+) {
+  var map = Object.create(null);
+  var list = str.split(',');
+  for (var i = 0; i < list.length; i++) {
+    map[list[i]] = true;
+  }
+  return expectsLowerCase
+    ? function (val) { return map[val.toLowerCase()]; }
+    : function (val) { return map[val]; }
+}
+
+/**
+ * [dynamicArgAttribute description]
+ * @type {RegExp}
+ */
+var dynamicArgAttribute = /^(\@|\:)/g;
+var eventArgAttribute = /^\@/g;
+
+var staticArgsMap = {
+	class: 'staticClass',
+	style: 'staticStyle',
+}
+
+var isAttr = makeMap(
+	'accept,accept-charset,accesskey,action,align,alt,async,autocomplete,' +
+	'autofocus,autoplay,autosave,bgcolor,border,buffered,challenge,charset,' +
+	'checked,cite,class,code,codebase,color,cols,colspan,content,http-equiv,' +
+	'name,contenteditable,contextmenu,controls,coords,data,datetime,default,' +
+	'defer,dir,dirname,disabled,download,draggable,dropzone,enctype,method,for,' +
+	'form,formaction,headers,height,hidden,high,href,hreflang,http-equiv,' +
+	'icon,id,ismap,itemprop,keytype,kind,label,lang,language,list,loop,low,' +
+	'manifest,max,maxlength,media,method,GET,POST,min,multiple,email,file,' +
+	'muted,name,novalidate,open,optimum,pattern,ping,placeholder,poster,' +
+	'preload,radiogroup,readonly,rel,required,reversed,rows,rowspan,sandbox,' +
+	'scope,scoped,seamless,selected,shape,size,type,text,password,sizes,span,' +
+	'spellcheck,src,srcdoc,srclang,srcset,start,step,style,summary,tabindex,' +
+	'target,title,type,usemap,value,width,wrap'
+);
+
+var isEventAttr = function (name) {
+	return (
+		name.match(eventArgAttribute)
+	);
+}
+
+var isCSSAttr = function (name) {
+	return (
+		name.match(/^\:?(style|class)$/g)
+	);
+}
+
+var isRenderableAttr = function (name) {
+	return (
+	isAttr(name) ||
+		name.indexOf('data-') === 0 ||
+		name.indexOf('aria-') === 0
+	)
+};
+
+var isArgNotHydratable = function (type, arg) {
+	if(type === null) {
+		type = arg;
+	}
+
+	return !(
+		['staticClass', 'staticClass', 'props'].includes(type)
+	)
+};
+
+var normalizeValue = function (value)
 {
-	let options = {};
+	if(value === '') {
+		value = true;
+	}
+
+	if(typeof value !== 'boolean') {
+		value = `"${value}"`;
+	}
+
+	return value;
+}
+
+
+function handleAttrsValue(context, value)
+{
+	let statefull = false;
+
+	let exp = expression(context, value, false);
+	
+	value = exp.value;
+
+	if(!statefull && exp.statefull) {
+		statefull = true;
+	}
+
+	return {
+		value,
+		statefull,
+	};
+}
+
+function genOptions(options)
+{
+	let result = '';
+
+	for(let key in options) {
+		let value = options[key];
+
+		if(typeof options[key] === 'object') {
+			value = genOptions(value);
+			if(value === null) {
+				continue;
+			}
+
+			result += `'${key}': { \n ${ value } \n},\n`;
+		} else {
+			if(value == '') {
+				continue;
+			}
+
+			result += `'${key}': ${ value },\n`;
+		}
+	}
+
+	if(result == '') {
+		return null;
+	}
+
+	return result;
+}
+
+function parseAttrs(context, attrs, hydrate = false)
+{
+	let shouldOptionsHydrate = false;
+
+	let options = {
+		staticClass: '',
+		staticStyle: {},
+		class: [],
+		style: [],
+		attrs: {},
+		on: {},
+		domProps: {},
+		props: {},
+	};
 
 	for(let key in attrs)
 	{
-		let value = attrs[key];
-		let option_key = prepareOptionKey(key);
+		let arg = key.replace(dynamicArgAttribute, '');
+		let attrValue = attrs[key];
 
-		if(key.match(/^v\-/g)) {
+		if(arg.match(/^v\-/g)) {
 			continue;
 		}
-		// Is html attr
-		if(HTMLAttributes.includes(key) || Object.keys(AttrsMap).includes(key) || key.match(/data\-/g) || key.match(/@/g)) {
-			if(key === 'style') {
-				value = parseStyles(value);
+		
+		if(key.match(dynamicArgAttribute)) {
+			let { value, statefull } = handleAttrsValue(context, attrValue);
+
+			if(statefull) {
+				shouldOptionsHydrate = true;
 			}
 
-			options[option_key] = value;
+			let type = false;
+
+			if(isEventAttr(key)) {
+				type = 'on';
+			} else {
+				if(isCSSAttr(key)) {
+					type = null;
+				} else if(isRenderableAttr(arg)) {
+					type = 'attrs';
+				} else {
+					type = 'props';
+				}
+			}
+
+			if(type === false) {
+				continue;
+			}
+
+			if(hydrate && !statefull && isArgNotHydratable(type, arg)) {
+				continue;
+			}
+
+			if(type === null) {
+				options[arg] = value;
+			} else {
+				options[type][arg] = value;
+			}
 		} else {
-			if(!options.props) {
-				options.props = {};
+			let value = attrValue;
+			let normalizedValue = null;
+			let type = false;
+
+			if(arg === 'class') {
+				arg = 'staticClass';
+				type = null;
+				normalizedValue = normalizeValue(value);
+			} else if(arg === 'style') {
+				arg = 'staticStyle';
+				type = null;
+				normalizedValue = {}
+
+				value = value.split(';');
+				for (var i = 0; i < value.length; i++) {
+					let tmp = value[i].split(':').map((item) => item.trim());
+					if(tmp.length === 2) {
+						normalizedValue[tmp[0]] = normalizeValue(tmp[1]);
+					}
+				}
+			} else if(isRenderableAttr(arg)) {
+				type = 'attrs';
+				normalizedValue =  normalizeValue(value);
+			} else {
+				type = 'props';
+				normalizedValue =  normalizeValue(value);
 			}
 
-			options.props[option_key] = value;
+			if(type === false) {
+				continue;
+			}
+
+			if(hydrate && isArgNotHydratable(type, arg)) {
+				continue;
+			}
+
+			if(type === null) {
+				options[arg] = normalizedValue;
+			} else {
+				options[type][arg] = normalizedValue;
+			}
 		}
+		// Is expression inside
+		
 	}
 
-	return options;
+	// console.log(options);
+	// console.log(genOptions(options));
+	// console.log(shouldOptionsHydrate);
+	options = genOptions(options);
+
+	return {
+		options: options === null ? '' : options,
+		shouldOptionsHydrate,
+	}
 }
 
-function parseAttrs(string)
-{
-	if(typeof string !== 'string' || string == '') {
-		return {};
-	}
-
-	string = string.replace(/\s\s+/g, ' ').trim();
-
-	let pairs = string.match(/([^\s]*)=["'](.*?)["']|([\w\-]+)/g)
-	let attrs = {};
-
-	for (var i = 0; i < pairs.length; i++) {
-		let tmp = pairs[i].split('=');
-		let name = tmp[0];
-		let value = tmp[1] ? tmp[1].substring(1, tmp[1].length - 1) : true;
-		attrs[name] = value;
-	}
-
-	return attrs;
-}
-
-export { parseAttrs, parseOptions, parseOptionKey, parseOptionValue };
+export { parseAttrs, parseOptionKey, parseOptionValue };

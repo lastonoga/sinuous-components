@@ -40,7 +40,6 @@ function TEST_RENDER()
 
 function CLEAR_HOOKS()
 {
-	
 	let html = LAYOUT.innerHTML;
 	LAYOUT.innerHTML = html;
 	PageIndex.hook('unmounted');
@@ -70,7 +69,7 @@ TEST_WEBPACK_BUILD();
 
 	TEST_RENDER();
 	// console.log(LAYOUT.innerHTML)
-	return
+	// return
 
 	setTimeout(() => {
 

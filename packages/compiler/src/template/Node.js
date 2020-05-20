@@ -1,4 +1,4 @@
-import { parseOptions, parseOptionKey, parseOptionValue } from './attrs';
+import { parseAttrs } from './attrs';
 import { _ } from '../helpers';
 import { parseStatement, parseLoop, parseSlot } from './parseFunctions';
 import { expression } from './expression';
@@ -96,10 +96,11 @@ export default class Node
 {
 	constructor({ tag = null, attrs = null, children = [] })
 	{
+		// let { dynamicOptions, staticOptions } = parseOptions(attrs);
+
 		this.hid = ++HID;
 		this.tag = tag;
 		this.attrs = attrs;
-		this.options = parseOptions(attrs);
 		this.children = children;
 		
 		this.prevSibling = null;
@@ -229,7 +230,6 @@ export default class Node
 		let code = '';
 		let children = [];
 		let shouldHydarate = false;
-		let shouldOptionsHydrate = false;
 		let shouldSlotsHydrate = false;
 		let render = !hydrate;
 		// let isCallExpression = false;
@@ -278,7 +278,11 @@ export default class Node
 			
 		}
 
-		let options = '';
+		let { options, shouldOptionsHydrate } = parseAttrs(context, this.attrs, hydrate);
+		
+		if(shouldOptionsHydrate) {
+			shouldHydarate = true;
+		}
 
 		// Handle slots for Component children
 		if(this.isComponent && Object.keys(slots).length > 0) {
@@ -293,33 +297,10 @@ export default class Node
 			}
 		}
 
-		// Handle options
-		for(let key in this.options) {
-			let { value, statefull } = parseOptionValue(context, key, this.options[key]);
-			
-			if(statefull) {
-				shouldHydarate = true;
-			}
-
-			if(statefull || !hydrate || key === 'data-hid') {
-				options += `${ parseOptionKey(key) }: ${ value },`;
-			}
-
-			if(statefull && hydrate) {
-				shouldOptionsHydrate = true;
-			}
-		}
-
-
 		shouldHydarate = this.isComponent || shouldHydarate;
 
-		// Add hydrate ID 
-		if(shouldHydarate) {
-			// options += `id: ctx.getUID(${ this.hid }),`;
-		}
-
 		// Is component stateful
-		if(shouldOptionsHydrate) {
+		if(hydrate && shouldOptionsHydrate) {
 			options += `_s: true,`;
 		}
 

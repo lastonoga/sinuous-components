@@ -28,8 +28,6 @@ export function expression(context, code, keepObservation = true)
 
 	code = String(code);
 
-	// console.warn(code);
-
 	let identifierOnly = true;
 	let shouldExecute = keepObservation;
 
@@ -37,8 +35,7 @@ export function expression(context, code, keepObservation = true)
 
 	traverse(ast, {
 		enter(path) {
-			// console.log(path.node.type, path.node)
-			if(!['Program', 'ExpressionStatement', 'Identifier', 'BlockStatement', 'LabeledStatement'].includes(path.node.type)) {
+			if(!['Program', 'ExpressionStatement', 'Identifier', 'BlockStatement', 'LabeledStatement', 'ArrayExpression', 'ObjectExpression', 'ObjectProperty'].includes(path.node.type)) {
 				identifierOnly = false;
 			}
 		}

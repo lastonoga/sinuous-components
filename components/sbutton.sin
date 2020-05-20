@@ -1,5 +1,5 @@
 <template>
-	<div class="button" @click="click">
+	<div class="button" :class="[testClass, 'test']" style="border-radius: 52px;" :style="{ fontSize: s1 + 'px' }" @click="click" disabled>
 		<!-- {{ s1 }} -->
 		<slot>
 			Default button text 
@@ -8,26 +8,31 @@
 </template>
 
 <script>
-// let $s1 = 1;//Math.random(1, 100);
-// let timer = null;
-// let computed = () => {
+let $s1 = 12;//Math.random(1, 100);
+let timer = null;
 
-// }
-// function mounted()
-// {
-// 	// console.log('mounted');
-// 	timer = setInterval(() => {
-// 		// console.log('update')
-// 		s1 += 1
-// 	}, 1000)
-// }
+let testClass = () => {
+	return {
+		red: s1 % 2 === 0
+	}
+}
 
 function click()
 {
 	alert(1)
 }
-// function unmoutned()
-// {
-// 	clearInterval(timer);
-// }
+
+function mounted()
+{
+	// console.log('mounted');
+	timer = setInterval(() => {
+		// console.log('changed');
+		s1 += 1
+	}, 2000)
+}
+
+function unmoutned()
+{
+	clearInterval(timer);
+}
 </script>

@@ -1,11 +1,7 @@
 import { h as hs } from 'sinuous';
 import { observable, computed, subscribe } from 'sinuous/observable';
-import { styles, classes, options,  } from './';
+import { options,  } from './';
 import Sinuous from '@sinuous/i';
-
-let HTMLTags = [
-	'i', 'div', 'span', 'hr', 'br', 'strong', 'pre'
-];
 
 
 function registerChildren(parent, child)
@@ -24,10 +20,10 @@ export default function h(el, opts = {}, children = [])
 	// console.log('[ FF ]', el, this)
 	let dynamicAttrs = false;
 
-	options(this, opts);
+	opts = options(opts);
 
 	// If HTML tag render
-	if(HTMLTags.includes(el)) {
+	if(!Sinuous.hasComponent(el)) {
 		return hs(el, opts, children);
 	}
 
