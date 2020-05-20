@@ -152,37 +152,6 @@ var Basic = function () {
 	}
 
 	/**
-	 * Client side handler after SSR (hydration)
-	 */
-
-
-	Basic.prototype.hasStatefullData = function()
-	{
-		let stateful = false;
-
-		for(let hid in this._passedProps) {
-			for(let key in this._passedProps[hid]) {
-				if(this._passedProps[hid][key]) {
-					stateful = true;
-					break;
-				}
-			}
-
-			if(stateful) {
-				break;
-			}
-		}
-
-		return stateful && this._isStateful;
-	}
-
-
-	Basic.prototype.hasStatelessData = function()
-	{
-		return Object.keys(this._data).length > 0;
-	}
-
-	/**
 	 * Local component data
 	 */
 
