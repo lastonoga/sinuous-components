@@ -5,13 +5,14 @@ Yet another reactive framework based on Sinuous
 ## Why?
 
 There is no way to use reactive frameworks for websites because of bad performance (FID, TTI).
+
 Thats why even github use jquery-like libs.
 
 ## What?
 
 This framework is in pre-alpha and was created to test partial hydration combined with jquery-like reactivity (thanks Sinuous).
 
-Sinuous is fast, but doesnt have modern features like loops, if statements, components and... **Partial hydration**.
+Sinuous is fast, but doesnt have modern features like loops, if statements, components (single file components) and... **Partial hydration**.
 
 Partial hydration is hydration that works only with dynamic and statefull parts of application.
 It helps to use component and reactive paradigm for website development (not applications and SPA).
@@ -64,7 +65,7 @@ Full page size | 43kb | 39kb | 60kb | 169kb | 169kb
 That framework is faster then Vue + NuxtJS in:
 1. Full static: x3.5
 1. Static with event: x3
-1. Dynamic: x2
+1. Dynamic: x2.5
 1. Page size: x4
 
 ## Todo
