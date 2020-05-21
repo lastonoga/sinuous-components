@@ -1,5 +1,5 @@
 import { subscribe } from './subscribe';
-import { makeCss } from '@sinuous/component';
+import { makeCss, mergeOptions } from '@sinuous/component';
 import { api } from 'sinuous';
 
 // let subscribers = [];
@@ -9,6 +9,12 @@ import { api } from 'sinuous';
 
 export default function hydrateProps(context, el, options)
 {
+	// console.log(el);
+	// console.log(options);
+	options = mergeOptions(options)
+	// console.warn(options);
+	// return;
+	
 	if(!options._s) {
 		return;
 	}
@@ -32,6 +38,7 @@ export default function hydrateProps(context, el, options)
 	 * Make styles and classes
 	 */
 	if(options.style || options.class) {
+		// console.error(el);
 		let cssOptions = makeCss({}, options);
 
 		if(cssOptions.style) {
@@ -44,6 +51,7 @@ export default function hydrateProps(context, el, options)
 
 		if(cssOptions.class) {
 			addSubscriber(cssOptions.class, (value) => {
+				console.log(el, value)
 				el.className = value;
 			});
 		}

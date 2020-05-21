@@ -247,14 +247,9 @@ var Basic = function () {
 			ctx = this;
 		}
 
-		return ctx.__hydrate(compiler, {
-			ctx,
-			statement: hStatement,
-			slot: hSlot,
-			loop: hLoop,
-			d: dynamic,
-			c: computed,
-		});
+		h.bind(ctx);
+
+		return ctx.__hydrate(h);
 	}
 
 

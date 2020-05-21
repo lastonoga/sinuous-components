@@ -32,7 +32,6 @@ function argToObject()
 		
 		for(let key in arguments[i]) {
 			let value = arguments[i][key];
-			console.warn(value, key);
 			if(typeof value === 'function') {
 				value = value();
 			}
@@ -64,7 +63,13 @@ function classes(str = null, dynamic = null)
 		dynamic = dynamic();
 	}
 
+	if(!Array.isArray(dynamic)) {
+		dynamic = [dynamic];
+	}
+
 	str += argToString.apply(this, dynamic);
+	
+	// console.log(str);
 	
 	return str;
 }
@@ -108,7 +113,6 @@ function styles(obj = {}, dynamic = null)
 		}
 	}
 
-	console.log(readyStyles)
 	return readyStyles;
 }
 
@@ -214,6 +218,10 @@ export function mergeOptions(options)
 			readyOptions[name] = readyOptions[name].concat(option[name]);
 		}
 
+		if(option._s) {
+			readyOptions._s = option._s;
+		}
+
 		if(option.key) {
 			readyOptions.key = option.key;
 		}
@@ -233,9 +241,6 @@ export function mergeOptions(options)
 export default function options(options, shouldClone = true)
 {
 	let readyOptions = mergeOptions(options);
-
-	console.log(options);
-	console.warn(readyOptions);
 
 	return makeOption(readyOptions, shouldClone);
 }

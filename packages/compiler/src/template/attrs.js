@@ -143,7 +143,7 @@ var eventArgAttribute = /^\@/g;
  * e.g events, static class, props
  * @type {Array}
  */
-var isHydrationKeepAttr = makeMap('staticClass, staticClass, props, on');
+var isHydrationKeepAttr = makeMap('staticClass, staticStyle, props, on');
 
 var isFunctionAttr = makeMap('key, ref');
 
@@ -290,6 +290,7 @@ function parseAttrs(context, attrs, hydrate = false)
 			} else {
 				if(isCSSAttr(key)) {
 					type = null;
+					statefull = true;
 				} else if(isRenderableAttr(arg)) {
 					type = 'attrs';
 				} else {
@@ -363,15 +364,15 @@ function parseAttrs(context, attrs, hydrate = false)
 		
 	}
 
-	if(hydrate) {
-		if(options.class.length === 0) {
-			delete options.staticClass;
-		}
+	// if(hydrate) {
+	// 	if(options.class.length === 0) {
+	// 		delete options.staticClass;
+	// 	}
 
-		if(options.style.length === 0) {
-			delete options.staticStyle;
-		}
-	}
+	// 	if(options.style.length === 0) {
+	// 		delete options.staticStyle;
+	// 	}
+	// }
 
 	// console.log(options);
 	// console.log(genOptions(options));

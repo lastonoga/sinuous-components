@@ -46,7 +46,7 @@ export default function statefull(options, block)
 
 	if(options.isRuntime) {
 		code += `
-			instance.prototype.__hydrate = function() {
+			instance.prototype.__hydrate = function(h) {
 				let ctx = this;
 				return ${ block.source.hydrate };
 			}

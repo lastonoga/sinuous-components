@@ -81,7 +81,7 @@ TEST_WEBPACK_BUILD();
 
 	TEST_RENDER();
 	// console.log(LAYOUT.innerHTML)
-	return
+	// return
 
 	setTimeout(() => {
 

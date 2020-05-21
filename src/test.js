@@ -116,17 +116,27 @@ function unmounted()
 
 source = `
 <template>
-	<div id="test" class="button" style="border-radius: 5px;"  @click="click" v-for="(item, key) in [1,2,3]" :key="key">
+	<div class="button" :class="'new-button'" :style="[{ color: testColor }]" @click="click" style="border-radius: 15px;" disabled>
 		<!-- {{ s1 }} -->
-		<slot>
-			Default button text  2
+		<slot class="s">
+			Default button text 
 		</slot>
 	</div>
 </template>
 
 <script>
+let $s1 = 9;//Math.random(1, 100);
+let timer = null;
 
-let $s1 = 1;
+let testColor = () => {
+	return s1 % 2 === 0 ? 'red' : 'green'
+}
+
+let testClass = () => {
+	return {
+		red: s1 % 2 === 0
+	}
+}
 
 function click()
 {
@@ -135,17 +145,27 @@ function click()
 
 function mounted()
 {
-	// console.log('mounted');
+	let direction = 1;
+
+	// s1 += 10
+
 	timer = setInterval(() => {
-		s1 += 1
+		if(s1 > 40) {
+			direction = -5;
+		} else if(s1 < 10) {
+			direction = 5;
+		}
+
+		s1 += direction
 	}, 1000)
 }
 
-function unmoutned()
-{
-	clearInterval(timer);
-}
+// function unmoutned()
+// {
+// 	clearInterval(timer);
+// }
 </script>
+
 
 `
 // console.log(parseHTML(source));

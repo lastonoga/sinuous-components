@@ -242,9 +242,26 @@ function hydrateLoop(context, node, args)
 		for(let key in loop_condition)
 		{
 			let item = loop_condition[key];
-			let itemArgs = args.fn(item, key);
-			// console.log('[hydrate loop]', currentNode, itemArgs)
+			let itemKey = args.k(item, key);
+			let itemArgs;
 
+			let shouldRender = true;
+			if(currentNode) {
+				let nodeKey = currentNode.getAttribute('data-key');
+				if(nodeKey === itemKey) {
+					shouldRender = false;
+				}
+			}
+
+			if(shouldRender) {
+				itemArgs = args.r(item, key);
+			} else {
+				itemArgs = args.h(item, key);
+			}
+
+			// console.log(currentNode, shouldRender, args);
+			// return;
+			// console.log('[hydrate loop]', currentNode, itemArgs)
 			hydrate(context, currentNode, itemArgs);
 
 			currentNode = currentNode.nextElementSibling;
@@ -282,7 +299,7 @@ function getSlotNode(el, tag, path)
 function hydrateSlots(context, el, opts = {}, slots)
 {
 	// Hydrate props of main Node
-	hydrateProps(context, el, opts);
+	// hydrateProps(context, el, opts);
 	
 	let bindedNodes = {}
 
@@ -355,9 +372,6 @@ function hydrateTag(context, node, args)
 
 	if(component._functional) {
 		let newArgs = component.hydrate({
-			getUID() {
-				return -1;
-			},
 			_slots: opts.$slots,
 		});
 
@@ -379,6 +393,8 @@ function hydrateTag(context, node, args)
 	if(opts.$slots) {
 		hydrateSlots(component, node, opts, opts.$slots);
 	}
+
+	component.passOptions(opts);
 
 	return hydrate(component, node, component.hydrate(component));
 }
