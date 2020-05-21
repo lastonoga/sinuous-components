@@ -8,7 +8,7 @@
 </template>
 
 <script>
-// let $s1 = 9;//Math.random(1, 100);
+let $s1 = 9;//Math.random(1, 100);
 // let timer = null;
 
 // let testClass = () => {

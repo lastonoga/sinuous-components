@@ -72,8 +72,8 @@ TEST_WEBPACK_BUILD();
 
 	// LAYOUT.innerHTML = '';
 	// requestIdleCallback(() => {
-	// TEST_HYDRATE();
-	// return;
+	TEST_HYDRATE();
+	return;
 
 	// setTimeout(() => {
 		// TEST_RENDER();
@@ -81,7 +81,7 @@ TEST_WEBPACK_BUILD();
 
 	TEST_RENDER();
 	// console.log(LAYOUT.innerHTML)
-	// return
+	return
 
 	setTimeout(() => {
 
