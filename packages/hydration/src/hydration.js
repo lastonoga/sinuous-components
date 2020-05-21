@@ -245,7 +245,7 @@ function hydrateLoop(context, node, args)
 			let itemKey = args.k(item, key);
 			let itemArgs;
 
-			let shouldRender = true;
+			let shouldRender = false;
 			if(currentNode) {
 				let nodeKey = currentNode.getAttribute('data-key');
 				if(nodeKey === itemKey) {
@@ -298,6 +298,7 @@ function getSlotNode(el, tag, path)
 
 function hydrateSlots(context, el, opts = {}, slots)
 {
+	// return;
 	// Hydrate props of main Node
 	// hydrateProps(context, el, opts);
 	

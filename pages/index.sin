@@ -1,5 +1,5 @@
 <script>
-let $items = Array.from({ length: 1 }, (_, i) => i);
+let $items = Array.from({ length: 1000 }, (_, i) => i);
 let $s1 = 1;
 let timer = null;
 
@@ -32,7 +32,7 @@ function unmoutned()
 		</sbutton> -->
 	<!-- test -->
 		<sbutton v-for="(item, key) in items" :key="key" :class="s1" :style="{ fontStyle: 'italic' }" style="font-weight: bold;">
-			Button {{ item }}
+			Button {{ item }} 
 		</sbutton>
 		<!-- <test></test> -->
 		<!-- <test></test> -->

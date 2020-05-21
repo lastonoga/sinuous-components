@@ -352,6 +352,7 @@ export default class Node
 					slots[name] = [];
 				}
 
+				// console.log(name, i,statefull)
 				slots[name].push(value);
 
 				if(value !== _) {

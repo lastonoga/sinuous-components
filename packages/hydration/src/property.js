@@ -9,12 +9,13 @@ import { api } from 'sinuous';
 
 export default function hydrateProps(context, el, options)
 {
+	// return;
 	// console.log(el);
 	// console.log(options);
 	options = mergeOptions(options)
 	// console.warn(options);
 	// return;
-	
+
 	if(!options._s) {
 		return;
 	}
@@ -51,7 +52,6 @@ export default function hydrateProps(context, el, options)
 
 		if(cssOptions.class) {
 			addSubscriber(cssOptions.class, (value) => {
-				console.log(el, value)
 				el.className = value;
 			});
 		}

@@ -70,7 +70,7 @@ function classes(str = null, dynamic = null)
 	str += argToString.apply(this, dynamic);
 	
 	// console.log(str);
-	
+
 	return str;
 }
 
@@ -169,7 +169,14 @@ export function mergeOptions(options)
 
 	if(Array.isArray(options)) {
 		for (var i = 0; i < options.length; i++) {
+			
 			if(options[i] === null) {
+				break;
+			}
+
+			let keys = Object.keys(options[i]);
+
+			if(keys.length === 1 && keys.includes('$slots')) {
 				break;
 			}
 			
