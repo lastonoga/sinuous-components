@@ -116,7 +116,7 @@ function unmounted()
 
 source = `
 <template>
-	<div id="test" class="button" :class="[testClass]" style="border-radius: 5px;" :style="[{ fontSize: s1 }]" @click="click" disabled some-prop="red" :other-prop="1">
+	<div id="test" class="button" style="border-radius: 5px;"  @click="click" >
 		<!-- {{ s1 }} -->
 		<slot>
 			Default button text  2
@@ -125,14 +125,7 @@ source = `
 </template>
 
 <script>
-let $s1 = 1;//Math.random(1, 100);
-let timer = null;
 
-let testClass = () => {
-	return {
-		red: s1 % 2 === 0
-	}
-}
 
 function click()
 {

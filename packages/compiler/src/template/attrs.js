@@ -183,7 +183,6 @@ var isArgNotHydratable = function (type, arg) {
 	if(type === null) {
 		type = arg;
 	}
-	// console.log(type, arg)
 
 	return !(
 		['staticClass', 'staticClass', 'props', 'on'].includes(type)
@@ -279,14 +278,11 @@ function parseAttrs(context, attrs, hydrate = false)
 		if(key.match(dynamicArgAttribute)) {
 			let { value, statefull } = handleAttrsValue(context, attrValue);
 
-			if(statefull) {
-				shouldOptionsHydrate = true;
-			}
-
 			let type = false;
 
 			if(isEventAttr(key)) {
 				type = 'on';
+				statefull = true;
 			} else {
 				if(isCSSAttr(key)) {
 					type = null;
@@ -295,6 +291,10 @@ function parseAttrs(context, attrs, hydrate = false)
 				} else {
 					type = 'props';
 				}
+			}
+
+			if(statefull) {
+				shouldOptionsHydrate = true;
 			}
 
 			if(type === false) {

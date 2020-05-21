@@ -115,6 +115,8 @@ export function makeCss(readyOptions, options)
 	if(options.staticStyle || options.style) {
 		readyOptions.style = styles.bind(this, options.staticStyle || {}, options.style || null);
 	}
+
+	return readyOptions;
 }
 
 export default function options(options, shouldClone = true)

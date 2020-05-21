@@ -56,8 +56,8 @@ sButton:
 Metric  | SinuousCC | SinuousCC (Fn) | Sinuous | NuxtJS | NuxtJS (Fn)
 ------- | --------- | --------------------- | ------- | ------ | --------------------------------
 Render  | 1018ms | 865ms | 297ms (single obj) | 3743ms | 1825ms
-Hydration | 109ms | 71ms | 5000ms+ | 455ms | 238ms
-Hydration (with onclick) | 828ms | 757ms | 5000ms+ | 707ms | 390ms
+Hydration | 85ms | 68ms | 5000ms+ | 455ms | 238ms
+Hydration (with onclick) | 161ms | 113ms | 5000ms+ | 707ms | 390ms
 Full page size | 43kb | 39kb | 60kb | 169kb | 169kb
 
 So... Sinuous is faster in x10 times if components are functional and x20 times with simple components.

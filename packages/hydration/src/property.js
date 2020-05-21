@@ -1,63 +1,95 @@
 import { subscribe } from './subscribe';
+import { makeCss } from '@sinuous/component';
+import { api } from 'sinuous';
 
-export function property(el, options)
+// let subscribers = [];
+// let subscribers_first = [];
+
+
+
+export default function hydrateProps(context, el, options)
 {
+	if(!options._s) {
+		return;
+	}
+
+
+	let subscribers = [];
+	let subscribers_first = [];
+
+
+	function addSubscriber(value, fn, skip = true)
+	{
+		subscribers.push({
+			value,
+			fn,
+		});
+
+		subscribers_first.push(skip);
+	}
+
+	/**
+	 * Make styles and classes
+	 */
+	if(options.style || options.class) {
+		let cssOptions = makeCss({}, options);
+
+		if(cssOptions.style) {
+			addSubscriber(cssOptions.style, (obj) => {
+				for(let name in obj) {
+					el.style.setProperty(name, obj[name]);
+				}
+			});
+		}
+
+		if(cssOptions.class) {
+			addSubscriber(cssOptions.class, (value) => {
+				el.className = value;
+			});
+		}
+	}
 	
-	if(options.style) {
-
-	}
-
-	if(options.class) {
-
-	}
-
+	/**
+	 * Make events
+	 */
 	if(options.on) {
-
+		for(let name in options.on) {
+			handleEvent(el, name, options.on[name]);
+		}
 	}
 
+	/**
+	 * Make attributes
+	 */
 	if(options.attrs) {
+		for(let name in options.attrs) {
+			addSubscriber(options.attrs[name], (value) => {
+				el.setAttribute(name, value);
+			})
+		}
+	}
+	/**
+	 * Subscribe
+	 */
+	if(subscribers.length > 0) {
+		api.subscribe(() => {
+			for (var i = 0; i < subscribers.length; i++) {
+				let value = subscribers[i].value();
+				
+				if(subscribers_first[i]) {
+					subscribers_first[i] = false;
+					return;
+				}
 
+				subscribers[i].fn(value);
+			}
+		});
 	}
 
-
-	return;	
-
-    if (value == null) return;
-    if (!name || (name === 'attrs' && (isAttr = true))) {
-        for (name in value) {
-            property(el, value[name], name, isAttr, isCss);
-        }
-    } else if (name[0] === 'o' && name[1] === 'n' && !value.$o) {
-        // Functions added as event handlers are not executed
-        // on render unless they have an observable indicator.
-        handleEvent(el, name, value);
-    } else if (typeof value === 'function') {
-        subscribe(value, (value) => {
-        	console.log('set', el, value, name)
-            property(el, value, name, isAttr, isCss);
-        });
-    } else if (isCss) {
-        el.style.setProperty(name, value);
-    } else if (
-        isAttr ||
-        name.slice(0, 5) === 'data-' ||
-        name.slice(0, 5) === 'aria-'
-    ) {
-        el.setAttribute(name, value);
-    } else if (name === 'style') {
-        if (typeof value === 'string') {
-            el.style.cssText = value;
-        } else {
-            property(el, value, null, isAttr, true);
-        }
-    } else {
-        if (name === 'class') name += 'Name';
-        el[name] = value;
-    }
 }
 
 function handleEvent(el, name, value) {
-    name = name.slice(2).toLowerCase();
+    name = name.toLowerCase();
 
     if (value) {
         el.addEventListener(name, eventProxy);

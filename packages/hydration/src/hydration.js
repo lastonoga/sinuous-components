@@ -4,7 +4,7 @@ import Sinuous from '@sinuous/i';
 import { options as parseOptions } from '@sinuous/component';
 import { loadComponent } from '@sinuous/lazy';
 // import subscribe from './subscribe';
-import { property } from './property';
+import hydrateProps from './property';
 
 let OBSERVER;
 let STORAGE = {};
@@ -205,24 +205,24 @@ function addSubscriber(fn)
 
 
 
-function hydrateProps(el, options)
-{
-	if(options._s) {
-		// console.log(el, 'Prepare options', options);
-		options = parseOptions(options, false);
-		// console.log(el, 'Prepare options 2', options);
-		property(el, options);
+// function hydrateProps(el, options)
+// {
+// 	if(options._s) {
+// 		// console.log(el, 'Prepare options', options);
+// 		// options = parseOptions(options, false);
+// 		// console.log(el, 'Prepare options 2', options);
+// 		property(el, options);
 
-		// api.subscribe(() => {
-		// 	// console.log(el, 'Change options');
-			
-		// });
-	}
-}
+// 		// api.subscribe(() => {
+// 		// 	// console.log(el, 'Change options');
+// 		// 	api.property(el, options, null);
+// 		// });
+// 	}
+// }
 
 function hydrateH(context, el, options, children)
 {
-	hydrateProps(el, options);
+	hydrateProps(context, el, options);
 
 	for (var i = 0; i < children.length; i++) {
 		hydrate(context, el.childNodes[i], children[i]);
@@ -292,7 +292,7 @@ function getSlotNode(el, tag, path)
 
 function hydrateSlots(context, el, opts = {}, slots)
 {
-	hydrateProps(el, opts);
+	hydrateProps(context, el, opts);
 	// if(el === null) {
 	// 	console.log(context, el, opts, slots)
 	// }

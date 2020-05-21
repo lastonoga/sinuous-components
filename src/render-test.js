@@ -10,7 +10,6 @@ import button from '../components/sbutton.sin'
 // import IndexPage from '../pages/index.sin'
 import timeBenchmark from './time';
 
-
 const IndexPage = import(/* webpackChunkName: "pageIndex" */ '../pages/index.sin')
 
 
@@ -73,8 +72,8 @@ TEST_WEBPACK_BUILD();
 
 	// LAYOUT.innerHTML = '';
 	// requestIdleCallback(() => {
-	TEST_HYDRATE();
-	return;
+	// TEST_HYDRATE();
+	// return;
 
 	// setTimeout(() => {
 		// TEST_RENDER();
@@ -82,7 +81,7 @@ TEST_WEBPACK_BUILD();
 
 	TEST_RENDER();
 	// console.log(LAYOUT.innerHTML)
-	return
+	// return
 
 	setTimeout(() => {
 
