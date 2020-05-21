@@ -36,20 +36,20 @@ It was dirty check, but +- in similar conditions.
 Index page with 10k static components:
 ```javascript
 <template>
-	<div>
-		<sbutton v-for="(item, key) in items" :key="key">
-			Button {{ item }}
-		</sbutton>
-	</div>
+  <div>
+    <sbutton v-for="(item, key) in items" :key="key">
+      Button {{ item }}
+    </sbutton>
+  </div>
 </template>
 ````
 
 sButton:
 ```javascript
 <template>
-	<div class="button">
-		<slot />
-	</div>
+  <div class="button">
+    <slot />
+  </div>
 </template>
 ````
 
@@ -94,9 +94,9 @@ That framework is faster then Vue + NuxtJS in:
 
 ```html
 <template>
-	<div v-if="testProp" v-for="(item) in [1, 2, 3]" @click="reactive_click">
-		test {{ visible }} - {{ item }}
-	</div>
+  <div v-if="testProp" v-for="(item) in [1, 2, 3]" @click="reactive_click">
+    test {{ visible }} - {{ item }}
+  </div>
 </template>
 
 <script>
@@ -107,7 +107,7 @@ import { d } from 'import-some-thing'
  */
 let $visible = d;
 let $clicks2 = {
-	a: 2
+  a: 2
 };
 /**
  * Normal data defines as usual variable
@@ -119,26 +119,26 @@ let testProp = false;
  * Will become computed prop
  */
 let computed = () {
-	let k = [];
-	
-	for(let d in [1,2,3]) {
-		k.push(visible);
-	}
+  let k = [];
+  
+  for(let d in [1,2,3]) {
+    k.push(visible);
+  }
 
-	return visible * 2 * 5;
+  return visible * 2 * 5;
 }
 
 /**
  * Usual methods
  */
 function click(event) {
-	clicks++;
-	alert(this._data.clicks + `test ${ computed }`)
+  clicks++;
+  alert(this._data.clicks + `test ${ computed }`)
 }
 
 function reactive_click(event2) {
-	// Work with reactive as with usual variable
-	visible = visible + 1;
+  // Work with reactive as with usual variable
+  visible = visible + 1;
 }
 </script>
 ```
@@ -197,26 +197,26 @@ Use `parseName` to make component autonaming
 
 ```javascript
 {
-	test: /\.sin/,
-	use: [
-	    {
-		loader: '@sinuous/loader',
-		options: {
-			parseName(file) {
-				file = camelize(file);
-				let rootPath = camelize(path.resolve(__dirname, '../'));
+  test: /\.sin/,
+  use: [
+      {
+    loader: '@sinuous/loader',
+    options: {
+      parseName(file) {
+        file = camelize(file);
+        let rootPath = camelize(path.resolve(__dirname, '../'));
 
-					let componentPath = file
-						.split(rootPath)
-						.join('')
-						.replace(/\.sin/i, '')
-						.replace(/Components/, '')
-						.replace(/(\s|\/)/g, '');
+          let componentPath = file
+            .split(rootPath)
+            .join('')
+            .replace(/\.sin/i, '')
+            .replace(/Components/, '')
+            .replace(/(\s|\/)/g, '');
 
-					return componentPath;
-				}
-			}
-	    }
-	]
+          return componentPath;
+        }
+      }
+      }
+  ]
 },
 ```
