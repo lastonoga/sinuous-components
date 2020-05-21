@@ -4,6 +4,7 @@ import Sinuous from '@sinuous/i';
 import { options as parseOptions } from '@sinuous/component';
 import { loadComponent } from '@sinuous/lazy';
 // import subscribe from './subscribe';
+import { property } from './property';
 
 let OBSERVER;
 let STORAGE = {};
@@ -204,24 +205,23 @@ function addSubscriber(fn)
 
 
 
-
 function hydrateProps(el, options)
 {
 	if(options._s) {
-		// console.log(el, 'Prepare options');
-
+		// console.log(el, 'Prepare options', options);
 		options = parseOptions(options, false);
+		// console.log(el, 'Prepare options 2', options);
+		property(el, options);
 
-		api.subscribe(() => {
-			// console.log(el, 'Change options');
-			api.property(el, options, null);
-		});
+		// api.subscribe(() => {
+		// 	// console.log(el, 'Change options');
+			
+		// });
 	}
 }
 
 function hydrateH(context, el, options, children)
 {
-	
 	hydrateProps(el, options);
 
 	for (var i = 0; i < children.length; i++) {
@@ -236,6 +236,7 @@ function hydrateLoop(context, node, args)
 
 	api.subscribe(() => {
 		let loop_condition = typeof condition === 'function' ? condition() : condition;
+		// console.log(loop_condition)
 		let currentNode = startNode;
 
 		for(let key in loop_condition)
@@ -386,7 +387,7 @@ function hydrateTag(context, node, args)
 	// if(typeof opts.props !== 'undefined') {
 	// 	component.passProps(opts.props);
 	// }
-
+	// console.log(component, opts.$slots)
 	if(opts.$slots) {
 		hydrateSlots(component, node, opts, opts.$slots);
 	}
@@ -452,19 +453,7 @@ export default function initHydration(component, hydrationRoot, timeBenchmark = 
 			
 			hydrate(component, node, hydration);
 		}
-
 		
-			// console.log('start', SUBSCRIBERS);
-		// for (var i = 0; i < SUBSCRIBERS.length; i++) {
-		// 	let fn = SUBSCRIBERS[i];
-		// 	console.warn(i, SUBSCRIBERS[i])
-		// 	api.subscribe(() => {
-		// 		// console.log(fn)
-		// 		fn()
-		// 	});
-		// 	// SUBSCRIBERS[i]();
-		// }
-		// });
 		// console.log(instance);
 		instance.hook('mounted');
 

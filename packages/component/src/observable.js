@@ -23,6 +23,30 @@ export function computed(v, binding = false) {
 
 export function observable(v, binding = false)
 {
+	// let obs = null;
+	// let index = 0;
+
+	// let data = (v) => {
+	// 	console.log(seed, v, index)
+	// 	if(typeof v === 'undefined') {
+	// 		if(index === 0) {
+	// 			index++;
+	// 			return seed;
+	// 		}
+
+	// 		return obs();
+	// 	}
+
+	// 	// if(index === 0) {
+	// 	// 	index++;
+	// 	// 	return v;
+	// 	// }
+
+	// 	// if(obs === null) {
+	// 	// 	obs = sinuousObservable(v);
+	// 	// }
+	// }
+
 	let d = sinuousObservable(v);
 
 	

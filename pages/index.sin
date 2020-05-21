@@ -1,17 +1,17 @@
 <script>
-let $items = [];
+let $items = Array.from({ length: 1000 }, (_, i) => i);
 let $s1 = 1;
 // let timer = null;
 
 function mounted()
 {
-	let d = [];
+	// let d = [];
 
-	for (var i = 0; i < 1; i++) {
-		d.push(i);
-	}
+	// for (var i = 0; i < 1000; i++) {
+	// 	d.push(i);
+	// }
 
-	items = d;
+	// items = d;
 
 	// timer = setInterval(() => {
 	// 	s1 += 10

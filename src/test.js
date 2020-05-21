@@ -119,7 +119,7 @@ source = `
 	<div id="test" class="button" :class="[testClass]" style="border-radius: 5px;" :style="[{ fontSize: s1 }]" @click="click" disabled some-prop="red" :other-prop="1">
 		<!-- {{ s1 }} -->
 		<slot>
-			Default button text 
+			Default button text  2
 		</slot>
 	</div>
 </template>

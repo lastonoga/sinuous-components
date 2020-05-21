@@ -1,14 +1,17 @@
 import Sinuous from '@sinuous/i';
 import { hydrate } from '@sinuous/hydration';
 import render from '@sinuous/render';
+
+// import { api } from 'sinuous';
+// import { observable } from '@sinuous/component/src/observable';
 // import test from '../components/test.sin'
 // import test2 from '../components/test2.sin'
 import button from '../components/sbutton.sin'
-import IndexPage from '../pages/index.sin'
+// import IndexPage from '../pages/index.sin'
 import timeBenchmark from './time';
 
 
-// const IndexPage = import(/* webpackChunkName: "pageIndex" */ '../pages/index.sin')
+const IndexPage = import(/* webpackChunkName: "pageIndex" */ '../pages/index.sin')
 
 
 var LAYOUT;
@@ -58,6 +61,16 @@ TEST_WEBPACK_BUILD();
 (function load() {
 	LAYOUT = document.getElementById('layout');
 
+
+	// let d = observable(1);
+	// api.subscribe(() => {
+	// 	console.log('[sb]', d());
+	// })
+	// d(2);
+	// return;
+
+
+
 	// LAYOUT.innerHTML = '';
 	// requestIdleCallback(() => {
 	TEST_HYDRATE();
@@ -69,7 +82,7 @@ TEST_WEBPACK_BUILD();
 
 	TEST_RENDER();
 	// console.log(LAYOUT.innerHTML)
-	// return
+	return
 
 	setTimeout(() => {
 

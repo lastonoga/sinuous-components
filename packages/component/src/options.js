@@ -106,6 +106,17 @@ function styles(obj = {}, dynamic = null)
 
 let cloneOptions = ['_s', '$slots'];
 
+export function makeCss(readyOptions, options)
+{
+	if(options.staticClass || options.class) {
+		readyOptions.class = classes.bind(this, options.staticClass || null, options.class || null);
+	}
+
+	if(options.staticStyle || options.style) {
+		readyOptions.style = styles.bind(this, options.staticStyle || {}, options.style || null);
+	}
+}
+
 export default function options(options, shouldClone = true)
 {
 	let readyOptions = {};
@@ -116,13 +127,7 @@ export default function options(options, shouldClone = true)
 		}
 	}
 
-	if(options.staticClass || options.class) {
-		readyOptions.class = classes.bind(this, options.staticClass || null, options.class || null);
-	}
-
-	if(options.staticStyle || options.style) {
-		readyOptions.style = styles.bind(this, options.staticStyle || {}, options.style || null);
-	}
+	makeCss(readyOptions, options);
 
 	if(shouldClone) {
 		for (var i = 0; i < cloneOptions.length; i++) {

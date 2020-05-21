@@ -183,9 +183,10 @@ var isArgNotHydratable = function (type, arg) {
 	if(type === null) {
 		type = arg;
 	}
+	// console.log(type, arg)
 
 	return !(
-		['staticClass', 'staticClass', 'props'].includes(type)
+		['staticClass', 'staticClass', 'props', 'on'].includes(type)
 	)
 };
 
