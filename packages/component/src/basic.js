@@ -37,6 +37,7 @@ var Basic = function () {
 		this._computed = this.computed(computed);
 		this._children = [];
 		this._el_index = 0;
+		this.options = null;
 
 		// this._state = [];
 		// this._state = [];
@@ -129,6 +130,10 @@ var Basic = function () {
 		this._slots[name] = slots;
 	}
 
+	Basic.prototype.passOptions = function(options)
+	{
+		this.options = options;
+	}
 
 	Basic.prototype.passProps = function(props)
 	{

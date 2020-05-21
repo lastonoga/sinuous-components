@@ -1,4 +1,4 @@
-import { parseAttrs } from './attrs';
+import { parseAttrs, handleAttrsValue } from './attrs';
 import { _ } from '../helpers';
 import { parseStatement, parseLoop, parseSlot } from './parseFunctions';
 import { expression } from './expression';
@@ -21,20 +21,68 @@ var IF_STATEMENT_STARTED = false;
  *   Length
  * }
  */
-function makeLoop(condition, args, componentTag, returnObject)
+function makeLoop(node, context, Loop, condition, returnObject, { el, options, children, renderOptions, renderChildren })
 {
+	let args = Loop.args;
+
+	let componentRenderTag = getComponentCode(el, renderOptions, renderChildren, false);
+	let componentHydrateTag = getComponentCode(el, options, children, true);
+	
+	let key = Loop.rawArgs[1];
+
+	if(!node.attrs[':key']) {
+		console.warn('Key attribute is required for loop statement');
+	} else {
+		key = handleAttrsValue(context, node.attrs[':key']).value;
+	}
+
 	if(returnObject) {
 		return `{
 			_t: 'loop',
 			c: ${ condition },
-			fn: (${ args }) => { return ${ componentTag }; },
+			k: (${ args }) => { return ${ key }; },
+			h: (${ args }) => { return ${ componentHydrateTag }; },
+			r: (${ args }) => { return ${ componentRenderTag }; },
 		}`
 	}
 
-	return `loop(${ condition }, (${ args }) => { return ${ componentTag }; })`
+	return `loop(${ condition }, (${ args }) => { return ${ componentRenderTag }; })`
 }
 
-function getComponentCode(tag, options, children = [], returnObject = false)
+function makeStatement(context, Statement, condition, returnObject, { el, options, children, renderOptions, renderChildren })
+{
+	let length = getComponentSize(el, options, children);
+	let componentRenderTag = getComponentCode(el, renderOptions, renderChildren, false);
+	let componentHydrateTag = getComponentCode(el, options, children, true);
+
+	let code = '';
+
+	if(Statement.start) {
+		if(returnObject) {	
+			code += `{ _t: 'statement', a: [`;
+		} else {
+			code += `statement(`;
+		}
+	}
+
+	if(returnObject) {	
+		code += ` ${ condition.value }, ${ length }, ${ componentHydrateTag }, (h) => { return ${ componentRenderTag } }`;
+	} else {
+		code += ` ${ condition.value }, ${ length }, (h) => { return ${ componentRenderTag } }`;
+	}
+
+	if(Statement.end) {
+		if(returnObject) {	
+			code += `]}`;
+		} else {
+			code += `)`;
+		}
+	}
+
+	return code;
+}
+
+function getComponentCode(tag, options, children = [], returnObject = false, isComponent = false)
 {
 	if(tag === 'template') {
 		return `[${ children.join(',') }]`;
@@ -225,10 +273,45 @@ export default class Node
 		return slots;
 	}
 
-	toAST(context = null, hydrate = false, isCallExpression = false)
+	getOptions(context = null, slots, shouldSlotsHydrate, hydrate = false, root = false)
+	{
+		let { options, shouldOptionsHydrate } = parseAttrs(context, this.attrs, hydrate);
+		
+		// Handle slots for Component children
+		if(this.isComponent && Object.keys(slots).length > 0) {
+			let value = '';
+
+			for(let key in slots) {
+				value += `'${key}': [${ slots[key].join(',') }],`
+			}
+
+			if((hydrate && shouldSlotsHydrate) || !hydrate) {
+				options += `$slots: { ${ value } },`;
+			}
+		}
+
+		// Is component stateful
+		if(hydrate && shouldOptionsHydrate) {
+			options += `_s: true,`;
+		}
+
+		options = `{${options}}`;
+
+		if(root) {
+			options = `[ctx.options, ${options}]`;
+		}
+
+		return {
+			options,
+			shouldOptionsHydrate,
+		}
+	}
+
+	toAST(context = null, hydrate = false, root = false)
 	{
 		let code = '';
 		let children = [];
+		let renderChildren = [];
 		let shouldHydarate = false;
 		let shouldSlotsHydrate = false;
 		let render = !hydrate;
@@ -238,9 +321,9 @@ export default class Node
 		let Slot = parseSlot(this);
 		let Loop = parseLoop(this);
 
-		if(Statement.is) {
-			isCallExpression = true;
-		}
+		// if(Statement.is) {
+		// 	isCallExpression = true;
+		// }
 
 		let slots = {};
 
@@ -252,7 +335,10 @@ export default class Node
 		for (var i = 0; i < this.children.length; i++) {
 			let child = this.children[i];
 
-			let { value, statefull } = child.toAST(context, hydrate, isCallExpression);
+			// For loops and statements | Where hydration and render needs
+			renderChildren.push(child.toAST(context, false, false).value);
+
+			let { value, statefull } = child.toAST(context, hydrate);
 			// console.log('[child]', child, statefull);
 			if(statefull) {
 				shouldHydarate = true;
@@ -278,35 +364,17 @@ export default class Node
 			
 		}
 
-		let { options, shouldOptionsHydrate } = parseAttrs(context, this.attrs, hydrate);
+		let { options, shouldOptionsHydrate } = this.getOptions(context, slots, shouldSlotsHydrate, hydrate, root);
+
+		let renderOptions = this.getOptions(context, slots, shouldSlotsHydrate, false, root).options;
 		
 		if(shouldOptionsHydrate) {
 			shouldHydarate = true;
 		}
 
-		// Handle slots for Component children
-		if(this.isComponent && Object.keys(slots).length > 0) {
-			let value = '';
-
-			for(let key in slots) {
-				value += `'${key}': [${ slots[key].join(',') }],`
-			}
-
-			if((hydrate && shouldSlotsHydrate) || render) {
-				options += `$slots: { ${ value } },`;
-			}
-		}
-
 		shouldHydarate = this.isComponent || shouldHydarate;
 
-		// Is component stateful
-		if(hydrate && shouldOptionsHydrate) {
-			options += `_s: true,`;
-		}
-
-		options = `{${options}}`;
-
-		let componentTag = getComponentCode(this.tag, options, children, hydrate);
+		let componentTag = getComponentCode(this.tag, options, children, hydrate, this.isComponent);
 
 		// Make loop from component
 		if(Loop.is) {
@@ -316,23 +384,27 @@ export default class Node
 				shouldHydarate = true;
 			}
 
-			componentTag = makeLoop(condition.value, Loop.args, componentTag, hydrate)
+			componentTag = makeLoop(this, context, Loop, condition.value, hydrate, {
+				el: this.tag,
+				options,
+				children,
+				renderOptions,
+				renderChildren,
+			})
 		}
 		// Statement render
 		if(Statement.is) {
+
+			// console.log(renderChildren);
 			let condition = expression(context, Statement.condition, false);
 
-			if(Statement.start) {
-				code += `statement(`;
-			}
-
-			let length = getComponentSize(this.tag, options, children);
-
-			code += ` ${ condition.value }, ${ length }, (h) => { return ${ componentTag } }`;
-
-			if(Statement.end) {
-				code += `)`;
-			}
+			code += makeStatement(Statement, condition, hydrate, {
+				el: this.tag,
+				options,
+				children,
+				renderOptions,
+				renderChildren,
+			});
 		// Slot render
 		} else if(Slot.is) {
 			let { name, tag } = parseSlotAttrs(this);
@@ -343,7 +415,7 @@ export default class Node
 				delete attrs.name;
 				delete attrs.tag;
 
-				code += `slot(ctx, h, '${ name }', ${ tag }, ${ JSON.stringify(attrs) }, [${ children.join(',') }])`;
+				code += `slot(ctx, h, '${ name }', ${ tag }, ${ options }, [${ children.join(',') }])`;
 			} else {
 				code += `${ children.join(',') }`;
 			}
@@ -353,7 +425,7 @@ export default class Node
 
 	
 		// console.log(hydrate, shouldHydarate, isCallExpression, code)
-		if(hydrate && !shouldHydarate && !isCallExpression) {
+		if(hydrate && !shouldHydarate) {
 			return {
 				value: _,
 				statefull: false,

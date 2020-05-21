@@ -252,51 +252,38 @@ function hydrateLoop(context, node, args)
 	});
 }
 
+/**
+ * Maybe need same hydration algorithm as with props
+ * Skip first time hydration ???
+ */
 function hydrateText(context, node, args)
 {
-	// console.warn('[TEXT]', node, args.t);
 	if(args.t === _) {
 		return;
 	}
-	// if(typeof args.t !== 'function' ) {
-	// 	return;
-	// }
-	// console.warn('[TEXT]', node, args.t());
-	
-	// if(!node._hydrated) {
-	// 	node._hydrated = true;
 	
 	api.subscribe(() => {
 		api.insert(node, args.t(), null);
 	});
-	// }
-	// api.insert(el, nodes, null);
 }
 
 
 function getSlotNode(el, tag, path)
 {
 	let node = el;
-	// console.log(el, tag, path);
-	// try {
-		for (var i = 1; i < path.length; i++) {
-			node = node.childNodes[path[i]];
-		}
-	// } catch(err) {
-	// 	console.warn(el, node);
-	// }
-	// console.error(el);
+
+	for (var i = 1; i < path.length; i++) {
+		node = node.childNodes[path[i]];
+	}
 
 	return el;
 }
 
 function hydrateSlots(context, el, opts = {}, slots)
 {
+	// Hydrate props of main Node
 	hydrateProps(context, el, opts);
-	// if(el === null) {
-	// 	console.log(context, el, opts, slots)
-	// }
-
+	
 	let bindedNodes = {}
 
 	let slotData = context._slotsData;
@@ -332,6 +319,7 @@ function hydrateSlots(context, el, opts = {}, slots)
 		}
 	}
 }
+
 /**
  * Context setup
  */
@@ -401,7 +389,6 @@ function hydrateTag(context, node, args)
 function hydrate(context, node, args = null)
 {
 	// requestIdleCallback(() => {
-		// console.log('start')
 		hydrateIdle(context, node, args);
 	// }, {
 	// 	timeout: 0,
@@ -444,11 +431,11 @@ export default function initHydration(component, hydrationRoot, timeBenchmark = 
 
 		Sinuous.clearHID();
 
-		let connectedNode = filterChildNodes(hydrationRoot);
+		// let connectedNode = filterChildNodes(hydrationRoot);
 
 		for (var i = 0; i < tree.length; i++) {
 			let component = tree[i];
-			let node = connectedNode[i];
+			let node = hydrationRoot.childNodes[i];
 			let hydration = component.hydrate(component);
 			
 			hydrate(component, node, hydration);

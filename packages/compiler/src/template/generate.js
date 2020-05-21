@@ -28,8 +28,8 @@ export default function generate(context, html)
 	}
 
 	for (var i = 0; i < tree.length; i++) {
-		let renderAST = tree[i].toAST(context, false);
-		let hydrationAST = tree[i].toAST(context, true);
+		let renderAST = tree[i].toAST(context, false, true);
+		let hydrationAST = tree[i].toAST(context, true, true);
 
 		if(hydrationAST.statefull) {
 			result.shouldHydarate = true;

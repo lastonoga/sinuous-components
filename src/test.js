@@ -116,7 +116,7 @@ function unmounted()
 
 source = `
 <template>
-	<div id="test" class="button" style="border-radius: 5px;"  @click="click" >
+	<div id="test" class="button" style="border-radius: 5px;"  @click="click" v-for="(item, key) in [1,2,3]" :key="key">
 		<!-- {{ s1 }} -->
 		<slot>
 			Default button text  2
@@ -126,6 +126,7 @@ source = `
 
 <script>
 
+let $s1 = 1;
 
 function click()
 {

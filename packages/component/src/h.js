@@ -20,11 +20,10 @@ export default function h(el, opts = {}, children = [])
 	// console.log('[ FF ]', el, this)
 	let dynamicAttrs = false;
 
-	opts = options(opts);
-
+	let readyOptions = options(opts);
 	// If HTML tag render
 	if(!Sinuous.hasComponent(el)) {
-		return hs(el, opts, children);
+		return hs(el, readyOptions, children);
 	}
 
 	let component = Sinuous.getComponent(el);
@@ -33,10 +32,8 @@ export default function h(el, opts = {}, children = [])
 
 	if(component._functional) {
 		return component.render({
-			getUID() {
-				return -1;
-			},
-			_slots: opts.$slots,
+			options: opts,
+			_slots: readyOptions.$slots,
 		});
 	}
 
@@ -47,6 +44,8 @@ export default function h(el, opts = {}, children = [])
 	for(let key in opts.$slots) {
 		component.passSlots(key, opts.$slots[key]);	
 	}
+
+	component.passOptions(opts);
 
 	return component.render();
 }

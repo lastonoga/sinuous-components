@@ -1,7 +1,7 @@
 <template>
-	<div class="button" @click="click" disabled>
+	<div class="button" :class="'new-button'" :style="[{ color: testColor }]" @click="click" style="border-radius: 15px;" disabled>
 		<!-- {{ s1 }} -->
-		<slot>
+		<slot class="s">
 			Default button text 
 		</slot>
 	</div>
@@ -9,35 +9,39 @@
 
 <script>
 let $s1 = 9;//Math.random(1, 100);
-// let timer = null;
+let timer = null;
 
-// let testClass = () => {
-// 	return {
-// 		red: s1 % 2 === 0
-// 	}
-// }
+let testColor = () => {
+	return s1 % 2 === 0 ? 'red' : 'green'
+}
+
+let testClass = () => {
+	return {
+		red: s1 % 2 === 0
+	}
+}
 
 function click()
 {
 	alert(1)
 }
 
-// function mounted()
-// {
-// 	let direction = 1;
+function mounted()
+{
+	let direction = 1;
 
-// 	// s1 += 10
+	// s1 += 10
 
-// 	// timer = setInterval(() => {
-// 	// 	if(s1 > 40) {
-// 	// 		direction = -5;
-// 	// 	} else if(s1 < 10) {
-// 	// 		direction = 5;
-// 	// 	}
+	timer = setInterval(() => {
+		if(s1 > 40) {
+			direction = -5;
+		} else if(s1 < 10) {
+			direction = 5;
+		}
 
-// 	// 	s1 += direction
-// 	// }, 5000)
-// }
+		s1 += direction
+	}, 1000)
+}
 
 // function unmoutned()
 // {

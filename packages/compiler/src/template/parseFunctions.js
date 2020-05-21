@@ -34,10 +34,14 @@ export function parseLoop(node)
 
 		if(match.groups.item) {
 			args.push(match.groups.item);
+		} else {
+			args.push('_item');
 		}
 
 		if(match.groups.key) {
 			args.push(match.groups.key);
+		} else {
+			args.push('_index');
 		}
 
 		condition = match.groups.condition;
@@ -52,6 +56,7 @@ export function parseLoop(node)
 	return {
 		is: true,
 		condition: condition,
+		rawArgs: args,
 		args: args.join(','),
 	}
 }

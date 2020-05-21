@@ -1,7 +1,7 @@
 <script>
-let $items = Array.from({ length: 10000 }, (_, i) => i);
+let $items = Array.from({ length: 1 }, (_, i) => i);
 let $s1 = 1;
-// let timer = null;
+let timer = null;
 
 function mounted()
 {
@@ -13,9 +13,9 @@ function mounted()
 
 	// items = d;
 
-	// timer = setInterval(() => {
-	// 	s1 += 10
-	// }, 100)
+	timer = setInterval(() => {
+		s1 += 10
+	}, 1000)
 }
 
 function unmoutned()
@@ -31,7 +31,7 @@ function unmoutned()
 			Button - test - slot {{ s1 }}
 		</sbutton> -->
 	<!-- test -->
-		<sbutton v-for="(item, key) in items">
+		<sbutton v-for="(item, key) in items" :key="key" :class="s1" :style="{ fontStyle: 'italic' }" style="font-weight: bold;">
 			Button {{ item }}
 		</sbutton>
 		<!-- <test></test> -->

@@ -3,14 +3,20 @@ function argToString()
 	let str = '';
 
 	for (var i = 0; i < arguments.length; i++) {
-		if(typeof arguments[i] === 'object') {
-			for(let key in arguments[i]) {
-				if(arguments[i][key]) {
+		let value = arguments[i];
+		
+		if(typeof value === 'function') {
+			value = value();
+		}
+
+		if(typeof value === 'object') {
+			for(let key in value) {
+				if(value[key]) {
 					str += ` ${ key }`;
 				}
 			}
 		} else {
-			str += ` ${arguments[i]}`;
+			str += ` ${value}`;
 		}
 	}
 
@@ -26,7 +32,7 @@ function argToObject()
 		
 		for(let key in arguments[i]) {
 			let value = arguments[i][key];
-			// console.warn(value, key);
+			console.warn(value, key);
 			if(typeof value === 'function') {
 				value = value();
 			}
@@ -53,7 +59,7 @@ function classes(str = null, dynamic = null)
 	if(str === null) {
 		str = '';
 	}
-
+	
 	if(typeof dynamic === 'function') {
 		dynamic = dynamic();
 	}
@@ -80,6 +86,8 @@ function makeStyleProp(name)
 
 function styles(obj = {}, dynamic = null)
 {
+	let readyStyles = Object.assign({}, obj);
+
 	if(typeof dynamic === 'function') {
 		dynamic = dynamic();
 	}
@@ -92,16 +100,16 @@ function styles(obj = {}, dynamic = null)
 		
 		for(let key in dynamic[i]) {
 			let value = dynamic[i][key];
-			// console.warn(value, key);
+			
 			if(typeof value === 'function') {
 				value = value();
 			}
-
-			obj[makeStyleProp(key)] = value;
+			readyStyles[makeStyleProp(key)] = value;
 		}
 	}
 
-	return obj;
+	console.log(readyStyles)
+	return readyStyles;
 }
 
 let cloneOptions = ['_s', '$slots'];
@@ -119,26 +127,115 @@ export function makeCss(readyOptions, options)
 	return readyOptions;
 }
 
-export default function options(options, shouldClone = true)
+export function makeOption(option, shouldClone = true)
 {
-	let readyOptions = {};
+	let readyOption = {};
 
-	if(options.on) {
-		for(let key in options.on) {
-			readyOptions[`on${key}`] = options.on[key];
+	if(option.on) {
+		for(let key in option.on) {
+			readyOption[`on${key}`] = option.on[key];
 		}
 	}
 
-	makeCss(readyOptions, options);
+	if(option.key) {
+		readyOption['data-key'] = option.key;
+	}
+
+	makeCss(readyOption, option);
 
 	if(shouldClone) {
 		for (var i = 0; i < cloneOptions.length; i++) {
 			let name = cloneOptions[i];
-			if(options[name]) {
-				readyOptions[name] = options[name];
+			if(option[name]) {
+				readyOption[name] = options[name];
+			}
+		}
+	}
+
+	return readyOption;
+}
+
+const AssignObjectOptions = ['staticStyle', 'attrs', 'on'];
+const AssignValueOptions = ['style', 'class'];
+
+export function mergeOptions(options)
+{
+	let readyOptions = {};
+	let shouldBeMerged = false;
+
+	if(Array.isArray(options)) {
+		for (var i = 0; i < options.length; i++) {
+			if(options[i] === null) {
+				break;
+			}
+			
+			if(i > 0) {
+				shouldBeMerged = true;
+			}
+		}
+		
+		if(!shouldBeMerged) {
+			return options[1];
+		}
+	} else {
+		return options;
+	}
+
+	for (var i = 0; i < options.length; i++) {
+		let option = options[i]
+	
+		for (var j = 0; j < AssignObjectOptions.length; j++) {
+			let name = AssignObjectOptions[j];
+			
+			if(!option[name]) {
+				continue;
+			}
+
+			if(!readyOptions[name]) {
+				readyOptions[name] = {};
+			}
+
+			for(let prop in option[name]) {
+				readyOptions[name][prop] = option[name][prop];
+			}
+		}
+
+		for (var j = 0; j < AssignValueOptions.length; j++) {
+			let name = AssignValueOptions[j];
+
+			if(!option[name]) {
+				continue;
+			}
+
+			if(!readyOptions[name]) {
+				readyOptions[name] = [];
+			}
+
+			readyOptions[name] = readyOptions[name].concat(option[name]);
+		}
+
+		if(option.key) {
+			readyOptions.key = option.key;
+		}
+
+		if(option.staticClass) {
+			if(!readyOptions.staticClass) {
+				readyOptions.staticClass = option.staticClass;
+			} else {
+				readyOptions.staticClass += ' ' + option.staticClass;
 			}
 		}
 	}
 
 	return readyOptions;
+}
+
+export default function options(options, shouldClone = true)
+{
+	let readyOptions = mergeOptions(options);
+
+	console.log(options);
+	console.warn(readyOptions);
+
+	return makeOption(readyOptions, shouldClone);
 }

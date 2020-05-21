@@ -138,10 +138,14 @@ function makeMap (
 var dynamicArgAttribute = /^(\@|\:)/g;
 var eventArgAttribute = /^\@/g;
 
-var staticArgsMap = {
-	class: 'staticClass',
-	style: 'staticStyle',
-}
+/**
+ * Keep options while hydration
+ * e.g events, static class, props
+ * @type {Array}
+ */
+var isHydrationKeepAttr = makeMap('staticClass, staticClass, props, on');
+
+var isFunctionAttr = makeMap('key, ref');
 
 var isAttr = makeMap(
 	'accept,accept-charset,accesskey,action,align,alt,async,autocomplete,' +
@@ -184,9 +188,7 @@ var isArgNotHydratable = function (type, arg) {
 		type = arg;
 	}
 
-	return !(
-		['staticClass', 'staticClass', 'props', 'on'].includes(type)
-	)
+	return (!isHydrationKeepAttr(type))
 };
 
 var normalizeValue = function (value)
@@ -203,7 +205,7 @@ var normalizeValue = function (value)
 }
 
 
-function handleAttrsValue(context, value)
+export function handleAttrsValue(context, value)
 {
 	let statefull = false;
 
@@ -283,6 +285,8 @@ function parseAttrs(context, attrs, hydrate = false)
 			if(isEventAttr(key)) {
 				type = 'on';
 				statefull = true;
+			} else if(isFunctionAttr(arg)) {
+				type = null;
 			} else {
 				if(isCSSAttr(key)) {
 					type = null;
@@ -331,6 +335,8 @@ function parseAttrs(context, attrs, hydrate = false)
 						normalizedValue[tmp[0]] = normalizeValue(tmp[1]);
 					}
 				}
+			} else if(isFunctionAttr(arg)) {
+				throw new Error(`Attribute ${arg} should by dynamic`);
 			} else if(isRenderableAttr(arg)) {
 				type = 'attrs';
 				normalizedValue =  normalizeValue(value);
@@ -355,6 +361,16 @@ function parseAttrs(context, attrs, hydrate = false)
 		}
 		// Is expression inside
 		
+	}
+
+	if(hydrate) {
+		if(options.class.length === 0) {
+			delete options.staticClass;
+		}
+
+		if(options.style.length === 0) {
+			delete options.staticStyle;
+		}
 	}
 
 	// console.log(options);
