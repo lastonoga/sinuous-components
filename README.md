@@ -4,18 +4,17 @@ Yet another reactive framework based on Sinuous
 
 ## Why?
 
-All reactive frameworks are really slow now days.
-We can't use them to make fast websites and partial-dynamic web apps. (Thats why even github use jquery-like libs)
-
-I am fully tired of developing slow web apps.
-Build systems (like NuxtJS) have a lot of problems like backend-auth and cookie/session passing.
+There is no way to use reactive frameworks for websites because of bad performance (FID, TTI).
+Thats why even github use jquery-like libs.
 
 ## What?
 
 This framework is in pre-alpha and was created to test partial hydration combined with jquery-like reactivity (thanks Sinuous).
 
-It uses Sinuous for reactivity and render, because it the fastest one.
-Sinuous is really tiny and too far from Vue+Nuxt, React+Next and etc.
+Sinuous is fast, but doesnt have modern features like loops, if statements, components and... **Partial hydration**.
+
+Partial hydration is hydration that works only with dynamic and statefull parts of application.
+It helps to use component and reactive paradigm for website development (not applications and SPA).
 
 ## How?
 
@@ -24,8 +23,8 @@ Sinuous is really tiny and too far from Vue+Nuxt, React+Next and etc.
 - **Automagic reactivity.** define a reactive variable and all methods/props that use that variable become reactive
 
 ## Benefits
-- **Small.** hello world at `~8kB` gzip.
-- **Fast.** Thanks Sinuous and partial hydration. (we need to finish slots, loopts and more to create realy website page and understand how fast is partial hydration work on partial-dynamic web apps)
+- **Small.** hello world at `~9kB` gzip.
+- **Fast.** Thanks Sinuous and partial hydration.
 - **Truly reactive.** automatically derived from the app state.
 - **Tips & Tricks.** Slots, Loops, Statements and Props as we get used to
 
@@ -61,10 +60,12 @@ Hydration (with onclick) | 165ms | 117ms | 5000ms+ | 707ms | 390ms
 Hydration (full dynamic) | 75ms | - | 5000ms+ | 185ms | -
 Full page size | 43kb | 39kb | 60kb | 169kb | 169kb
 
-So... Sinuous is faster in x10 times if components are functional and x20 times with simple components.
-Framework size is x4 less.
 
-But! Thats only for full static components that do need hydration. Why? Because more that 60% of usual website is static.
+That framework is faster then Vue + NuxtJS in:
+1. Full static: x3.5
+1. Static with event: x3
+1. Dynamic: x2
+1. Page size: x4
 
 ## Todo
 
