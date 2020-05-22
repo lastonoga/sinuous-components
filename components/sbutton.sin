@@ -1,6 +1,6 @@
 <template>
 	<div class="button" :class="'new-button'" :style="[{ color: testColor }]" @click="click" style="border-radius: 15px;" disabled>
-		<!-- {{ s1 }} -->
+		{{ prop1 }}
 		<slot class="s">
 			Default button text 
 		</slot>
@@ -9,6 +9,7 @@
 
 <script>
 let $s1 = 9;//Math.random(1, 100);
+let prop1 = Number | 9;
 let timer = null;
 
 let testColor = () => {

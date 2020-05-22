@@ -466,16 +466,12 @@ function hydrateTag(context, node, args)
 		return;
 	}
 
-	// setup component
-	// if(typeof opts.props !== 'undefined') {
-	// 	component.passProps(opts.props);
-	// }
-	// console.log(component, opts.$slots)
+	component.passProps(opts.props);
+	component.passOptions(opts);
+	
 	if(opts.$slots) {
 		hydrateSlots(component, node, opts, opts.$slots);
 	}
-
-	component.passOptions(opts);
 
 	return hydrate(component, node, component.hydrate(component));
 }

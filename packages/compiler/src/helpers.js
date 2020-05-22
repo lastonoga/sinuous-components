@@ -1,7 +1,25 @@
 export const ReactiveNamespaces = ['state', 'computed'];
 
+
+/**
+ * Consts
+ */
 export const _ = -1;
 
+export const Reactity = {
+  'state': 'o',
+  'computed': 'o'
+};
+
+export const FunctionReturnExpression = ['data', 'state', 'computed'];
+export const ObjectReturnExpression = ['methods', 'props']; // As it is expressions
+
+export const AiiExpression = ['imports'];
+// export const RETURN_FUNCTION_TYPE = 1;
+// export const OBJECT_FUNCTION_TYPE = 2;
+// 
+// 
+// 
 export function isIdentifierReactive(data, id)
 {
 	let name = id.name;

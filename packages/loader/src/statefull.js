@@ -34,6 +34,11 @@ export default function statefull(options, block)
 		for(let key in config.methods) {
 			instance.prototype[key] = config.methods[key]
 		}
+		
+		instance.prototype.__props = {};
+		for(let key in config.props) {
+			instance.prototype.__props[key] = config.props[key]
+		}
 	`	
 	
 	if(options.isSSR) {

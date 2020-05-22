@@ -116,9 +116,8 @@ function unmounted()
 
 source = `
 <script>
-let $items = Array.from({ length: 1 }, (_, i) => i);
 let $s1 = 1;
-let timer = null;
+let prop1 = Any | 'some';
 
 function unmoutned()
 {
@@ -127,7 +126,7 @@ function unmoutned()
 </script>
 
 <template>
-	<div>
+	<div :class="prop1">
 		<sbutton v-if="s1 % 2 === 0">
 			Button
 		</sbutton>

@@ -19,7 +19,7 @@ var Basic = function () {
 		this.hid = ++HID;
 		this.$el = null;
 
-		this._props = this.props();
+		this._props = {};
 		this._passedProps = {};
 
 		// Local data
@@ -44,7 +44,7 @@ var Basic = function () {
 		// this._state = [];
 
 		// Default prop values 
-		this.initProps();
+		// this.initProps();
 
 		// this.initTemplate();
 
@@ -136,23 +136,20 @@ var Basic = function () {
 
 	Basic.prototype.passProps = function(props)
 	{
-		// if(typeof this._passedProps[component.hid] === 'undefined') {
-		// 	this._passedProps[component.hid] = {};
-		// }
+		if(!props) {
+			props = {};
+		}
 
-		for(let key in props)
+		for(let key in this.__props)
 		{
-			if(props[key]._observable) {
-				this._isStateful = true;
+			let value = this.__props[key].default();
+			if(props[key]) {
+				value = props[key];
 			}
 
-			this._data[key] = props[key];
-			// if(typeof this._data[key] !== 'undefined') {
-			// 	throw new Error(`[Sinuous] Component ${ this.name } already has ${ key } property`)
-			// } else {
-			// 	this._data[key] = props[key];
-			// }
+			this._props[key] = value;
 		}
+
 	}
 
 	/**

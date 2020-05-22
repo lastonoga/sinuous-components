@@ -9,7 +9,7 @@ import {
 	getIdentifierName,
 	isIdentifierReactive,
 	makeObservableGetter,
-} from "./helpers";
+} from "../helpers";
 
 
 export default function(data, ast)
@@ -30,7 +30,13 @@ export default function(data, ast)
 				let name = getIdentifierName(id);
 
 				let type = null;
-				if(['ArrowFunctionExpression', 'FunctionExpression'].includes(value.type)) {
+				if(value.type === 'BinaryExpression') {
+					type = 'props';
+					value = {
+						type: value.left.name,
+						defaultValue: value.right,
+					}
+				} else if(['ArrowFunctionExpression', 'FunctionExpression'].includes(value.type)) {
 					type = 'computed';
 				} else if(isIdentifierReactive(data, id)) {
 					type = 'state';

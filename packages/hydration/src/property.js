@@ -41,7 +41,7 @@ export default function hydrateProps(context, el, options)
 		if(cssOptions.class) {
 			// console.log(cssOptions.class());
 			addSubscriber(cssOptions.class, (value) => {
-				console.log(el, value);
+				// console.log(el, value);
 				el.className = value;
 			});
 		}

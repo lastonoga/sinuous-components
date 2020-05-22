@@ -1,5 +1,5 @@
 <script>
-let $items = Array.from({ length: 1 }, (_, i) => i);
+let $items = Array.from({ length: 1000 }, (_, i) => i);
 let $s1 = 2;
 let timer = null;
 
@@ -31,14 +31,14 @@ function unmounted()
 <template>
 	<div>
 		
-		<sbutton v-if="s1 % 2 === 0">
+		<!-- <sbutton v-if="s1 % 2 === 0" prop1="test">
 			Button
 		</sbutton>
-		<div v-else>1</div>
+		<div v-else>1</div> -->
 	<!-- test -->
-		<!-- <sbutton v-for="(item, key) in items" :key="key" :class="s1" :style="{ fontStyle: 'italic' }" style="font-weight: bold;">
+		<sbutton v-for="(item, key) in items" :key="key" :class="s1" :style="{ fontStyle: 'italic' }" style="font-weight: bold;" prop1="test--">
 			Button {{ item }} 
-		</sbutton> -->
+		</sbutton>
 		<!-- <test></test> -->
 		<!-- <test></test> -->
 		

@@ -7,7 +7,9 @@ import {
 	FunctionExpression,
 	ArrowFunctionExpression,
 	BlockStatement,
+	LabeledStatement,
 	ReturnStatement,
+	StringLiteral,
 	identifier,
 	program,
 } from "@babel/types";
@@ -18,7 +20,7 @@ import {
 	FunctionReturnExpression,
 	ObjectReturnExpression,
 	AiiExpression,
-} from "./helpers";
+} from "../helpers";
 
 export default function(data)
 {
@@ -100,13 +102,29 @@ function generateFunctionReturnExpression(data, returnProp)
 	return object;
 }
 
-function generateObjectReturnExpression(data, prop)
+function generateObjectReturnExpression(data, type)
 {
-	let values = data[prop];
+	let values = data[type];
 	let properties = [];
 
 	for(let prop in values) {
 		let val = values[prop];
+
+		if(type === 'props') {
+			let propType = val.type;
+			let propValue = val.defaultValue;
+
+			val = ObjectExpression([
+				ObjectProperty(identifier('type'), StringLiteral(propType)),
+				ObjectProperty(identifier('default'),
+					ArrowFunctionExpression([],
+						BlockStatement([
+							ReturnStatement(propValue)
+						])
+					)),
+			]);
+			// console.log(prop, propType, propValue);
+		}
 
 		if(val.type === 'FunctionDeclaration') {
 			val = FunctionExpression(null, val.params, val.body);
@@ -118,7 +136,7 @@ function generateObjectReturnExpression(data, prop)
 	}
 
 	let object = ObjectProperty(
-		identifier(prop),
+		identifier(type),
 		ObjectExpression(properties)
 	);
 

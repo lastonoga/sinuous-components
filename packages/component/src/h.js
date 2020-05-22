@@ -38,9 +38,9 @@ export default function h(el, opts = {}, children = [])
 		});
 	}
 
-	if(typeof opts.props !== 'undefined') {
-		component.passProps(opts.props);
-	}
+	// if(typeof opts.props !== 'undefined') {
+	component.passProps(opts.props);
+	// }
 
 	for(let key in opts.$slots) {
 		component.passSlots(key, opts.$slots[key]);	

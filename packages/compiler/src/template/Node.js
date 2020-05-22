@@ -66,7 +66,6 @@ function makeStatement(context, Statement, condition, returnObject, { el, option
 		}
 	}
 
-	console.log(Statement, returnObject);
 	if(returnObject) {	
 		code += `
 		${ condition.value },
@@ -84,8 +83,6 @@ function makeStatement(context, Statement, condition, returnObject, { el, option
 		} else {
 			code += `)`;
 		}
-
-		console.log(code);
 	}
 
 	return code;

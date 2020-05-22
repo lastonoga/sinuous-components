@@ -6,7 +6,6 @@ import generate from "@babel/generator";
 import { createData } from "./data";
 import parseContext from "./parseContext";
 import parseExpression from "./parseExpression";
-import parseMethods from "./parseMethods";
 import AstGenerator from "./AstGenerator";
 
 

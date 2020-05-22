@@ -15,8 +15,6 @@ import {
 
 import { prepareOptionKey } from './attrs';
 
-import { hasState, getVariable } from './helpers';
-
 export function expression(context, code, keepObservation = true)
 {
 	if(typeof code === 'object') {
