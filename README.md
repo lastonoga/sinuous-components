@@ -76,7 +76,7 @@ That framework is faster then Vue + NuxtJS in:
 - [ ] Loops
 - [x] Functional components (automatic)
 - [x] Attributes inheritence to component
-- [x] Props
+- [x] Props (Can be used as Init data for component)
 - [ ] Component lazy load
 - [ ] Dynamic component
 - [ ] Server side render
