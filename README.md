@@ -68,27 +68,21 @@ That framework is faster then Vue + NuxtJS in:
 1. Dynamic: x2.5
 1. Page size: x4
 
-## Todo
+## Features
 
 - [x] Single file components
-- [x] Compiler (Alpha)
-- [x] Partial hydration
-- [x] Page lazy load
-- [x] Statements Render
-- [x] Loops Render
-- [x] Slots Render
-- [x] Statements hydration
-- [ ] Loops hydration
-- [x] Slots hydration
+- [x] Statements (v-if, v-else-if, v-else)
+- [x] Slots
+- [ ] Loops
+- [x] Functional components (automatic)
+- [x] Attributes inheritence to component
 - [ ] Props
-- [x] Functional components (automatic, need to reduce class init time)
-- [ ] Make full page and test performance
-- [ ] Init data 
 - [ ] Component lazy load
-- [ ] Dynamic Components
-- [ ] SSR with initial data passing
-- [ ] SSR Data fetching. (Server can fetch data only once. Then components are static)
-- [ ] Auto detection statefull variables (depends on component template variable usage)
+- [ ] Dynamic component
+- [ ] Server side render
+- [ ] Server side data fetching (once)
+
+When Statements, slots, loops and props will be ready i gonna make full page perfromance to understand how Partial hydration works.
 
 ## Component example
 
