@@ -77,7 +77,7 @@ That framework is faster then Vue + NuxtJS in:
 - [x] Statements Render
 - [x] Loops Render
 - [x] Slots Render
-- [ ] Statements hydration
+- [x] Statements hydration
 - [ ] Loops hydration
 - [x] Slots hydration
 - [ ] Props
