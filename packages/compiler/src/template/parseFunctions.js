@@ -61,28 +61,45 @@ export function parseLoop(node)
 	}
 }
 
+function has(obj, name)
+{
+	return obj.hasOwnProperty(name);
+}
+
+function getAttr(obj, name)
+{
+	if(has(obj, name)) {
+		return obj[name];
+	}
+
+	return false;
+}
+
 export function parseStatement(node)
 {
 	let start = false;
 	let end = true;
 	let statement = false;
-	let condition = node.attrs['v-if'] || node.attrs['v-else-if'] || 'true';
+	let condition = getAttr(node.attrs, 'v-if') || getAttr(node.attrs, 'v-else-if') || 'true';
 
-	if(node.attrs['v-if']) {
+	if(node.attrs.hasOwnProperty('v-if')) {
 		start = true;
 	}
 
-	if(node.attrs['v-if'] || node.attrs['v-else-if'] || node.attrs['v-else']) {
+	if(has(node.attrs, 'v-if') || has(node.attrs, 'v-else-if') || has(node.attrs, 'v-else')) {
 		node.if_statement = true;
 		statement = true;
 	}
 
+	// console.log(node, node.nextSibling)
 
 	if(node.nextSibling instanceof Node) {
-		if(node.nextSibling.attrs['v-else-if'] || node.nextSibling.attrs['v-else']) {
+		if(has(node.nextSibling.attrs, 'v-else-if') || has(node.nextSibling.attrs, 'v-else')) {
 			end = false;
 		}
 	}
+
+	// console.log(node, start, end)
 
 	return {
 		condition,

@@ -9,7 +9,7 @@ export default function statement()
 		}
 
 		let result = [];
-
+		let foundCondition = false;
 		// value
 		let childIndex = 0;
 		for (var i = 0; i < arguments.length; i += 3) {
@@ -18,17 +18,14 @@ export default function statement()
 			let value = arguments[i + 2];
 			let node = null;
 
-			if(typeof condition === 'function') {
-				if(condition()) {
-					node = value;
-				}
-			} else {
-				if(condition) {
-					node = value;
-				}
+			condition = typeof condition === 'function' ? condition() : condition;
+
+			if(condition && !foundCondition) {
+				foundCondition = true;
+				node = value;
 			}
 
-			// console.warn(i, size, node);
+			// console.warn(condition, size, value, node);
 			// Pass failed stetement condition
 			// Normilize index that will be used in replacing placeholder (below)
 			if(node === null) {

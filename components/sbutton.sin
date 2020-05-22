@@ -30,9 +30,11 @@ function mounted()
 {
 	let direction = 1;
 
-	// s1 += 10
+	// console.log('mounted', this.hid);
 
 	timer = setInterval(() => {
+		// console.log('interval', this.hid);
+
 		if(s1 > 40) {
 			direction = -5;
 		} else if(s1 < 10) {
@@ -43,8 +45,9 @@ function mounted()
 	}, 1000)
 }
 
-// function unmoutned()
-// {
-// 	clearInterval(timer);
-// }
+function unmounted()
+{
+	// console.log('unmounted', this.hid);
+	clearInterval(timer);
+}
 </script>

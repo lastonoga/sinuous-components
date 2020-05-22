@@ -28,6 +28,7 @@ export default function h(el, opts = {}, children = [])
 
 	let component = Sinuous.getComponent(el);
 
+	// console.log(this)
 	registerChildren(this, component);
 
 	if(component._functional) {

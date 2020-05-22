@@ -24,7 +24,7 @@ It helps to use component and reactive paradigm for website development (not app
 - **Automagic reactivity.** define a reactive variable and all methods/props that use that variable become reactive
 
 ## Benefits
-- **Small.** hello world at `~9kB` gzip.
+- **Small.** hello world at `7.1kB` gzip.
 - **Fast.** Thanks Sinuous and partial hydration.
 - **Truly reactive.** automatically derived from the app state.
 - **Tips & Tricks.** Slots, Loops, Statements and Props as we get used to

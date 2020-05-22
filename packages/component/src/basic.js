@@ -1,12 +1,8 @@
 import Sinuous from '@sinuous/i';
 import { _ } from '@sinuous/compiler/src/empty';
 
-
-import { hydrate, dhtml } from 'sinuous/hydrate';
-
 import { observable, computed } from './observable';
 
-import { loop as hLoop, slot as hSlot, statement as hStatement } from '@sinuous/hydration';
 import { styles, classes, statement, dynamic, loop, slot } from './index';
 
 import { h } from './';
@@ -21,6 +17,7 @@ var Basic = function () {
 	{
 		this._isComponent = true;
 		this.hid = ++HID;
+		this.$el = null;
 
 		this._props = this.props();
 		this._passedProps = {};
@@ -29,10 +26,12 @@ var Basic = function () {
 		this._data = this.data();
 		// Stateful data
 		this._state = this.state(observable);
-
+		// slots
 		this._slots = {
 			default: [],
 		};
+		// hooks
+		this._hooks = [];
 
 		this._computed = this.computed(computed);
 		this._children = [];
@@ -197,12 +196,16 @@ var Basic = function () {
 
 	Basic.prototype.hook = function(type = 'mounted')
 	{
+		if(!this._hooks.includes(type)) {
+			this._hooks.push(type);
+		}
+
 		if(this[type]) {
 			this[type].call(this);
 		}
 
 		for (var i = 0; i < this._children.length; i++) {
-			if(this._children[i] === _) {
+			if(this._children[i] === _ || this._children[i]._hooks.includes(type)) {
 				continue;
 			}
 			
@@ -230,7 +233,7 @@ var Basic = function () {
 
 		h.bind(ctx);
 
-		return ctx.__render(h.bind(ctx), {
+		this.$el = ctx.__render(h.bind(ctx), {
 			ctx,
 			statement,
 			loop,
@@ -238,10 +241,12 @@ var Basic = function () {
 			d: dynamic,
 			c: computed,
 		});
+
+		return this.$el;
 	}
 
 
-	Basic.prototype.hydrate = function(ctx = null, compiler = null)
+	Basic.prototype.hydrate = function(ctx = null)
 	{
 		if(ctx === null) {
 			ctx = this;

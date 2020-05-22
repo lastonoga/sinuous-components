@@ -115,58 +115,26 @@ function unmounted()
 
 
 source = `
-<template>
-	<div class="button" :class="'new-button'" :style="[{ color: testColor }]" @click="click" style="border-radius: 15px;" disabled>
-		<!-- {{ s1 }} -->
-		<slot class="s">
-			Default button text 
-		</slot>
-	</div>
-</template>
-
 <script>
-let $s1 = 9;//Math.random(1, 100);
+let $items = Array.from({ length: 1 }, (_, i) => i);
+let $s1 = 1;
 let timer = null;
 
-let testColor = () => {
-	return s1 % 2 === 0 ? 'red' : 'green'
-}
-
-let testClass = () => {
-	return {
-		red: s1 % 2 === 0
-	}
-}
-
-function click()
+function unmoutned()
 {
-	alert(1)
+	// clearInterval(timer);
 }
-
-function mounted()
-{
-	let direction = 1;
-
-	// s1 += 10
-
-	timer = setInterval(() => {
-		if(s1 > 40) {
-			direction = -5;
-		} else if(s1 < 10) {
-			direction = 5;
-		}
-
-		s1 += direction
-	}, 1000)
-}
-
-// function unmoutned()
-// {
-// 	clearInterval(timer);
-// }
 </script>
 
+<template>
+	<div>
+		<sbutton v-if="s1 % 2 === 0">
+			Button
+		</sbutton>
 
+		<div v-else>1</div>
+	</div>
+</template>
 `
 // console.log(parseHTML(source));
 

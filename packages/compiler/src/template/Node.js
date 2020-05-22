@@ -42,7 +42,7 @@ function makeLoop(node, context, Loop, condition, returnObject, { el, options, c
 			c: ${ condition },
 			k: (${ args }) => { return ${ key }; },
 			h: (${ args }) => { return ${ componentHydrateTag }; },
-			r: (${ args }) => { return ${ componentRenderTag }; },
+			r: (h, ${ args }) => { return ${ componentRenderTag }; },
 		}`
 	}
 
@@ -57,6 +57,7 @@ function makeStatement(context, Statement, condition, returnObject, { el, option
 
 	let code = '';
 
+
 	if(Statement.start) {
 		if(returnObject) {	
 			code += `{ _t: 'statement', a: [`;
@@ -65,10 +66,16 @@ function makeStatement(context, Statement, condition, returnObject, { el, option
 		}
 	}
 
+	console.log(Statement, returnObject);
 	if(returnObject) {	
-		code += ` ${ condition.value }, ${ length }, ${ componentHydrateTag }, (h) => { return ${ componentRenderTag } }`;
+		code += `
+		${ condition.value },
+		${ length }, {
+			h: ${ componentHydrateTag },
+			r: (h) => { return ${ componentRenderTag }; }
+		}`;
 	} else {
-		code += ` ${ condition.value }, ${ length }, (h) => { return ${ componentRenderTag } }`;
+		code += ` ${ condition.value }, ${ length }, () => { return ${ componentRenderTag } }`;
 	}
 
 	if(Statement.end) {
@@ -77,6 +84,8 @@ function makeStatement(context, Statement, condition, returnObject, { el, option
 		} else {
 			code += `)`;
 		}
+
+		console.log(code);
 	}
 
 	return code;
@@ -398,14 +407,15 @@ export default class Node
 
 			// console.log(renderChildren);
 			let condition = expression(context, Statement.condition, false);
-
-			code += makeStatement(Statement, condition, hydrate, {
+			code += makeStatement(context, Statement, condition, hydrate, {
 				el: this.tag,
 				options,
 				children,
 				renderOptions,
 				renderChildren,
 			});
+
+			shouldHydarate = true;
 		// Slot render
 		} else if(Slot.is) {
 			let { name, tag } = parseSlotAttrs(this);

@@ -1,7 +1,8 @@
-import { h, hs, api } from 'sinuous';
+import { api } from 'sinuous';
 import { _ } from '@sinuous/compiler/src/empty';
 import Sinuous from '@sinuous/i';
-import { options as parseOptions } from '@sinuous/component';
+import map from 'sinuous/map';
+import { options as parseOptions, h } from '@sinuous/component';
 import { loadComponent } from '@sinuous/lazy';
 // import subscribe from './subscribe';
 import hydrateProps from './property';
@@ -229,14 +230,80 @@ function hydrateH(context, el, options, children)
 	}
 }
 
+function hydrateStatement(context, node, args)
+{
+	let parent = node.parentNode;
+	let startIndex = 0;
+
+	while((node = node.previousSibling) != null)
+		startIndex++;
+	
+	let statementArgs = args.a;
+
+	function hideNodes(children, startIndex, length)
+	{
+		for (var j = startIndex; j <= length; j++) {
+			let node = children[j];
+			// console.log('hide', j, node);
+			if(node.nodeType !== Node.COMMENT_NODE) {
+				node.replaceWith(document.createComment(''));
+			}
+
+			node = node.nextElementSibling;
+		}
+	}
+
+	api.subscribe(() => {
+		let currentIndex = startIndex;
+		let foundCondition = false;
+		
+		for (var i = 0; i < statementArgs.length; i+= 3) {
+			let condition = statementArgs[i];
+			let size = statementArgs[i + 1];
+			let component = statementArgs[i + 2];
+
+			let currentNode = parent.childNodes[currentIndex];
+
+			condition = typeof condition === 'function' ? condition() : condition;
+
+			// console.log(currentNode, condition && !foundCondition);
+			if(condition && !foundCondition) {
+				foundCondition = true;
+				// console.log('show', parent.childNodes[currentIndex], size);
+				if(currentNode.nodeType === Node.COMMENT_NODE) {
+					//  render
+					let newNode = component.r(h.bind(context));
+					currentNode.replaceWith(newNode);
+				} else {
+					// hydrate
+					markAsReady(currentNode);
+					hydrate(context, currentNode, component.h);
+				}
+			} else {
+				// console.log('[hide]', parent.childNodes, currentIndex, size);
+				hideNodes(parent.childNodes, currentIndex, size);
+			}
+
+			currentIndex += size;
+			// console.warn(currentNode, currentNode.nextElementSibling)
+
+			// console.log(currentNode, condition, 'skip');
+
+			
+		}
+	});
+	
+}
+
 function hydrateLoop(context, node, args)
 {
 	let condition = args.c;
 	let startNode = node;
+	let prevNode = node;
+	let parentNode = node.parentNode;
 
 	api.subscribe(() => {
 		let loop_condition = typeof condition === 'function' ? condition() : condition;
-		// console.log(loop_condition)
 		let currentNode = startNode;
 
 		for(let key in loop_condition)
@@ -245,7 +312,8 @@ function hydrateLoop(context, node, args)
 			let itemKey = args.k(item, key);
 			let itemArgs;
 
-			let shouldRender = false;
+			let shouldRender = currentNode === null;
+
 			if(currentNode) {
 				let nodeKey = currentNode.getAttribute('data-key');
 				if(nodeKey === itemKey) {
@@ -254,17 +322,29 @@ function hydrateLoop(context, node, args)
 			}
 
 			if(shouldRender) {
-				itemArgs = args.r(item, key);
-			} else {
+				// let newNode = args.r(h.bind(context), item, key);
+				
+				// markAsReady(newNode);
+				// modify H with Index to create class + mount/unmount
+				if(currentNode) {
+					// replace
+				} else {
+					// prevNode.after(newNode)
+				}
+				// prevNode = newNode;
+				// context.hook('mounted');
+			} else { // if(!currentNode._hydrated) 
 				itemArgs = args.h(item, key);
+
+				markAsReady(currentNode);
+
+				hydrate(context, currentNode, itemArgs);
 			}
 
-			// console.log(currentNode, shouldRender, args);
-			// return;
-			// console.log('[hydrate loop]', currentNode, itemArgs)
-			hydrate(context, currentNode, itemArgs);
-
-			currentNode = currentNode.nextElementSibling;
+			if(!shouldRender) {
+				prevNode = currentNode;
+				currentNode = currentNode.nextElementSibling;
+			}
 		}
 	});
 }
@@ -413,6 +493,11 @@ function hydrate(context, node, args = null)
 	// });
 }
 
+function markAsReady(node)
+{
+	node._hydrated = true;
+}
+
 function hydrateIdle(context, node, args)
 {
 	if(args === null || node === null) {
@@ -433,6 +518,10 @@ function hydrateIdle(context, node, args)
 		hydrateLoop(context, node, args);
 	}
 
+	if(args._t === 'statement') {
+		hydrateStatement(context, node, args);
+	}
+	
 	return _;
 	
 }

@@ -1,29 +1,17 @@
-import { subscribe } from './subscribe';
 import { makeCss, mergeOptions } from '@sinuous/component';
 import { api } from 'sinuous';
 
-// let subscribers = [];
-// let subscribers_first = [];
-
-
-
 export default function hydrateProps(context, el, options)
 {
-	// return;
-	// console.log(el);
-	// console.log(options);
-	options = mergeOptions(options)
-	// console.warn(options);
-	// return;
+
+	options = mergeOptions(options);
 
 	if(!options._s) {
 		return;
 	}
 
-
 	let subscribers = [];
 	let subscribers_first = [];
-
 
 	function addSubscriber(value, fn, skip = true)
 	{
@@ -51,7 +39,9 @@ export default function hydrateProps(context, el, options)
 		}
 
 		if(cssOptions.class) {
+			// console.log(cssOptions.class());
 			addSubscriber(cssOptions.class, (value) => {
+				console.log(el, value);
 				el.className = value;
 			});
 		}
