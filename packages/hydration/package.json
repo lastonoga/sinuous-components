@@ -1,6 +1,6 @@
 {
   "name": "@siph/hydration",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Support assets list input file type",
   "main": "dist/index.js",
   "publishConfig": {
