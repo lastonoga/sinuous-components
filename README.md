@@ -57,8 +57,8 @@ Metric  | SinuousCC | SinuousCC (Fn) | Sinuous | NuxtJS | NuxtJS (Fn)
 ------- | --------- | --------------------- | ------- | ------ | --------------------------------
 Render  | 1018ms | 865ms | 297ms (single obj) | 3743ms | 1825ms
 Hydration | 85ms | 68ms | 5000ms+ | 455ms | 238ms
-Hydration (with onclick) | 165ms | 117ms | 5000ms+ | 707ms | 390ms
-Hydration (x1000 dynamic) | 75ms | - | 5000ms+ | 185ms | -
+Hydration (with onclick) | 165ms | 117ms | - | 707ms | 390ms
+Hydration (x1000 dynamic) | 75ms | - | - | 185ms | -
 Full page size | 43kb | 39kb | 60kb | 169kb | 169kb
 
 
