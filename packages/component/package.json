@@ -12,5 +12,12 @@
   },
   "author": "Kir Burkhanov",
   "license": "MIT",
-  "gitHead": "85f030845b9196442a576cf4df301654e50bcb7a"
+  "gitHead": "85f030845b9196442a576cf4df301654e50bcb7a",
+  "dependencies": {
+    "@siph/compiler": "^0.0.17",
+    "@siph/component": "^0.0.17",
+    "@siph/i": "^0.0.17",
+    "@siph/render": "^0.0.17",
+    "sinuous": "^0.27.3"
+  }
 }

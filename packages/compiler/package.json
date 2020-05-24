@@ -13,11 +13,11 @@
   "author": "Kir Burkhanov",
   "license": "MIT",
   "devDependencies": {
-    "@babel/generator": "^7.9.5",
-    "@babel/parser": "^7.9.4",
-    "@babel/traverse": "^7.9.5",
+    "@babel/generator": "^7.9.6",
+    "@babel/parser": "^7.9.6",
+    "@babel/traverse": "^7.9.6",
+    "@babel/types": "^7.9.6",
     "htmlparser2": "^4.1.0",
-    "node-html-parser": "^1.2.16",
     "prettier": "^2.0.5"
   },
   "gitHead": "85f030845b9196442a576cf4df301654e50bcb7a"
