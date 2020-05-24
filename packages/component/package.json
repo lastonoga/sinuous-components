@@ -3,12 +3,14 @@
   "version": "0.0.16",
   "description": "Support assets list input file type",
   "main": "dist/index.js",
-  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "echo \"Component\"",
     "start": "babel --root-mode upward src --watch --out-dir dist --source-maps inline --copy-files --ignore spec.js,spec.jsx"
   },
   "author": "Kir Burkhanov",
   "license": "MIT",
-  "gitHead": "4f7193f9d669315c1454b0dc2d98a3ebd99f8e03"
+  "gitHead": "85f030845b9196442a576cf4df301654e50bcb7a"
 }
