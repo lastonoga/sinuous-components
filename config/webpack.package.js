@@ -29,7 +29,7 @@ class PrintChunksPlugin {
 
 module.exports = {
 
-    mode: 'development',
+    mode: 'production',
 
     entry: [
         './index.js'
