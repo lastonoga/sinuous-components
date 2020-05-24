@@ -7,7 +7,6 @@
   "alias": {
     "~": "~/.."
   },
-  "private": true,
   "workspaces": [
     "packages/*"
   ],
