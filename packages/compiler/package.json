@@ -1,6 +1,6 @@
 {
   "name": "@siph/compiler",
-  "version": "1.0.0",
+  "version": "0.0.7",
   "description": "Support assets list input file type",
   "main": "dist/index.js",
   "private": false,
@@ -17,6 +17,5 @@
     "htmlparser2": "^4.1.0",
     "node-html-parser": "^1.2.16",
     "prettier": "^2.0.5"
-  },
-  "dependencies": {}
+  }
 }

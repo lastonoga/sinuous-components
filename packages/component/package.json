@@ -1,6 +1,6 @@
 {
   "name": "@siph/component",
-  "version": "1.0.0",
+  "version": "0.0.7",
   "description": "Support assets list input file type",
   "main": "dist/index.js",
   "private": false,
@@ -9,8 +9,5 @@
     "start": "babel --root-mode upward src --watch --out-dir dist --source-maps inline --copy-files --ignore spec.js,spec.jsx"
   },
   "author": "Kir Burkhanov",
-  "license": "MIT",
-  "devDependencies": {
-  },
-  "dependencies": {}
+  "license": "MIT"
 }
