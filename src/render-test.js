@@ -1,6 +1,6 @@
 import Sinuous from '@sinuous/i';
 import { hydrate } from '@sinuous/hydration';
-import render from '@sinuous/render';
+import { render } from '@sinuous/render';
 
 // import { api } from 'sinuous';
 // import { observable } from '@sinuous/component/src/observable';

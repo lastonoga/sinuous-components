@@ -33,7 +33,7 @@ function makeLoop(node, context, Loop, condition, returnObject, { el, options, c
 	if(!node.attrs[':key']) {
 		console.warn('Key attribute is required for loop statement');
 	} else {
-		key = handleAttrsValue(context, node.attrs[':key']).value;
+		key = handleAttrsValue(context, node.attrs[':key'], false).value;
 	}
 
 	if(returnObject) {
@@ -46,7 +46,7 @@ function makeLoop(node, context, Loop, condition, returnObject, { el, options, c
 		}`
 	}
 
-	return `loop(${ condition }, (${ args }) => { return ${ componentRenderTag }; })`
+	return `loop(ctx, ${ condition }, (${ args }) => { return ${ key }; }, (${ args }) => { return ${ componentRenderTag }; })`
 }
 
 function makeStatement(context, Statement, condition, returnObject, { el, options, children, renderOptions, renderChildren })

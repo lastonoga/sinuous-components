@@ -1,5 +1,6 @@
 <script>
 let $items = Array.from({ length: 1000 }, (_, i) => i);
+let $items2 = ['a_', 'b_']// Array.from({ length: 1 }, (_, i) => i);
 let $s1 = 2;
 let timer = null;
 
@@ -12,14 +13,19 @@ function mounted()
 	// }
 
 	// items = d;
-
 	timer = setInterval(() => {
 		s1 += 1
 	}, 2000);
 
-	setTimeout(() => {
-		items = Array.from({ length: 2 }, (_, i) => i);
-	}, 5000)
+	// setTimeout(() => {
+	// 	console.log('change')
+	// 	items = ['a', 'c', 'd']
+	// }, 1000)
+
+	// setTimeout(() => {
+	// 	console.log('change')
+	// 	items = ['a', 'e', 'd', 'b', 'c']
+	// }, 3000)
 }
 
 function unmounted()
@@ -36,9 +42,15 @@ function unmounted()
 		</sbutton>
 		<div v-else>1</div> -->
 	<!-- test -->
-		<sbutton v-for="(item, key) in items" :key="key" :class="s1" :style="{ fontStyle: 'italic' }" style="font-weight: bold;" prop1="test--">
+		<sbutton v-for="(item, key) in items" :key="item" :pt="item" :class="s1" :style="{ fontStyle: 'italic' }" style="font-weight: bold;" prop1="test--">
 			Button {{ item }} 
 		</sbutton>
+
+		<!-- <sbutton :class="s1" :style="{ fontStyle: 'italic' }" style="font-weight: bold;" prop1="test--">
+			<div v-for="(item, key) in items2" :key="item">
+				Button {{ item }} 
+			</div>
+		</sbutton> -->
 		<!-- <test></test> -->
 		<!-- <test></test> -->
 		

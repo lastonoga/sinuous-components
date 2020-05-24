@@ -135,13 +135,13 @@ export function makeOption(option, shouldClone = true)
 {
 	let readyOption = {};
 
-	if(option.on) {
+	if(option.on !== undefined) {
 		for(let key in option.on) {
 			readyOption[`on${key}`] = option.on[key];
 		}
 	}
 
-	if(option.key) {
+	if(option.key !== undefined) {
 		readyOption['data-key'] = option.key;
 	}
 
@@ -225,22 +225,24 @@ export function mergeOptions(options)
 			readyOptions[name] = readyOptions[name].concat(option[name]);
 		}
 
-		if(option._s) {
+		if(option._s !== undefined) {
 			readyOptions._s = option._s;
 		}
 
-		if(option.key) {
+		if(option.key !== undefined) {
 			readyOptions.key = option.key;
 		}
 
-		if(option.staticClass) {
-			if(!readyOptions.staticClass) {
+		if(option.staticClass !== undefined) {
+			if(readyOptions.staticClass === undefined) {
 				readyOptions.staticClass = option.staticClass;
 			} else {
 				readyOptions.staticClass += ' ' + option.staticClass;
 			}
 		}
 	}
+
+	// console.warn(readyOptions)
 
 	return readyOptions;
 }

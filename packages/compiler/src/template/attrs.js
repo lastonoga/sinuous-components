@@ -52,7 +52,7 @@ function parseOptionValue(context, key, value)
 
 	if(key[0] === '_') {
 		value = '`' + value.replace(/{{((?:(?!(}})).)+)}}/g, '${$1}') + '`';
-		keepObservation = false;
+		keepObservation = true;
 		isExpression = true;
 	}
 
@@ -163,6 +163,7 @@ var isAttr = makeMap(
 	'target,title,type,usemap,value,width,wrap'
 );
 
+var isNotCallable = makeMap('');
 var isEventAttr = function (name) {
 	return (
 		name.match(eventArgAttribute)
@@ -205,11 +206,11 @@ var normalizeValue = function (value)
 }
 
 
-export function handleAttrsValue(context, value)
+export function handleAttrsValue(context, value, shouldBeCallable = true)
 {
 	let statefull = false;
 
-	let exp = expression(context, value, false);
+	let exp = expression(context, value, shouldBeCallable);
 	
 	value = exp.value;
 
@@ -278,7 +279,7 @@ function parseAttrs(context, attrs, hydrate = false)
 		}
 		
 		if(key.match(dynamicArgAttribute)) {
-			let { value, statefull } = handleAttrsValue(context, attrValue);
+			let { value, statefull } = handleAttrsValue(context, attrValue, !isNotCallable(arg));
 
 			let type = false;
 

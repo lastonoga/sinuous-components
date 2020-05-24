@@ -29,7 +29,9 @@ export default function h(el, opts = {}, children = [])
 	let component = Sinuous.getComponent(el);
 
 	// console.log(this)
-	registerChildren(this, component);
+	if(this) {
+		this.addChildren(component);
+	}
 
 	if(component._functional) {
 		return component.render({
@@ -48,5 +50,9 @@ export default function h(el, opts = {}, children = [])
 
 	component.passOptions(opts);
 
-	return component.render();
+	let node = component.render();
+
+	node.$s = component;
+
+	return node;
 }

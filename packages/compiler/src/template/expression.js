@@ -15,7 +15,7 @@ import {
 
 import { prepareOptionKey } from './attrs';
 
-export function expression(context, code, keepObservation = true)
+export function expression(context, code, shouldBeCallable = true)
 {
 	if(typeof code === 'object') {
 		return {
@@ -27,7 +27,7 @@ export function expression(context, code, keepObservation = true)
 	code = String(code);
 
 	let identifierOnly = true;
-	let shouldExecute = keepObservation;
+	// let shouldBeCallable = keepObservation;
 
 	const ast = parser.parse(code);
 
@@ -54,7 +54,7 @@ export function expression(context, code, keepObservation = true)
 		// clean append
 		code = code.replace(/(;|,)$/g, '');
 
-		if(changed && !identifierOnly) {
+		if(changed && !identifierOnly && shouldBeCallable) {
 			code = `() => { return ${code}; }`;
 		}
 	}

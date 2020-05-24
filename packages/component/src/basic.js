@@ -87,9 +87,22 @@ var Basic = function () {
 
 	Basic.prototype.addChildren = function(child)
 	{
+		if(child._functional) {
+			child = _;
+		}
+
 		this._children.push(child);
+
+		if(child.setParent) {
+			child.setParent(this);
+		}
 	}
 
+	Basic.prototype.removeChild = function(index)
+	{
+		this._children[index].hook('unmounted');
+		this._children.splice(index, 1);
+	}
 
 	Basic.prototype.setParent = function(parent = null)
 	{

@@ -1,7 +1,7 @@
 import { loadComponent } from '@sinuous/lazy';
+import { map } from './map';
 
-
-export default function(component, layout, timeBenchmark = () => {}, callback = null) {
+function render(component, layout, timeBenchmark = () => {}, callback = null) {
 
     layout.innerHTML = '';
 
@@ -21,3 +21,5 @@ export default function(component, layout, timeBenchmark = () => {}, callback = 
 		return instance;
 	});
 }
+
+export { render, map };

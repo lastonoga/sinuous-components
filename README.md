@@ -73,7 +73,7 @@ That framework is faster then Vue + NuxtJS in:
 - [x] Single file components
 - [x] Statements (v-if, v-else-if, v-else)
 - [x] Slots
-- [ ] Loops
+- [x] Loops
 - [x] Functional components (automatic)
 - [x] Attributes inheritence to component
 - [x] Props (Can be used as Init data for component)
@@ -83,6 +83,17 @@ That framework is faster then Vue + NuxtJS in:
 - [ ] Server side data fetching (once)
 
 When Statements, slots, loops and props will be ready i gonna make full page perfromance to understand how Partial hydration works.
+
+## Bugs
+
+- Slots need to be fixed for render function in statement and loops (on refactor step)
+- Component children register is broken (because of loops, need to be fixed)
+- Disallow to use multiple nodes in loops, statements (so everywehere for now)
+
+Problem of multiple nodes
+Its hard to understand which nodes should be hydrated because there is no tree before hydration/render.
+On render step its not necessary because of H function. But on hydration step there is no way to understand how many nodes should be replaced with new value.
+
 
 ## Component example
 

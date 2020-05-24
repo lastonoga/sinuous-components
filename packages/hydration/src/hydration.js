@@ -1,10 +1,9 @@
 import { api } from 'sinuous';
 import { _ } from '@sinuous/compiler/src/empty';
 import Sinuous from '@sinuous/i';
-import map from 'sinuous/map';
 import { options as parseOptions, h } from '@sinuous/component';
 import { loadComponent } from '@sinuous/lazy';
-// import subscribe from './subscribe';
+import { map } from '@sinuous/render';
 import hydrateProps from './property';
 
 let OBSERVER;
@@ -298,55 +297,34 @@ function hydrateStatement(context, node, args)
 function hydrateLoop(context, node, args)
 {
 	let condition = args.c;
-	let startNode = node;
-	let prevNode = node;
 	let parentNode = node.parentNode;
+	let parentChildren = parentNode.childNodes;
 
-	api.subscribe(() => {
-		let loop_condition = typeof condition === 'function' ? condition() : condition;
-		let currentNode = startNode;
+	map(context, args.c, args.k, (item, key) => {
+		
+		let node = args.r(h.bind(context), item, key);
 
-		for(let key in loop_condition)
-		{
-			let item = loop_condition[key];
-			let itemKey = args.k(item, key);
-			let itemArgs;
+		return node;	
+	}, (registerHydration) => {
+		let items = args.c();
 
-			let shouldRender = currentNode === null;
+		for (var i = 0; i < items.length; i++) {
+			let node = parentChildren[i];
+			let item = items[i];
+			let itemKey = args.k(item, i);
 
-			if(currentNode) {
-				let nodeKey = currentNode.getAttribute('data-key');
-				if(nodeKey === itemKey) {
-					shouldRender = false;
+			if(node) {
+				if(node.getAttribute('data-key') == itemKey) {
+					markAsReady(node);
+					hydrate(context, node, args.h(item, i));
 				}
 			}
 
-			if(shouldRender) {
-				// let newNode = args.r(h.bind(context), item, key);
-				
-				// markAsReady(newNode);
-				// modify H with Index to create class + mount/unmount
-				if(currentNode) {
-					// replace
-				} else {
-					// prevNode.after(newNode)
-				}
-				// prevNode = newNode;
-				// context.hook('mounted');
-			} else { // if(!currentNode._hydrated) 
-				itemArgs = args.h(item, key);
-
-				markAsReady(currentNode);
-
-				hydrate(context, currentNode, itemArgs);
-			}
-
-			if(!shouldRender) {
-				prevNode = currentNode;
-				currentNode = currentNode.nextElementSibling;
-			}
+			registerHydration(item, i, node);
+			// console.log(reg, item, i, node);
 		}
-	});
+	}, node.parentNode);
+
 }
 
 /**
@@ -449,7 +427,7 @@ function hydrateTag(context, node, args)
 		return _;
 	}
 
-	registerChildren(context, component);
+	context.addChildren(component);
 
 	if(component._functional) {
 		let newArgs = component.hydrate({
@@ -468,10 +446,13 @@ function hydrateTag(context, node, args)
 
 	component.passProps(opts.props);
 	component.passOptions(opts);
-	
+
 	if(opts.$slots) {
 		hydrateSlots(component, node, opts, opts.$slots);
 	}
+
+	node.$s = component;
+	// console.log(component, node)
 
 	return hydrate(component, node, component.hydrate(component));
 }

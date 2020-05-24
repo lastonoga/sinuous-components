@@ -8,10 +8,18 @@ export default function slot(context, h, name, tag, options, defaultChildren)
 		children = context._slots[name];
 	}
 	
-	// console.log(name, tag, options, defaultChildren, children, context._slots)
 	if(tag === null) {
 		return children;
 	}
 
-	return h(tag, options, children);
+	// h.bind(null)
+
+	let render = h(tag, options, children);
+
+	// for (var i = 0; i < render.childNodes.length; i++) {
+	// 	console.log(render.childNodes[i], render.childNodes[i].$s);
+	// }
+	
+
+	return render;
 }

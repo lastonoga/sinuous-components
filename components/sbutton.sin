@@ -1,15 +1,16 @@
 <template>
 	<div class="button" :class="'new-button'" :style="[{ color: testColor }]" @click="click" style="border-radius: 15px;" disabled>
-		{{ prop1 }}
-		<slot class="s">
+		{{ s1 }}
+		<slot class="s" tag="div">
 			Default button text 
 		</slot>
 	</div>
 </template>
 
 <script>
-let $s1 = 9;//Math.random(1, 100);
+let $s1 = random(1, 100)
 let prop1 = Number | 9;
+let pt = Number | 9;
 let timer = null;
 
 let testColor = () => {
@@ -22,28 +23,36 @@ let testClass = () => {
 	}
 }
 
+function random(s, e) {
+	return Math.floor(Math.random() * e) + s;
+}
+
 function click()
 {
-	alert(1)
+	alert(s1)
 }
 
 function mounted()
 {
 	let direction = 1;
 
-	// console.log('mounted', this.hid);
+	// console.log('created', this.hid, 'with s1 =', s1);
 
-	timer = setInterval(() => {
-		// console.log('interval', this.hid);
+	setInterval(() => {
+		
+		s1 += 1;//Math.random(0, 100)
+	}, 2000);
+	// timer = setInterval(() => {
+	// 	// console.log('interval', this.hid);
 
-		if(s1 > 40) {
-			direction = -5;
-		} else if(s1 < 10) {
-			direction = 5;
-		}
+	// 	if(s1 > 40) {
+	// 		direction = -5;
+	// 	} else if(s1 < 10) {
+	// 		direction = 5;
+	// 	}
 
-		s1 += direction
-	}, 1000)
+	// 	s1 += direction
+	// }, 1000)
 }
 
 function unmounted()
