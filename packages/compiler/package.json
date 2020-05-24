@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Compiler\"",
-    "start": "babel --root-mode upward src --watch --out-dir dist --source-maps inline --copy-files --ignore spec.js,spec.jsx"
+    "start": "babel --root-mode upward src --watch --out-dir dist --source-maps inline --copy-files --ignore spec.js,spec.jsx",
+    "build": "babel --root-mode upward src --out-dir dist --source-maps inline --copy-files --ignore spec.js,spec.jsx"
   },
   "author": "Kir Burkhanov",
   "license": "MIT",
