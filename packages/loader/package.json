@@ -1,6 +1,6 @@
 {
   "name": "@siph/loader",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "Support assets list input file type",
   "main": "dist/index.js",
   "publishConfig": {
@@ -21,6 +21,6 @@
   },
   "gitHead": "85f030845b9196442a576cf4df301654e50bcb7a",
   "dependencies": {
-    "@siph/compiler": "^0.0.20"
+    "@siph/compiler": "^0.0.21"
   }
 }
