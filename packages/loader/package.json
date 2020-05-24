@@ -1,6 +1,6 @@
 {
   "name": "@siph/loader",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "description": "Support assets list input file type",
   "main": "dist/index.js",
   "private": false,
