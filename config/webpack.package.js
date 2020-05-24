@@ -38,8 +38,8 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, '../dist'),
         publicPath: '/', // path.resolve(__dirname, '../build'),
-        filename: '[name].bundle.js',
-        chunkFilename: '[name].bundle.js',
+        filename: 'index.js',
+        chunkFilename: 'index.js',
     },
 
     optimization: {
