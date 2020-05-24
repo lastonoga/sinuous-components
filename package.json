@@ -25,9 +25,10 @@
   "author": "Kirill Burkhanov <me@burkhanov.com> (https://burkhanov.com)",
   "license": "ISC",
   "scripts": {
-  	"prepublish": "yarn clear && yarn bundle && yarn packages:build",
+  	"prepare": "yarn clear",
+  	"prepack": "yarn packages:bundle && yarn bundle",
     "packages:watch": "yarn clear && lerna run --parallel start",
-    "packages:build": "lerna run --parallel build",
+    "packages:bundle": "lerna run --parallel build",
     "watch": "cross-env NODE_ENV=development webpack --config config/webpack.dev.js ",
     "build": "cross-env NODE_ENV=development webpack --config config/webpack.prod.js",
     "bundle": "cross-env NODE_ENV=development webpack --config config/webpack.package.js",
