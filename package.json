@@ -1,5 +1,6 @@
 {
-  "name": "hprf",
+  "name": "sinuous-components",
+  "repository": "lastonoga/sinuous-components",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -14,17 +15,18 @@
     "fs": false,
     "child_process": false
   },
+  "bugs": {
+    "url": "https://github.com/lastonoga/sinuous-components/issues"
+  },
+  "homepage": "https://github.com/lastonoga/sinuous-components#readme",
+  "author": "Kirill Burkhanov <me@burkhanov.com> (https://burkhanov.com)",
+  "license": "ISC",
   "scripts": {
     "packages:watch": "lerna run --parallel start",
     "watch": "cross-env NODE_ENV=development webpack --config config/webpack.dev.js ",
     "build": "cross-env NODE_ENV=development webpack --config config/webpack.prod.js",
-    "test": "echo \"Test\"",
-    "dev": "parcel ./index.html --no-cache",
-    "build2": "parcel build ./index.html --no-cache",
-    "start3": "cross-env NODE_ENV=development webpack --config config/webpack.dev.js"
+    "clear": "rm -rf ./packages/*/dist"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",

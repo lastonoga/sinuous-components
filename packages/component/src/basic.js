@@ -3,7 +3,7 @@ import { _ } from '@sinuous/compiler/src/empty';
 
 import { observable, computed } from './observable';
 
-import { styles, classes, statement, dynamic, loop, slot } from './index';
+import { statement, dynamic, loop, slot } from './index';
 
 import { h } from './';
 
