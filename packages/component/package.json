@@ -1,6 +1,6 @@
 {
   "name": "@siph/component",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Support assets list input file type",
   "main": "dist/index.js",
   "publishConfig": {
@@ -15,10 +15,10 @@
   "license": "MIT",
   "gitHead": "c96e4b0b26723e73dd0c2f09f62f8bae182c27b8",
   "dependencies": {
-    "@siph/compiler": "^0.0.21",
-    "@siph/component": "^0.0.21",
-    "@siph/i": "^0.0.21",
-    "@siph/render": "^0.0.21",
+    "@siph/compiler": "^0.0.22",
+    "@siph/component": "^0.0.22",
+    "@siph/i": "^0.0.22",
+    "@siph/render": "^0.0.22",
     "sinuous": "^0.27.3"
   }
 }

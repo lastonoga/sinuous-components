@@ -1,6 +1,6 @@
 {
   "name": "@siph/i",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Support assets list input file type",
   "main": "dist/index.js",
   "publishConfig": {

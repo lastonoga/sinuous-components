@@ -1,6 +1,6 @@
 {
   "name": "@siph/loader",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Support assets list input file type",
   "main": "dist/index.js",
   "publishConfig": {
@@ -14,11 +14,11 @@
   "author": "Kir Burkhanov",
   "license": "MIT",
   "dependencies": {
+    "@siph/compiler": "^0.0.22",
     "loader-utils": "^2.0.0",
     "node-html-parser": "^1.2.17",
     "querystring": "^0.2.0",
-    "schema-utils": "^2.6.6",
-     "@siph/compiler": "^0.0.21"
+    "schema-utils": "^2.6.6"
   },
   "gitHead": "c96e4b0b26723e73dd0c2f09f62f8bae182c27b8"
 }
