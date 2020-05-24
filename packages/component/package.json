@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Support assets list input file type",
   "main": "dist/index.js",
-  "private": true,
+  "private": false,
   "scripts": {
     "test": "echo \"Component\"",
     "start": "babel --root-mode upward src --watch --out-dir dist --source-maps inline --copy-files --ignore spec.js,spec.jsx"
