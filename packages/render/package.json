@@ -1,6 +1,6 @@
 {
   "name": "@siph/render",
-  "version": "0.0.17",
+  "version": "0.0.20",
   "description": "Support assets list input file type",
   "main": "dist/index.js",
   "publishConfig": {
@@ -14,7 +14,7 @@
   "license": "MIT",
   "gitHead": "85f030845b9196442a576cf4df301654e50bcb7a",
   "dependencies": {
-    "@siph/lazy": "^0.0.17",
+    "@siph/lazy": "^0.0.20",
     "sinuous": "^0.27.3"
   }
 }

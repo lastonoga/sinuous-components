@@ -1,6 +1,6 @@
 {
   "name": "@siph/lazy",
-  "version": "0.0.17",
+  "version": "0.0.20",
   "description": "Support assets list input file type",
   "main": "dist/index.js",
   "publishConfig": {
