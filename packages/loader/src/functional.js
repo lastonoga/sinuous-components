@@ -15,7 +15,7 @@ export default function functional(options, block)
 	let context = block.source.context;
 
 	let imports = [
-		`import { styles, classes, dynamic } from '@sinuous/component';`,
+		`import { styles, classes, dynamic } from '@siph/component';`,
 	];
 
 	let code = '';
@@ -38,7 +38,7 @@ export default function functional(options, block)
 	`	
 	
 	if(options.isSSR) {
-		imports.push(`import { statement, loop, slot, h } from '@sinuous/component';`);
+		imports.push(`import { statement, loop, slot, h } from '@siph/component';`);
 
 		code += `
 			instance.render = function(ctx) {
@@ -48,7 +48,7 @@ export default function functional(options, block)
 	}
 	
 	if(options.isRuntime) {
-		// imports.push(`import { statement as hStatement, loop as hLoop, slot as hSlot } from '@sinuous/hydration';`);
+		// imports.push(`import { statement as hStatement, loop as hLoop, slot as hSlot } from '@siph/hydration';`);
 
 		code += `
 			instance.hydrate = function(ctx, h) {

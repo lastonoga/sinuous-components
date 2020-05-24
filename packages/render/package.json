@@ -1,5 +1,5 @@
 {
-  "name": "@sinuous/render",
+  "name": "@siph/render",
   "version": "1.0.0",
   "description": "Support assets list input file type",
   "main": "dist/index.js",

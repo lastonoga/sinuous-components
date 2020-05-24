@@ -1,4 +1,4 @@
-import { loadComponent } from '@sinuous/lazy';
+import { loadComponent } from '@siph/lazy';
 import { map } from './map';
 
 function render(component, layout, timeBenchmark = () => {}, callback = null) {

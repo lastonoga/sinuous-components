@@ -1,9 +1,10 @@
 {
-  "name": "sinuous-components",
-  "repository": "lastonoga/sinuous-components",
-  "version": "0.0.5",
+  "name": "siph",
+  "repository": "lastonoga/siph",
+  "version": "0.0.6",
   "description": "",
   "main": "dist/index.js",
+  "private": true,
   "alias": {
     "~": "~/.."
   },
@@ -15,16 +16,16 @@
     "child_process": false
   },
   "bugs": {
-    "url": "https://github.com/lastonoga/sinuous-components/issues"
+    "url": "https://github.com/lastonoga/siph/issues"
   },
-  "homepage": "https://github.com/lastonoga/sinuous-components#readme",
+  "homepage": "https://github.com/lastonoga/siph#readme",
   "author": "Kirill Burkhanov <me@burkhanov.com> (https://burkhanov.com)",
   "license": "ISC",
   "scripts": {
     "packages:watch": "yarn clear && lerna run --parallel start",
     "watch": "cross-env NODE_ENV=development webpack --config config/webpack.dev.js ",
     "build": "cross-env NODE_ENV=development webpack --config config/webpack.prod.js",
-    "packages:build": "cross-env NODE_ENV=development webpack --config config/webpack.package.js",
+    "bbuild": "cross-env NODE_ENV=development webpack --config config/webpack.package.js",
     "clear": "rm -rf ./packages/*/dist"
   },
   "devDependencies": {

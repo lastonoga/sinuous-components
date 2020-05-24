@@ -1,4 +1,4 @@
-import { h } from '@sinuous/component';
+import { h } from '@siph/component';
 
 export default function statement()
 {

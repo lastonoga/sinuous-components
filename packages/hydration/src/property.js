@@ -1,4 +1,4 @@
-import { makeCss, mergeOptions } from '@sinuous/component';
+import { makeCss, mergeOptions } from '@siph/component';
 import { api } from 'sinuous';
 
 export default function hydrateProps(context, el, options)

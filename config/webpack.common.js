@@ -80,7 +80,7 @@ module.exports = {
                 test: /\.sin/,
                 use: [
                     {
-                    	loader: '@sinuous/loader',
+                    	loader: '@siph/loader',
                     	options: {
                     		parseName(file) {
                     			file = camelize(file);

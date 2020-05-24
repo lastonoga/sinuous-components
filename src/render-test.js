@@ -1,9 +1,9 @@
-import Sinuous from '@sinuous/i';
-import { hydrate } from '@sinuous/hydration';
-import { render } from '@sinuous/render';
+import Sinuous from '@siph/i';
+import { hydrate } from '@siph/hydration';
+import { render } from '@siph/render';
 
 // import { api } from 'sinuous';
-// import { observable } from '@sinuous/component/src/observable';
+// import { observable } from '@siph/component/src/observable';
 // import test from '../components/test.sin'
 // import test2 from '../components/test2.sin'
 import button from '../components/sbutton.sin'

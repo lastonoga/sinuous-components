@@ -1,6 +1,6 @@
 import loaderUtils from 'loader-utils';
 import qs from 'querystring';
-import { compiler, _ } from '@sinuous/compiler';
+import { compiler, _ } from '@siph/compiler';
 import path from 'path';
 import { parseName } from './name';
 import statefullComponent from './statefull';

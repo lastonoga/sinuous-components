@@ -1,5 +1,5 @@
-import Sinuous from '@sinuous/i';
-import { _ } from '@sinuous/compiler/src/empty';
+import Sinuous from '@siph/i';
+import { _ } from '@siph/compiler/src/empty';
 
 import { observable, computed } from './observable';
 

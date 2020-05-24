@@ -1,9 +1,9 @@
 import { api } from 'sinuous';
-import { _ } from '@sinuous/compiler/src/empty';
-import Sinuous from '@sinuous/i';
-import { options as parseOptions, h } from '@sinuous/component';
-import { loadComponent } from '@sinuous/lazy';
-import { map } from '@sinuous/render';
+import { _ } from '@siph/compiler/src/empty';
+import Sinuous from '@siph/i';
+import { options as parseOptions, h } from '@siph/component';
+import { loadComponent } from '@siph/lazy';
+import { map } from '@siph/render';
 import hydrateProps from './property';
 
 let OBSERVER;

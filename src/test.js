@@ -1,7 +1,7 @@
-import { compiler, _ } from '@sinuous/compiler';
+import { compiler, _ } from '@siph/compiler';
 
-// import { parseExpression } from '@sinuous/compiler/src/template/expression';
-// import { parseHTML } from '@sinuous/compiler/src/template/html';
+// import { parseExpression } from '@siph/compiler/src/template/expression';
+// import { parseHTML } from '@siph/compiler/src/template/html';
 
 // parseExpression(data, `
 // let d = function() {}

@@ -1,5 +1,5 @@
 import { observable, computed } from 'sinuous/observable';
-import { map } from '@sinuous/render';
+import { map } from '@siph/render';
 
 export default function loop(context, condition, getKey, getItem)
 {

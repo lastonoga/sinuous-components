@@ -1,8 +1,8 @@
-import Instance from '@sinuous/i';
+import Instance from '@siph/i';
 
-import { hydrate as sh } from '@sinuous/hydration';
-import { render as sr } from '@sinuous/render';
-import { loader as sl } from '@sinuous/loader';
+import { hydrate as sh } from '@siph/hydration';
+import { render as sr } from '@siph/render';
+import { loader as sl } from '@siph/loader';
 
 
 export function hydrate() {
@@ -17,6 +17,6 @@ export function loader() {
 	return sl.apply(this, arguments);
 }
 
-export function Sinuous() {
+export function Siph() {
 	return new Instance();
 }

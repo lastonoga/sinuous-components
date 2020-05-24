@@ -1,5 +1,5 @@
 {
-  "name": "@sinuous/hydration",
+  "name": "@siph/hydration",
   "version": "1.0.0",
   "description": "Support assets list input file type",
   "main": "dist/index.js",

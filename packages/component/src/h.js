@@ -1,7 +1,7 @@
 import { h as hs } from 'sinuous';
 import { observable, computed, subscribe } from 'sinuous/observable';
 import { options,  } from './';
-import Sinuous from '@sinuous/i';
+import Sinuous from '@siph/i';
 
 
 function registerChildren(parent, child)

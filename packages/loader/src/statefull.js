@@ -1,7 +1,7 @@
 export default function statefull(options, block)
 {
 	let code = `
-		import { Basic } from '@sinuous/component';
+		import { Basic } from '@siph/component';
 
 		let config = Object.assign({
 			methods: {},
