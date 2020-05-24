@@ -27,7 +27,7 @@
   "scripts": {
   	"prepublish": "yarn clear && yarn bundle && yarn packages:build",
     "packages:watch": "yarn clear && lerna run --parallel start",
-    "packages:build": "yarn clear && lerna run build",
+    "packages:build": "yarn clear && lerna run --parallel build",
     "watch": "cross-env NODE_ENV=development webpack --config config/webpack.dev.js ",
     "build": "cross-env NODE_ENV=development webpack --config config/webpack.prod.js",
     "bundle": "cross-env NODE_ENV=development webpack --config config/webpack.package.js",
