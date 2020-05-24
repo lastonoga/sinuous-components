@@ -1,9 +1,9 @@
 {
   "name": "sinuous-components",
   "repository": "lastonoga/sinuous-components",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "alias": {
     "~": "~/.."
   },
@@ -25,6 +25,7 @@
     "packages:watch": "yarn clear && lerna run --parallel start",
     "watch": "cross-env NODE_ENV=development webpack --config config/webpack.dev.js ",
     "build": "cross-env NODE_ENV=development webpack --config config/webpack.prod.js",
+    "packages:build": "cross-env NODE_ENV=development webpack --config config/webpack.package.js",
     "clear": "rm -rf ./packages/*/dist"
   },
   "devDependencies": {
