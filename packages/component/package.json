@@ -9,5 +9,6 @@
     "start": "babel --root-mode upward src --watch --out-dir dist --source-maps inline --copy-files --ignore spec.js,spec.jsx"
   },
   "author": "Kir Burkhanov",
-  "license": "MIT"
+  "license": "MIT",
+  "gitHead": "a8258ef1fdf933e426ff709fd2d4e81e6a332470"
 }

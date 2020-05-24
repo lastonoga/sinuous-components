@@ -14,5 +14,6 @@
     "loader-utils": "^2.0.0",
     "querystring": "^0.2.0",
     "schema-utils": "^2.6.6"
-  }
+  },
+  "gitHead": "a8258ef1fdf933e426ff709fd2d4e81e6a332470"
 }

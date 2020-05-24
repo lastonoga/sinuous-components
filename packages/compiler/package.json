@@ -17,5 +17,6 @@
     "htmlparser2": "^4.1.0",
     "node-html-parser": "^1.2.16",
     "prettier": "^2.0.5"
-  }
+  },
+  "gitHead": "a8258ef1fdf933e426ff709fd2d4e81e6a332470"
 }
