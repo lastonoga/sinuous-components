@@ -2,15 +2,16 @@ import Sinuous from '@siph/i';
 import { hydrate } from '@siph/hydration';
 import { render } from '@siph/render';
 
+
 // import { api } from 'sinuous';
 // import { observable } from '@siph/component/src/observable';
 // import test from '../components/test.sin'
 // import test2 from '../components/test2.sin'
 import button from '../components/sbutton.sin'
-// import IndexPage from '../pages/index.sin'
+import IndexPage from '../pages/index.sin'
 import timeBenchmark from './time';
 
-const IndexPage = import(/* webpackChunkName: "pageIndex" */ '../pages/index.sin')
+// const IndexPage = import(/* webpackChunkName: "pageIndex" */ '../pages/index.sin')
 
 
 var LAYOUT;
