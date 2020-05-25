@@ -2,6 +2,7 @@ import { loadComponent } from '@siph/lazy';
 import { map as loop } from './map';
 import { slot } from './slot';
 import { statement } from './statement';
+import { h } from './h';
 
 function render(component, layout, timeBenchmark = () => {}, callback = null) {
 
@@ -24,4 +25,4 @@ function render(component, layout, timeBenchmark = () => {}, callback = null) {
 	});
 }
 
-export { render, loop, statement, slot };
+export { render, loop, statement, slot, h };

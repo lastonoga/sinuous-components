@@ -1,8 +1,6 @@
 import { h as hs } from 'sinuous';
-import { observable, computed, subscribe } from 'sinuous/observable';
-import { options,  } from './';
+import { options } from '@siph/component';
 import Sinuous from '@siph/i';
-
 
 function registerChildren(parent, child)
 {
@@ -12,7 +10,7 @@ function registerChildren(parent, child)
 	}
 }
 
-export default function h(el, opts = {}, children = [])
+export function h(el, opts = {}, children = [])
 {
 	el = el.toLowerCase();
 	// el = computed(() => (typeof el === 'function' ? el : el));

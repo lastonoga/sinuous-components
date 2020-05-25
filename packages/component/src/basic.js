@@ -3,9 +3,7 @@ import { _ } from '@siph/compiler/src/empty';
 
 import { observable, computed } from './observable';
 
-import { statement, loop, slot } from '@siph/render';
-
-import { h } from './';
+import { statement, loop, slot, h } from '@siph/render';
 
 // import { render, hydrate } from './template';
 let HID = 0;
