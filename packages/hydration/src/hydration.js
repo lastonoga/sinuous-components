@@ -3,7 +3,7 @@ import { _ } from '@siph/compiler/src/empty';
 import Sinuous from '@siph/i';
 import { options as parseOptions, h } from '@siph/component';
 import { loadComponent } from '@siph/lazy';
-import { map } from '@siph/render';
+import { loop } from '@siph/render';
 import hydrateProps from './property';
 
 let OBSERVER;
@@ -89,7 +89,7 @@ function hydrateLoop(context, node, args)
 	let parentNode = node.parentNode;
 	let parentChildren = parentNode.childNodes;
 
-	map(context, args.c, args.k, (item, key) => {
+	loop(context, args.c, args.k, (item, key) => {
 		
 		let node = args.r(h.bind(context), item, key);
 

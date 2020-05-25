@@ -1,4 +1,4 @@
-export default function slot(context, h, name, tag, options, defaultChildren)
+export function slot(context, h, name, tag, options, defaultChildren)
 {
 	// context.__slots
 	

@@ -1,6 +1,6 @@
 import { h } from '@siph/component';
 
-export default function statement()
+export function statement()
 {
 	let d = () => {
 

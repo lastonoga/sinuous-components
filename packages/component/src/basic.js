@@ -3,7 +3,7 @@ import { _ } from '@siph/compiler/src/empty';
 
 import { observable, computed } from './observable';
 
-import { statement, dynamic, loop, slot } from './index';
+import { statement, loop, slot } from '@siph/render';
 
 import { h } from './';
 
@@ -108,10 +108,10 @@ var Basic = function () {
 	{
 		this._parent = parent;
 	}
+
 	/**
 	 * Props
 	 */
-
 	Basic.prototype.props = function()
 	{
 		return {};
@@ -248,8 +248,6 @@ var Basic = function () {
 			statement,
 			loop,
 			slot,
-			d: dynamic,
-			c: computed,
 		});
 
 		return this.$el;

@@ -43,7 +43,7 @@ export default function statefull(options, block)
 	
 	if(options.isSSR) {
 		code += `
-			instance.prototype.__render = function(h, { ctx, components, render, statement, slot, loop, d, c }) {
+			instance.prototype.__render = function(h, { ctx, components, render, statement, slot, loop }) {
 				return ${ block.source.render };
 			}
 		`;
