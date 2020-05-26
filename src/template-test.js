@@ -35,6 +35,7 @@ function isObservable(prop)
 	return prop.$o !== undefined || typeof prop === 'function';
 }
 
+let subscribers = [];
 /**
  * Subscribe action to property
  */
@@ -53,16 +54,14 @@ function valueSubscribe(hydrate, prop, fn)
 
 	// return;
 	// Skip first hydration
-
-	subscribe(() => {
-		let v = prop();
-
+	on(prop, () => {
 		if(first) {
 			first = false;
 			return;
 		}
+		// console.log('render');
 
-		fn(v);
+		fn(prop());
 	});
 }
 
@@ -117,7 +116,7 @@ const buttonView = (context, hydrate = false) => {
 	let node = getNode(_button$, hydrate);
 	// let d = observable(1);
 	// setInterval(() => { d(d() + 1); }, 100);
-	
+
 	/**
 	 * Prop Inheritance
 	 */
@@ -175,7 +174,7 @@ const pageView = (context, hydrate = false) => {
 				// },
 				slots: {
 					default: `Button ${ item }`,
-					// default2: () => `Button ${ arr[key] } - ${ s1() }`
+					// default: () => `Button ${ arr[key] } - ${ s1() }`
 				}
 			}, node);
 		}
