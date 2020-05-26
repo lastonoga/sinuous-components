@@ -51,6 +51,7 @@ function valueSubscribe(hydrate, prop, fn)
 
 	let first = hydrate;
 
+	// return;
 	// Skip first hydration
 	subscribe(() => {
 		let v = prop();
@@ -66,6 +67,43 @@ function valueSubscribe(hydrate, prop, fn)
 	});
 }
 
+// attr binding and hydration
+function makeAttrs(node, hydrate, arg1, arg2)
+{
+	if(arg1 !== null) {
+		for(let key in arg1) {
+			// cleanup same keys
+			if(arg2[key] !== undefined) {
+				delete arg1[key];
+			} else {
+				// Set Main Node component attributes
+				valueSubscribe(hydrate, arg1[key], (v) => {
+					node.setAttribute(key, v);
+				});
+			}
+		}
+	}
+
+	// Set passed component attributes
+	for(let key in arg2) {
+		valueSubscribe(hydrate, arg2[key], (v) => {
+			node.setAttribute(key, v);
+		})
+	}
+}
+
+// event binding
+function makeEvents(node, ...args)
+{
+	for (var i = 0; i < args.length; i++) {
+		for(let key in args[i]) {
+			let value = args[i][key];
+			node.addEventListener(key, function(event) {
+				return value(event);
+			})
+		}
+	}
+}
 
 /**
  * Button
@@ -79,15 +117,24 @@ const buttonView = (context, hydrate = false) => {
 
 	let node = getNode(_button$, hydrate);
 
+	/**
+	 * Prop Inheritance
+	 */
+	makeAttrs(node, hydrate, {}, context.attrs || {});
+
+	makeEvents(node, {
+		// click: () => { console.log('test'); }
+	}, context.on || {});
+
+	/**
+	 * Main
+	 */
 	let defaultSlot = node.firstChild;
 
+	// Render and hydration text node
 	valueSubscribe(hydrate, slots.default, (v) => {
 		defaultSlot.innerHTML = v;
 	})
-
-	node.onclick = function() {
-		alert(1);
-	}
 
 	return node;
 };
@@ -97,7 +144,7 @@ const buttonView = (context, hydrate = false) => {
  */
 
 const _page$ = document.createElement("template");
-_page$.innerHTML = `<div><span>v-for-loading</span></div>`;
+_page$.innerHTML = `<div><!----></div>`;
 
 const pageView = (context, hydrate = false) => {
 	
