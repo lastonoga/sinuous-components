@@ -15,7 +15,7 @@ export default function functional(options, block)
 	let context = block.source.context;
 
 	let imports = [
-		`import { styles, classes, dynamic } from '@siph/component';`,
+
 	];
 
 	let code = '';
@@ -38,7 +38,7 @@ export default function functional(options, block)
 	`	
 	
 	if(options.isSSR) {
-		imports.push(`import { statement, loop, slot, h } from '@siph/component';`);
+		imports.push(`import { statement, loop, slot, h } from '@siph/render';`);
 
 		code += `
 			instance.render = function(ctx) {

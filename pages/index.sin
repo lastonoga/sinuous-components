@@ -1,5 +1,5 @@
 <script>
-let $items = Array.from({ length: 10 }, (_, i) => i);
+let $items = Array.from({ length: 10000 }, (_, i) => i);
 let $items2 = ['a_', 'b_']// Array.from({ length: 1 }, (_, i) => i);
 let $s1 = 2;
 let timer = null;
@@ -42,9 +42,13 @@ function unmounted()
 		</sbutton>
 		<div v-else>1</div> -->
 	<!-- test -->
-		<sbutton v-for="(item, key) in items" :key="item" :pt="item" :class="s1" :style="{ fontStyle: 'italic' }" style="font-weight: bold;" prop1="test--">
+		<!-- <sbutton v-for="(item, key) in items" :key="item" :pt="item" :class="s1" :style="{ fontStyle: 'italic' }" style="font-weight: bold;" prop1="test--">
 			Button {{ item }} 
-		</sbutton>
+		</sbutton> -->
+
+		<sbutton2 v-for="(item, key) in items" :key="item">
+			Button {{ item }} 
+		</sbutton2>
 
 		<!-- <sbutton :class="s1" :style="{ fontStyle: 'italic' }" style="font-weight: bold;" prop1="test--">
 			<div v-for="(item, key) in items2" :key="item">

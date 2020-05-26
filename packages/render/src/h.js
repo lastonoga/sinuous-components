@@ -32,9 +32,10 @@ export function h(el, opts = {}, children = [])
 	}
 
 	if(component._functional) {
+		let $slots = Array.isArray(opts) ? opts[1].$slots : opts.$slots;
 		return component.render({
 			options: opts,
-			_slots: readyOptions.$slots,
+			_slots: $slots,
 		});
 	}
 

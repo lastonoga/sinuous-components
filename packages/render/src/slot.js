@@ -1,5 +1,6 @@
 export function slot(context, h, name, tag, options, defaultChildren)
 {
+	// console.log(context, h, name, tag)
 	// context.__slots
 	
 	let children = defaultChildren;

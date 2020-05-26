@@ -1,0 +1,16 @@
+<template>
+	<div class="button">
+		<slot>
+			Default button text 
+		</slot>
+	</div>
+</template>
+
+<script>
+
+function click()
+{
+	alert(s1)
+}
+
+</script>

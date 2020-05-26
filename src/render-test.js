@@ -7,11 +7,11 @@ import { render } from '@siph/render';
 // import { observable } from '@siph/component/src/observable';
 // import test from '../components/test.sin'
 // import test2 from '../components/test2.sin'
-import button from '../components/sbutton.sin'
-import IndexPage from '../pages/index.sin'
+import button from '../components/sbutton2.sin'
+// import IndexPage from '../pages/index.sin'
 import timeBenchmark from './time';
 
-// const IndexPage = import(/* webpackChunkName: "pageIndex" */ '../pages/index.sin')
+const IndexPage = import(/* webpackChunkName: "pageIndex" */ '../pages/index.sin')
 
 
 var LAYOUT;
