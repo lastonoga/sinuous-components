@@ -1,4 +1,4 @@
-import { observable, computed, subscribe } from 'sinuous/observable';
+import { observable, computed, subscribe, on } from 'sinuous/observable';
 import timeBenchmark from './time';
 
 /**
@@ -53,6 +53,7 @@ function valueSubscribe(hydrate, prop, fn)
 
 	// return;
 	// Skip first hydration
+
 	subscribe(() => {
 		let v = prop();
 
@@ -60,8 +61,6 @@ function valueSubscribe(hydrate, prop, fn)
 			first = false;
 			return;
 		}
-
-		// console.log('do', v);
 
 		fn(v);
 	});
@@ -116,11 +115,15 @@ const buttonView = (context, hydrate = false) => {
 	let { props, slots } = parseContext(context);
 
 	let node = getNode(_button$, hydrate);
-
+	// let d = observable(1);
+	// setInterval(() => { d(d() + 1); }, 100);
+	
 	/**
 	 * Prop Inheritance
 	 */
-	makeAttrs(node, hydrate, {}, context.attrs || {});
+	makeAttrs(node, hydrate, {
+		// 'data-test': () => { return d(); }
+	}, context.attrs || {});
 
 	makeEvents(node, {
 		// click: () => { console.log('test'); }
@@ -142,7 +145,7 @@ const buttonView = (context, hydrate = false) => {
 /**
  * Page
  */
-
+let timer = null;
 const _page$ = document.createElement("template");
 _page$.innerHTML = `<div><!----></div>`;
 
@@ -151,30 +154,36 @@ const pageView = (context, hydrate = false) => {
 	let { props, slots } = parseContext(context);
 
 	let node = getNode(_page$, hydrate);
-	let items = observable(Array.from({ length: 10000 }, (_, i) => i));
+	let items = observable(Array.from({ length: 1000 }, (_, i) => i));
 	let s1 = observable(1);
 
-	// setInterval(() => {
+	// clearInterval(timer);
+	// timer = setInterval(() => {
 	// 	s1(s1() + 1);
-	// }, 500)
+	// }, 1000)
 	// test simple loop
 	let loopBinding = node.firstChild;
 	subscribe(() => {
 		let buttons = document.createDocumentFragment();
 		let arr = items();
 
+		// create components
+		let _button_tmp = (item, key, node = false) => {
+			return buttonView({
+				// on: {
+				// 	click: () => { alert(key); }
+				// },
+				slots: {
+					default: `Button ${ item }`,
+					// default2: () => `Button ${ arr[key] } - ${ s1() }`
+				}
+			}, node);
+		}
+
 		// Loop render function
 		if(hydrate === false) {
 			for(let key in arr) {
-				let _button_tmp = buttonView({
-					slots: {
-						default: `Button ${ arr[key] }`,
-						// default2: () => `Button ${ arr[key] } - ${ s1() }`
-					}
-				});
-
-				
-				buttons.appendChild(_button_tmp);
+				buttons.appendChild(_button_tmp(arr[key], key));
 			}
 
 			loopBinding.replaceWith(buttons);
@@ -185,13 +194,8 @@ const pageView = (context, hydrate = false) => {
 				if(startNode === null) {
 					break;
 				}
-
-				let _button_tmp = buttonView({
-					slots: {
-						default: `Button ${ arr[key] }`,
-						// default2: () => `Button ${ arr[key] } - ${ s1() }`
-					}
-				}, startNode);
+				// continue;
+				_button_tmp(arr[key], key, startNode);
 
 				startNode = startNode.nextElementSibling;
 			}
@@ -209,7 +213,7 @@ let LAYOUT = document.getElementById('layout');
  * Render
  */
 
-// LAYOUT.innerHTML = '';
+LAYOUT.innerHTML = '';
 
 timeBenchmark('render');
 LAYOUT.appendChild(pageView());
@@ -218,6 +222,11 @@ timeBenchmark('render');
 /**
  * Hydrate
  */
+ 
+clearInterval(timer);
+let __tmp = LAYOUT.innerHTML;
+LAYOUT.innerHTML = __tmp;
+
 setTimeout(() => {
 	timeBenchmark('hydrate');
 	pageView(null, LAYOUT.firstChild);
