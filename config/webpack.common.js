@@ -32,7 +32,7 @@ module.exports = {
     mode: 'development',
 
     entry: [
-        './src/render-test.js'
+        './src/template-test.js'
     ],
 
     output: {
