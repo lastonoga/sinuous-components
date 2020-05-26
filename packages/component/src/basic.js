@@ -18,7 +18,6 @@ var Basic = function () {
 		this.$el = null;
 
 		this._props = {};
-		this._passedProps = {};
 
 		// Local data
 		this._data = this.data();
@@ -116,23 +115,23 @@ var Basic = function () {
 	}
 
 
-	Basic.prototype.initProps = function()
-	{
-		for(let key in this._props)
-		{
-			let prop = this._props[key];
-			let value = null;
-			let type = null;
+	// Basic.prototype.initProps = function()
+	// {
+	// 	for(let key in this._props)
+	// 	{
+	// 		let prop = this._props[key];
+	// 		let value = null;
+	// 		let type = null;
 
-			if(typeof prop === 'function') {
-				// type
-			} else {
-				value = prop.default();
-			}
+	// 		if(typeof prop === 'function') {
+	// 			// type
+	// 		} else {
+	// 			value = prop.default();
+	// 		}
 
-			this._data[key] = value;
-		}
-	}
+	// 		this._data[key] = value;
+	// 	}
+	// }
 
 
 	Basic.prototype.passSlots = function(name, slots)

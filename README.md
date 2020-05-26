@@ -53,13 +53,13 @@ sButton:
 </template>
 ````
 
-Metric  | SinuousCC | SinuousCC (Fn) | Sinuous | NuxtJS | NuxtJS (Fn)
+Metric  | SinuousCC |  Svelte | Sinuous | NuxtJS | NuxtJS (Fn)
 ------- | --------- | --------------------- | ------- | ------ | --------------------------------
-Render  | 1018ms | 865ms | 297ms (single obj) | 3743ms | 1825ms
-Hydration | 85ms | 68ms | 5000ms+ | 455ms | 238ms
-Hydration (with onclick) | 165ms | 117ms | - | 707ms | 390ms
+Render  | 865ms | - | 297ms (single obj) | 3743ms | 1825ms
+Hydration | 68ms | 657ms | 5000ms+ | 455ms | 238ms
+Hydration (with onclick) | 117ms | - | - | 707ms | 390ms
 Hydration (x1000 dynamic) | 75ms | - | - | 185ms | -
-Full page size | 43kb | 39kb | 60kb | 169kb | 169kb
+Full page size | 39kb | 160kb | 60kb | 169kb | 169kb
 
 
 That framework is faster then Vue + NuxtJS in:
