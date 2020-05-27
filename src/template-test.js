@@ -1,4 +1,4 @@
-import { observable, computed, subscribe, on } from 'sinuous/observable';
+import { observable, computed, subscribe, on } from './obs';
 import timeBenchmark from './time';
 
 /**
@@ -35,7 +35,6 @@ function isObservable(prop)
 	return prop.$o !== undefined || typeof prop === 'function';
 }
 
-let subscribers = [];
 /**
  * Subscribe action to property
  */
@@ -50,19 +49,12 @@ function valueSubscribe(hydrate, prop, fn)
 		return;
 	}
 
-	let first = hydrate;
 
-	// return;
-	// Skip first hydration
-	on(prop, () => {
-		if(first) {
-			first = false;
-			return;
-		}
-		// console.log('render');
-
+	subscribe(prop, () => {
 		fn(prop());
-	});
+	}, hydrate);
+
+	
 }
 
 // attr binding and hydration
@@ -132,7 +124,7 @@ const buttonView = (context, hydrate = false) => {
 	 * Main
 	 */
 	let defaultSlot = node.firstChild;
-
+	let i = 0;
 	// Render and hydration text node
 	valueSubscribe(hydrate, slots.default, (v) => {
 		defaultSlot.innerHTML = v;
@@ -162,7 +154,7 @@ const pageView = (context, hydrate = false) => {
 	// }, 1000)
 	// test simple loop
 	let loopBinding = node.firstChild;
-	subscribe(() => {
+	subscribe(items, () => {
 		let buttons = document.createDocumentFragment();
 		let arr = items();
 
@@ -174,7 +166,7 @@ const pageView = (context, hydrate = false) => {
 				// },
 				slots: {
 					default: `Button ${ item }`,
-					// default: () => `Button ${ arr[key] } - ${ s1() }`
+					// default: computed(s1, () => `Button ${ arr[key] } - ${ s1() }`)
 				}
 			}, node);
 		}
