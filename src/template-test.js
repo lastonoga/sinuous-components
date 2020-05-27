@@ -23,7 +23,11 @@ function parseContext(context)
 function getNode(template, node)
 {
 	if(node === false) {
-		node = template.content.firstChild.cloneNode(true);
+		if(template.content.children.length === 1) {
+			node = template.content.firstChild.cloneNode(true);
+		} else {
+			node = template.content.cloneNode(true)
+		}
 	}
 
 	return node;
@@ -96,16 +100,44 @@ function makeEvents(node, ...args)
 }
 
 /**
+ * Multiple if test
+ */
+const _iftmp$ = document.createElement("template");
+_iftmp$.innerHTML = `<div>Div 1</div><div>Div 2</div>`;
+
+const ifView = (context, hydrate = false) => {
+	let { props, slots } = parseContext(context);
+
+	let node = getNode(_iftmp$, hydrate);
+	let returnNode = node;
+
+	let _el1$ = hydrate ? node : node.firstChild;
+	let _el2$ = _el1$.nextSibling;
+
+	valueSubscribe(hydrate, props.hydrated, (v) => {
+		_el2$.innerHTML = v;
+	});
+
+	returnNode = _el2$;
+
+	return hydrate ? returnNode : node; 
+}
+/**
  * Button
  */
 const _button$ = document.createElement("template");
-_button$.innerHTML = `<div class="button"><span>Default text</span></div>`;
+_button$.innerHTML = `<div class="button"><span>Default text</span></div><!-- a --><hr/>`;
 
 const buttonView = (context, hydrate = false) => {
 
 	let { props, slots } = parseContext(context);
 
 	let node = getNode(_button$, hydrate);
+	let returnNode = node;
+
+	let _el1$ = hydrate ? node : node.firstChild;
+
+	// console.warn(node)
 	// let d = observable(1);
 	// setInterval(() => { d(d() + 1); }, 100);
 
@@ -123,14 +155,40 @@ const buttonView = (context, hydrate = false) => {
 	/**
 	 * Main
 	 */
-	let defaultSlot = node.firstChild;
-	let i = 0;
+	let defaultSlot = _el1$.firstChild;
 	// Render and hydration text node
 	valueSubscribe(hydrate, slots.default, (v) => {
 		defaultSlot.innerHTML = v;
-	})
+	});
 
-	return node;
+	/**
+	 * If
+	 */
+	let _el2$ = _el1$.nextSibling;
+
+		// ifView({}, _el1$)
+	if(true) {
+		let tagif = ifView({
+			props: {
+				hydrated: computed([], () => { return hydrate !== false })
+			}
+		}, hydrate ? _el2$ : false);
+
+		if(hydrate) {
+			_el2$ = tagif;
+		} else {
+			_el2$.replaceWith(tagif);
+		}
+	}
+
+	// valueSubscribe(hydrate, true, (v) => {
+		
+	// });
+	
+	// clear last child of that component
+	returnNode = _el2$.nextSibling;
+
+	return hydrate ? returnNode : node;
 };
 
 /**
@@ -145,8 +203,11 @@ const pageView = (context, hydrate = false) => {
 	let { props, slots } = parseContext(context);
 
 	let node = getNode(_page$, hydrate);
+
 	let items = observable(Array.from({ length: 1000 }, (_, i) => i));
 	let s1 = observable(1);
+
+	let refs = {};
 
 	// clearInterval(timer);
 	// timer = setInterval(() => {
@@ -186,7 +247,9 @@ const pageView = (context, hydrate = false) => {
 					break;
 				}
 				// continue;
-				_button_tmp(arr[key], key, startNode);
+				// console.log(startNode);
+				startNode = _button_tmp(arr[key], key, startNode);
+				// console.log(startNode);
 
 				startNode = startNode.nextElementSibling;
 			}

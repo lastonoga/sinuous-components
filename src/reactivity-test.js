@@ -82,30 +82,31 @@ function subscribe(obs, value, skip = true)
 	}
 }
 
-timeBenchmark('manual-react');
 
+
+// timeBenchmark('manual-react');
 // for (var i = 0; i < 10000; i++) {
-	let t = observable(0);
-	let d = observable(1);
+	// let t = observable(0);
+	// let d = observable(1);
 	
-	let c = computed([t, d], () => {
-		return t() * 10 + d();
-	});
+	// let c = computed([t, d], () => {
+	// 	return t() * 10 + d();
+	// });
 
-	let c2 = computed(c, () => {
-		return c() * 10;
-	});
+	// let c2 = computed(c, () => {
+	// 	return c() * 10;
+	// });
 
-	// subscribe(t, () => {
-	// 	console.log('subscribe T = ', t());
-	// }, false);
+	// // subscribe(t, () => {
+	// // 	console.log('subscribe T = ', t());
+	// // }, false);
 
-	subscribe(c2, () => {
-		console.log('subscribe C2 = ', c2());
-	});
+	// subscribe(c2, () => {
+	// 	console.log('subscribe C2 = ', c2());
+	// });
 
-	t(2);
-	d(2)
+	// t(2);
+	// d(2)
 // }
 
 // timeBenchmark('manual-react');
